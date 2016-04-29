@@ -5,7 +5,7 @@ domain=$1
 is_public=$2
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain/ -a rocketchat
+sudo yunohost app checkurl $domain -a rocketchat
 if [[ ! $? -eq 0 ]]; then
 exit 1
 fi
