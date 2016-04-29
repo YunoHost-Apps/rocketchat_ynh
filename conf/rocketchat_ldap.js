@@ -31,11 +31,5 @@ db.rocketchat_settings.update(
       $set: { "value": true }
     }
 )
-db.rocketchat_settings.update(
-  { "_id" : "Accounts_RegistrationForm" },
-    {
-      $set: { "value": "Disabled" }
-    }
-)
 
 
