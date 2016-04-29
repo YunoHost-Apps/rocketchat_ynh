@@ -39,7 +39,7 @@ else
         sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/rocketchat.conf
 fi
 
-
+pkgdir=$(pwd)
 
 # Copy files to the right place
 final_path=/var/www/rocketchat
@@ -54,8 +54,6 @@ sudo npm install
 
 cd $final_path/
 
-sudo chmod +x /var/www/rocketchat/bin/rockit
-
 sudo chown -R www-data: $final_path
 
 
@@ -67,6 +65,10 @@ then
 fi
 sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
+
+cd $pkgdir
+
+sudo mongo < ../conf/rocketchat_ldap.js
 
 sudo yunohost app ssowatconf
 
