@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo systemctl stop Rocketchat.service
+
+sudo m -rf /var/www/rocketchat/*
+sudo cp -r ../sources/* /var/www/rocketchat/*
+sudo systemctl start Rocketchat.service
