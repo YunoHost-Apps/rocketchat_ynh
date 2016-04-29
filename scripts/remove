@@ -8,5 +8,5 @@ sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
 sudo rm -Rf /var/log/rocketchat/
 sudo systemctl stop Rocketchat.service
 sudo rm /etc/systemd/system/Rocketchat.service
-
+sudo systemctl restart nginx
 
