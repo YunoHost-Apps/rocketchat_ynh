@@ -1,0 +1,70 @@
+{
+  "name": "apn",
+  "description": "An interface to the Apple Push Notification service for Node.js",
+  "version": "1.6.2",
+  "author": {
+    "name": "Andrew Naylor",
+    "email": "argon@mkbot.net"
+  },
+  "contributors": [
+    {
+      "name": "Andrew Naylor",
+      "email": "argon@mkbot.net"
+    }
+  ],
+  "keywords": [
+    "apple",
+    "push",
+    "push notifications",
+    "iOS",
+    "apns",
+    "notifications"
+  ],
+  "main": "index.js",
+  "bugs": {
+    "url": "https://github.com/argon/node-apn/issues",
+    "email": "argon@mkbot.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/argon/node-apn.git"
+  },
+  "dependencies": {
+    "q": "1.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+    "chai-as-promised": "*"
+  },
+  "scripts": {
+    "test": "mocha -w"
+  },
+  "engines": {
+    "node": ">= 0.6.14"
+  },
+  "license": "MIT",
+  "gitHead": "bb81c39b5b79961a6f79937023bb1715dee4f621",
+  "homepage": "https://github.com/argon/node-apn",
+  "_id": "apn@1.6.2",
+  "_shasum": "c074d41220bdb7e6a19502075d4feba1968383f3",
+  "_from": "apn@1.6.2",
+  "_npmVersion": "2.0.0-alpha-5",
+  "_npmUser": {
+    "name": "argon",
+    "email": "argon@mkbot.net"
+  },
+  "maintainers": [
+    {
+      "name": "argon",
+      "email": "argon@mkbot.net"
+    }
+  ],
+  "dist": {
+    "shasum": "c074d41220bdb7e6a19502075d4feba1968383f3",
+    "tarball": "http://registry.npmjs.org/apn/-/apn-1.6.2.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/apn/-/apn-1.6.2.tgz",
+  "readme": "ERROR: No README data found!"
+}

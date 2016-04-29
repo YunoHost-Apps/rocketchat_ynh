@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export ROOT_URL=http://rc.dev.weho.st:3000/
+export MONGO_URL=mongodb://localhost:27017/rocketchat
+export PORT=3000
+
+cd /var/www/rocketchat
+node main.js
+
+

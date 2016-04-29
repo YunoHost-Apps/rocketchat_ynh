@@ -1,0 +1,19 @@
+[Unit]
+Description=Rocket.Chat  
+After=network.target
+
+[Service]
+Type=simple  
+WorkingDirectory=/var/www/rocketchat  
+User=www-data  
+Group=www-data
+ExecStart=/usr/local/bin/node main.js  
+Restart=always  
+SyslogIdentifier=Rocket.Chat  
+Environment="BIND_IP=127.0.0.1"  
+Environment="ROOT_URL=https://rc.dev.weho.st"  
+Environment="PORT=3000"  
+Environment="MONGO_URL=mongodb://localhost:27017/rocketchat"
+
+[Install]
+WantedBy=multi-user.target  

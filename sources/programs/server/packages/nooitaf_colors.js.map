@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/packages/nooitaf_colors/export.js"],"names":[],"mappings":";;;;;;;;;;;;;;;;AAAA;AACA,yE","file":"/packages/nooitaf_colors.js","sourcesContent":["colors = Npm.require('colors');\n"]}

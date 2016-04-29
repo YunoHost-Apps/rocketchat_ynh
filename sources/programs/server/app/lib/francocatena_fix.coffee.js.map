@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/lib/francocatena_fix.coffee"],"names":[],"mappings":";;;;;;;;;AAAA,IAAC,iBAAD,GAAoB,SAAC,GAAD,EAAK,OAAL;AACnB,SAAO,OAAO,CAAC,EAAR,CAAW,GAAX,EAAe,OAAf,CAAP,CADmB;AAAA,CAApB","file":"/lib/francocatena_fix.coffee.js","sourcesContent":["@i18n_status_func = (key,options) ->\n\treturn TAPi18n.__(key,options)\n"]}

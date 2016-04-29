@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/loadStylesheet.js"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,UAAU,CAAC,KAAK,CAAC,eAAe,CAAC,YAAW;AAC3C,QAAO,MAAM,CAAC,OAAO,CAAC,cAAc,CAAC,CAAC;CACtC,CAAC,CAAC,oE","file":"/packages/rocketchat_tooltip.js","sourcesContent":["RocketChat.theme.addPackageAsset(function() {\n\treturn Assets.getText('tooltip.less');\n});\n"]}

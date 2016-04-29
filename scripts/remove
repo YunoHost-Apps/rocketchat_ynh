@@ -1,0 +1,13 @@
+#!/bin/bash
+
+domain=$(sudo yunohost app setting rocketchat domain)
+
+sudo rm -rf /var/www/rocketchat
+
+sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
+sudo rm -Rf /var/log/rocketchat/
+sudo update-rc.d rocketchat remove
+sudo service rocketchat stop
+sudo rm /etc/init.d/rocketchat
+
+

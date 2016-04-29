@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/lib/RegExp.coffee"],"names":[],"mappings":";;;;;;;;;AAAA,MAAM,CAAC,MAAP,GAAgB,SAAC,CAAD;AACf,SAAO,CAAC,CAAC,OAAF,CAAU,wBAAV,EAAoC,MAApC,CAAP,CADe;AAAA,CAAhB","file":"/lib/RegExp.coffee.js","sourcesContent":["RegExp.escape = (s) ->\n\treturn s.replace /[-\\/\\\\^$*+?.()|[\\]{}]/g, '\\\\$&'"]}

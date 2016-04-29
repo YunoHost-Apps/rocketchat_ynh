@@ -1,0 +1,44 @@
+{
+    "name": "Rocketchat",
+    "id": "rocketchat",
+    "description": {
+        "en": "online editor providing collaborative editing in really real-time"
+    },
+    "developer": {
+        "name": "realitygaps",
+        "email": "realitygaps@yahoo.com",
+        "url": "http://rocket.chat"
+    },
+    "multi_instance": "true",
+    "arguments": {
+        "install" : [
+            {
+                "name": "domain",
+                "ask": {
+                    "en": "Choose a domain for Rocketchat"
+                },
+                "example": "domain.org"
+            },
+            {
+                "name": "path",
+                "ask": {
+                    "en": "Choose a path for Rocketchat"
+                },
+                "example": "/",
+                "default": "/"
+            },
+            {
+                "name": "public_site",
+                "ask": {
+                    "en": "Is it a public Rocketchat ?"
+                },
+                "choices": ["Yes", "No"],
+                "default": "Yes"
+            }
+
+
+        ]
+    }
+}
+
+

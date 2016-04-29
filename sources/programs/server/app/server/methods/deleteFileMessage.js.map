@@ -1,0 +1,1 @@
+{"version":3,"sources":["meteor://💻app/server/methods/deleteFileMessage.js"],"names":[],"mappings":"yBAAA;AACA;AACA;AACA;AACA","file":"/server/methods/deleteFileMessage.js","sourcesContent":["Meteor.methods({\n\tdeleteFileMessage: function(fileID) {\n\t\treturn Meteor.call('deleteMessage', RocketChat.models.Messages.getMessageByFileId(fileID));\n\t}\n});\n"]}
