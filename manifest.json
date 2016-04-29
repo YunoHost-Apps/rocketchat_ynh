@@ -20,14 +20,6 @@
                 "example": "domain.org"
             },
             {
-                "name": "path",
-                "ask": {
-                    "en": "Choose a path for Rocketchat"
-                },
-                "example": "/",
-                "default": "/"
-            },
-            {
                 "name": "public_site",
                 "ask": {
                     "en": "Is it a public Rocketchat ?"

@@ -2,20 +2,16 @@
 
 #Retrieve arguments
 domain=$1
-path=$2
-is_public=$3
+is_public=$2
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain/$path -a rocketchat
+sudo yunohost app checkurl $domain -a rocketchat
 if [[ ! $? -eq 0 ]]; then
 exit 1
 fi
 
 # Save specific settings
 sudo yunohost app setting rocketchat is_public -v $is_public
-
-# Remove trailing "/" for next commands
-path=${path%/}
 
 
 #Install dependencies
@@ -30,17 +26,11 @@ sudo npm install -g n
 # Meteor needs at least this version of node to work.
 sudo n 0.10.40
 
-sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
-sed -i "s@CHANGEMETOROOTURL@$domain\/$path/@g" ../conf/Rocketchat.service
+sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
 
 
-if [ "$path" = "" ];
-then
-        sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
-else
-        sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/rocketchat.conf
-fi
+sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
 
 pkgdir=$(pwd)
 
