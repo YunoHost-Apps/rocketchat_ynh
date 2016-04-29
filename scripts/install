@@ -32,6 +32,9 @@ sudo n 0.10.40
 
 sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf*
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
+sed -i "s@CHANGEMETOROOTURL@$domain\/$path/@g" ../conf/Rocketchat.service
+
+
 if [ "$path" = "" ];
 then
         sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
