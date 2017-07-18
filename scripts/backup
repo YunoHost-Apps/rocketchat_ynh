@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 #=================================================
 # GENERIC START
@@ -7,17 +8,12 @@
 #=================================================
 
 # Exit on command errors and treat access to unset variables as an error
-set -eu
+ynh_abort_if_errors
 
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
-if [ ! -e _common.sh ]; then
-	# Get the _common.sh file if it's not in the current directory
-	sudo cp ../settings/scripts/_common.sh ./_common.sh
-	sudo chmod a+rx _common.sh
-fi
 source _common.sh
 source /usr/share/yunohost/helpers
 
