@@ -7,7 +7,6 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 ROCKETCHAT_VERSION=0.57.2

@@ -7,7 +7,6 @@ set -u
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source _common.sh
 source /usr/share/yunohost/helpers
 
 app=$YNH_APP_INSTANCE_NAME
