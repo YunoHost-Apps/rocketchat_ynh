@@ -62,7 +62,7 @@ sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
 pkgdir=$(pwd)
 
 # download and extract rocketchat
-cd /tmp && curl -sO https://rocket.chat/releases/$ROCKETCHAT_VERSION/download
+curl -so /tmp/rocket.chat-$ROCKETCHAT_VERSION.gtar /rocket https://rocket.chat/releases/$ROCKETCHAT_VERSION/download
 cd $final_path && gunzip -c /tmp/rocket.chat-$ROCKETCHAT_VERSION.gtar | tar xvf -
 cd $final_path && rm -r PaxHeader && mv bundle/** .
 
