@@ -30,14 +30,13 @@
                 "example": "domain.org"
             },
             {
-                "name": "public_site",
-                "type": "boolean",
+               "name": "is_public",
                 "ask": {
-                    "en": "Is it a public Rocketchat ?"
+                    "en": "Is it a public application?"
                 },
                 "choices": ["Yes", "No"],
-                "default": "Yes"
-            }
+                "default": "No"
+	          }
         ]
     }
 }
