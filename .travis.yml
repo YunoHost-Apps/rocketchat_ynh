@@ -4,11 +4,7 @@ sudo: required
 language: node_js
 
 before_install:
-  - sudo apt-get install git dialog
-  - git clone https://github.com/YunoHost/install_script /tmp/install_script
-  - cd /tmp/install_script && sudo ./install_yunohost
   - git clone https://github.com/YunoHost/package_linter /tmp/packge_linter
 
 script:
   - /tmp/package_linter.py ./
-  - yunohost app install ./
