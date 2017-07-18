@@ -63,11 +63,10 @@ sudo cp ../conf/Rocketchat.service /etc/systemd/system/
 pkgdir=$(pwd)
 
 # download and extract rocketchat
-sudo curl -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/$ROCKETCHAT_VERSION/download"
+sudo curl -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
 sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path
-sudo rm -r $final_path/PaxHeader
+sudo ls -lah $final_path
 sudo mv $final_path/bundle/** $final_path
-sudo rm -r $final_path/bundle
 
 cd $final_path/programs/server/
 
