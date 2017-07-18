@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
 domain=$(sudo yunohost app setting rocketchat domain)
 
 sudo rm -rf /var/www/rocketchat
@@ -9,4 +18,3 @@ sudo rm -Rf /var/log/rocketchat/
 sudo systemctl stop Rocketchat.service
 sudo rm /etc/systemd/system/Rocketchat.service
 sudo systemctl restart nginx
-
