@@ -7,4 +7,4 @@ before_install:
   - git clone https://github.com/YunoHost/package_linter /tmp/packge_linter
 
 script:
-  - /tmp/package_linter.py ./
+  - /tmp/package_linter/package_linter.py ./
