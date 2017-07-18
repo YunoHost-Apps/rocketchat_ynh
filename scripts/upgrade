@@ -1,7 +1,16 @@
 #!/bin/bash
+ROCKETCHAT_VERSION=0.57.2
+NODE_VERSION=4.7.1
 
 sudo systemctl stop Rocketchat.service
 
 sudo m -rf /var/www/rocketchat/*
-sudo cp -r ../sources/* /var/www/rocketchat/*
+
+sudo n $NODE_VERSION
+
+# download and extract rocketchat
+cd /tmp && curl -sO https://rocket.chat/releases/$ROCKETCHAT_VERSION/download
+cd $final_path && gunzip -c /tmp/rocket.chat-$ROCKETCHAT_VERSION.gtar | tar xvf -
+cd $final_path && rm -r PaxHeader && mv bundle/** .
+
 sudo systemctl start Rocketchat.service
