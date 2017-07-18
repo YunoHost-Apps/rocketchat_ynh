@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 #=================================================
 # GENERIC START
@@ -34,11 +35,11 @@ NODE_VERSION=4.7.1
 # Check domain/path availability
 sudo yunohost app checkurl $domain -a rocketchat
 if [[ ! $? -eq 0 ]]; then
-exit 1
+  ynh_die
 fi
 
 # Save specific settings
-sudo yunohost app setting rocketchat is_public -v $is_public
+ynh_app_setting_set $app is_public $is_public
 
 #Install dependencies
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -78,7 +79,7 @@ sudo chown -R www-data: $final_path
 sudo service nginx reload
 if [ "$is_public" = "Yes" ];
 then
-        sudo yunohost app setting rocketchat unprotected_uris -v "/"
+  ynh_app_setting_set $app unprotected_uris "/"
 fi
 sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
