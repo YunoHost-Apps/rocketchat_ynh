@@ -67,6 +67,7 @@ sudo curl -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket
 sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path
 sudo ls -lah $final_path
 sudo mv $final_path/bundle/** $final_path
+sudo mv $final_path/bundle/.node_version.txt $final_path
 
 cd $final_path/programs/server/
 
