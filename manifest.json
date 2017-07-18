@@ -23,6 +23,7 @@
         "install" : [
             {
                 "name": "domain",
+                "type": "domain",
                 "ask": {
                     "en": "Choose a domain for Rocketchat"
                 },
@@ -30,6 +31,7 @@
             },
             {
                 "name": "public_site",
+                "type": "boolean",
                 "ask": {
                     "en": "Is it a public Rocketchat ?"
                 },
