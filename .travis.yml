@@ -6,7 +6,7 @@ language: node_js
 before_install:
   - sudo apt-get install git dialog
   - git clone https://github.com/YunoHost/install_script /tmp/install_script
-  - echo "yunohost_${TRAVIS_BUILD_ID}" | passwd --stdin root
+  - echo -e "yunorootpass_${TRAVIS_BUILD_ID}\nyunorootpass_${TRAVIS_BUILD_ID}" | passwd root
   - cd /tmp/install_script && sudo ./install_yunohost
   - git clone https://github.com/YunoHost/package_linter /tmp/packge_linter
 
