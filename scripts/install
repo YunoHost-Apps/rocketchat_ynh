@@ -49,17 +49,17 @@ sudo apt-get install -y mongodb-org gzip curl graphicsmagick npm
 sudo npm install -g n
 sudo n $NODE_VERSION
 
+# Create destination
+final_path=/var/www/rocketchat
+ynh_app_setting_set $app final_path $final_path
+sudo mkdir -p $final_path
+
 sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
 sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
 
 sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
 
 pkgdir=$(pwd)
-
-# Copy files to the right place
-final_path=/var/www/rocketchat
-ynh_app_setting_set $app final_path $final_path
-sudo mkdir -p $final_path
 
 # download and extract rocketchat
 cd /tmp && curl -sO https://rocket.chat/releases/$ROCKETCHAT_VERSION/download
