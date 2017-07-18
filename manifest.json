@@ -49,7 +49,7 @@
             {
                "name": "lang",
                 "ask": {
-                    "en": "Select default language",
+                    "en": "Select default language"
                 },
                 "choices": ["English"],
                 "default": "English"
