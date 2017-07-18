@@ -59,6 +59,7 @@ pkgdir=$(pwd)
 
 # Copy files to the right place
 final_path=/var/www/rocketchat
+ynh_app_setting_set $app final_path $final_path
 sudo mkdir -p $final_path
 
 # download and extract rocketchat
