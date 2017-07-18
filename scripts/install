@@ -86,7 +86,7 @@ fi
 sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
 
-sleep 10s
+sleep 25s
 
 cd $pkgdir
 
