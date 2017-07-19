@@ -19,4 +19,5 @@ sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
 sudo rm -rf /var/log/rocketchat/
 sudo rm -f /etc/systemd/system/Rocketchat.service
 
+sudo systemctl daemon-reload
 sudo systemctl restart nginx

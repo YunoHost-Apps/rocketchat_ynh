@@ -63,6 +63,7 @@ sudo mkdir -p $final_path
 # Copy and set systemd configuration
 sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
 sudo cp ../conf/Rocketchat.service /etc/systemd/system/
+sudo systemctl daemon-reload
 
 # Copy and set nginx configuration
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
