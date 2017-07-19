@@ -33,7 +33,7 @@ NODE_VERSION=4.7.1
 workdir=$(pwd)
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain -a $path
+sudo yunohost app checkurl $domain -a $app
 if [[ ! $? -eq 0 ]]; then
   ynh_die "domain not available"
 fi
