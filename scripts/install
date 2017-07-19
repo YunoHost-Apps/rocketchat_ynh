@@ -78,10 +78,7 @@ sudo cp ../conf/nginx.conf "$nginx_conf"
 # download and extract rocketchat
 echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
 sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
-sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path
-sudo ls -lah $final_path
-sudo mv $final_path/bundle/** $final_path
-sudo mv $final_path/bundle/.node_version.txt $final_path
+sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
 
 cd $final_path/programs/server/
 
