@@ -99,7 +99,7 @@ sudo chown -R www-data: $final_path
 sudo service nginx reload
 if [ "$is_public" = "Yes" ];
 then
-	ynh_app_setting_set "$app" skipped_uris "/"
+  ynh_app_setting_set $app skipped_regex "$domain$path/.*"
 fi
 
 sudo systemctl start Rocketchat.service
