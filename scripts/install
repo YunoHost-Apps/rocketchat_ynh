@@ -21,7 +21,7 @@ ynh_abort_if_errors
 #=================================================
 
 domain=$YNH_APP_ARG_DOMAIN
-path_url=$YNH_APP_ARG_PATH
+path=$YNH_APP_ARG_PATH
 is_public=$YNH_APP_ARG_IS_PUBLIC
 language=$YNH_APP_ARG_LANG
 
@@ -29,6 +29,8 @@ app=$YNH_APP_INSTANCE_NAME
 
 ROCKETCHAT_VERSION=0.57.2
 NODE_VERSION=4.7.1
+
+workdir=$(pwd)
 
 # Check domain/path availability
 sudo yunohost app checkurl $domain -a rocketchat
@@ -50,17 +52,26 @@ sudo npm install -g n
 sudo n $NODE_VERSION
 
 # Create destination
-final_path=/var/www/rocketchat
+final_path="/var/www/$app"
+[[ -d $final_path ]] && ynh_die \
+"The destination directory '$DESTDIR' already exists.\
+ You should safely delete it before installing this app."
+
 ynh_app_setting_set $app final_path $final_path
 sudo mkdir -p $final_path
 
-sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
+# Copy and set systemd configuration
 sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
-
-sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
 sudo cp ../conf/Rocketchat.service /etc/systemd/system/
 
-pkgdir=$(pwd)
+# Copy and set nginx configuration
+nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
+sed -i "s@#APP#@${app}@g"          ../conf/nginx.conf
+sed -i "s@#PATH#@${path}@g"        ../conf/nginx.conf
+sed -i "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
+sed -i "s@#DESTDIR#@${final_path}@g"  ../conf/nginx.conf
+
+sudo cp ../conf/nginx.conf "$nginx_conf"
 
 # download and extract rocketchat
 sudo curl -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
@@ -86,9 +97,13 @@ fi
 sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
 
-sleep 25s
+# wait for rocketchat to populate db and start (oneliner has to be improved)
+isup=false; x=5; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
+x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:3000/api/v1/info | \
+grep -e "success.*true" >/dev/null 2>%1); then isup=true; break; fi; done && if $isup; \
+then echo "service is up"; else echo "service not reachable"; ynh_die; fi
 
-cd $pkgdir
+cd $workdir
 
 sudo mongo < ../conf/rocketchat_ldap.js
 

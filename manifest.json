@@ -6,7 +6,8 @@
         "en": "the ultimate chat platform"
     },
     "url": "https://github.com/selamanse/rocketchat_ynh",
-    "license": "free",
+    "license": "MIT",
+    "version": "0.57.2-rc.0",
     "maintainer": {
         "name": "selamanse",
         "email": "selamanse@scheinfrei.info",
@@ -35,8 +36,8 @@
                 "ask": {
                     "en": "Choose a path for RocketChat"
                 },
-                "example": "/chat",
-                "default": "/chat"
+                "example": "/rocketchat",
+                "default": "/rocketchat"
             },
             {
                "name": "is_public",
