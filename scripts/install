@@ -62,16 +62,16 @@ sudo mkdir -p $final_path
 
 # Copy and set systemd configuration
 sed -i "s@#ROOTURL#@$domain/@g" ../conf/Rocketchat.service
-sed -i "s@#LOCATION#@/${path}@g" ../conf/Rocketchat.service
+sed -i "s@#LOCATION#@/$path@g" ../conf/Rocketchat.service
 sudo cp ../conf/Rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
 # Copy and set nginx configuration
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-sed -i "s@#APP#@${app}@g"          ../conf/nginx.conf
-sed -i "s@#PATH#@${path}@g"        ../conf/nginx.conf
+sed -i "s@#APP#@$app@g"          ../conf/nginx.conf
+sed -i "s@#PATH#@$path@g"        ../conf/nginx.conf
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
-sed -i "s@#DESTDIR#@${final_path}@g"  ../conf/nginx.conf
+sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
 
 sudo cp ../conf/nginx.conf "$nginx_conf"
 
@@ -99,7 +99,7 @@ sudo systemctl enable Rocketchat.service
 
 # wait for rocketchat to populate db and start (oneliner has to be improved)
 isup=false; x=45; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
-x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:3000/api/v1/info | \
+x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:3000${path}/api/v1/info | \
 grep -e "success.*true" >/dev/null 2>%1); then isup=true; break; fi; done && if $isup; \
 then echo "service is up"; else ynh_die "$app could not be started"; fi
 
