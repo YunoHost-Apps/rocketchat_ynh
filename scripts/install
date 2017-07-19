@@ -109,4 +109,6 @@ cd $workdir
 
 sudo mongo < ../conf/rocketchat_ldap.js
 
+sudo systemctl restart Rocketchat.service
+
 sudo yunohost app ssowatconf
