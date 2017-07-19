@@ -100,10 +100,10 @@ sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
 
 # wait for rocketchat to populate db and start (oneliner has to be improved)
-isup=false; x=5; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
+isup=false; x=45; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
 x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:3000/api/v1/info | \
 grep -e "success.*true" >/dev/null 2>%1); then isup=true; break; fi; done && if $isup; \
-then echo "service is up"; else echo "service not reachable"; ynh_die; fi
+then echo "service is up"; else ynh_die; fi
 
 cd $workdir
 
