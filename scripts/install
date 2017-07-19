@@ -54,7 +54,7 @@ sudo n $NODE_VERSION
 # Create destination
 final_path="/var/www/$app"
 [[ -d $final_path ]] && ynh_die \
-"The destination directory '$DESTDIR' already exists.\
+"The destination directory '$final_path' already exists.\
  You should safely delete it before installing this app."
 
 ynh_app_setting_set $app final_path $final_path
