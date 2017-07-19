@@ -14,6 +14,9 @@ domain=$(ynh_app_setting_get $app domain)
 
 sudo systemctl stop Rocketchat.service
 
+# remove Rocketchat from services
+sudo yunohost service remove Rocketchat
+
 sudo rm -rf /var/www/rocketchat
 sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
 sudo rm -rf /var/log/rocketchat/

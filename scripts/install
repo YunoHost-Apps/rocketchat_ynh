@@ -33,7 +33,7 @@ NODE_VERSION=4.7.1
 workdir=$(pwd)
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain -a $app
+sudo yunohost app checkurl $domain -a $path
 if [[ ! $? -eq 0 ]]; then
   ynh_die "domain not available"
 fi
@@ -47,9 +47,15 @@ echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.0 main" | sudo
 sudo apt-get update
 sudo apt-get install -y mongodb-org gzip curl graphicsmagick npm
 
+# add mongodb to services
+sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
+
 # Meteor needs at least this version of node to work.
 sudo npm install -g n
 sudo n $NODE_VERSION
+
+# find suitable port (default 3000)
+port=$(ynh_find_port 3000)
 
 # Create destination
 final_path="/var/www/$app"
@@ -63,6 +69,7 @@ sudo mkdir -p $final_path
 # Copy and set systemd configuration
 sed -i "s@#ROOTURL#@$domain/@g" ../conf/Rocketchat.service
 sed -i "s@#LOCATION#@/$path@g" ../conf/Rocketchat.service
+sed -i "s@#PORT#@/$port@g" ../conf/Rocketchat.service
 sudo cp ../conf/Rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
@@ -70,6 +77,7 @@ sudo systemctl daemon-reload
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
 sed -i "s@#APP#@$app@g"          ../conf/nginx.conf
 sed -i "s@#PATH#@$path@g"        ../conf/nginx.conf
+sed -i "s@#PORT#@$port@g"        ../conf/nginx.conf
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
 sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
 
@@ -97,9 +105,12 @@ fi
 sudo systemctl start Rocketchat.service
 sudo systemctl enable Rocketchat.service
 
+# add Rocketchat to services
+sudo yunohost service add Rocketchat
+
 # wait for rocketchat to populate db and start (oneliner has to be improved)
 isup=false; x=45; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
-x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:3000${path}/api/v1/info | \
+x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port/api/v1/info | \
 grep -e "success.*true" >/dev/null 2>%1); then isup=true; break; fi; done && if $isup; \
 then echo "service is up"; else ynh_die "$app could not be started"; fi
 
