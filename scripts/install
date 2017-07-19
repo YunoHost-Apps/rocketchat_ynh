@@ -61,7 +61,8 @@ ynh_app_setting_set $app final_path $final_path
 sudo mkdir -p $final_path
 
 # Copy and set systemd configuration
-sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
+sed -i "s@#ROOTURL#@$domain/@g" ../conf/Rocketchat.service
+sed -i "s@#LOCATION#@/${path}@g" ../conf/Rocketchat.service
 sudo cp ../conf/Rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
