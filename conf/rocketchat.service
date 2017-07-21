@@ -11,7 +11,7 @@ Restart=always
 SyslogIdentifier=Rocket.Chat
 Environment="BIND_IP=127.0.0.1"
 Environment="ROOT_URL=https://#ROOTURL##LOCATION#"
-Environment="PORT=3000"
+Environment="PORT=#PORT#"
 Environment="MONGO_URL=mongodb://localhost:27017/rocketchat"
 
 [Install]

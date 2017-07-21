@@ -78,8 +78,8 @@ sudo mkdir -p $final_path
 # Copy and set systemd configuration
 sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
-sed -i "s@#PORT#@/$port@g" ../conf/rocketchat.service
-sed -i "s@#USER#@/$serviceuser@g" ../conf/rocketchat.service
+sed -i "s@#PORT#@$port@g" ../conf/rocketchat.service
+sed -i "s@#USER#@$serviceuser@g" ../conf/rocketchat.service
 sudo cp ../conf/rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
