@@ -102,7 +102,7 @@ cd $final_path/programs/server/
 
 sudo npm install --production
 
-cd $final_path
+cd $workdir
 
 sudo useradd -d "$final_path" -M $serviceuser
 sudo chown -R $serviceuser: $final_path
@@ -124,7 +124,7 @@ sudo yunohost service add rocketchat
 # wait for rocketchat to populate db and start
 waitforservice
 
-sudo mongo < $workdir/conf/rocketchat_ldap.js
+sudo mongo < ../conf/rocketchat_ldap.js
 
 sudo systemctl restart rocketchat.service
 
