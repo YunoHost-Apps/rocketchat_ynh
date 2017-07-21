@@ -1,12 +1,29 @@
 #!/bin/bash
+set -u
 
-domain=$(sudo yunohost app setting rocketchat domain)
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-sudo rm -rf /var/www/rocketchat
+source /usr/share/yunohost/helpers
 
-sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
-sudo rm -Rf /var/log/rocketchat/
-sudo systemctl stop Rocketchat.service
-sudo rm /etc/systemd/system/Rocketchat.service
-sudo systemctl restart nginx
+app=$YNH_APP_INSTANCE_NAME
+domain=$(ynh_app_setting_get $app domain)
+final_path=$(ynh_app_setting_get $app final_path)
+serviceuser=$(ynh_app_setting_get $app serviceuser)
 
+sudo systemctl stop $app.service
+
+# remove Rocketchat from services
+sudo yunohost service remove $app
+
+sudo rm -rf $final_path
+sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
+sudo rm -rf /var/log/$app
+sudo rm -f /etc/systemd/system/$app.service
+sudo userdel -r $serviceuser
+
+sudo systemctl daemon-reload
+sudo systemctl reload nginx

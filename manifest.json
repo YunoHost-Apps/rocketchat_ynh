@@ -1,40 +1,60 @@
 {
-    "package_format": 1,
-    "name": "Rocketchat",
+    "packaging_format": 1,
+    "name": "RocketChat",
     "id": "rocketchat",
     "description": {
-        "en": "online editor providing collaborative editing in really real-time"
+        "en": "the ultimate chat platform"
     },
-    "developer": {
-        "name": "realitygaps",
-        "email": "realitygaps@yahoo.com",
-        "url": "http://rocket.chat"
+    "url": "https://github.com/selamanse/rocketchat_ynh",
+    "license": "MIT",
+    "version": "0.57.2-rc.1",
+    "maintainer": {
+        "name": "selamanse",
+        "email": "selamanse@scheinfrei.info",
+        "url": "https://github.com/selamanse"
     },
-    "multi_instance": "true",
+    "multi_instance": false,
+    "services": [
+        "nginx"
+    ],
     "requirements": {
-        "yunohost": ">= 2.4.0"
+        "yunohost": ">> 2.5.6"
     },
     "arguments": {
         "install" : [
             {
                 "name": "domain",
+                "type": "domain",
                 "ask": {
                     "en": "Choose a domain for Rocketchat"
                 },
                 "example": "domain.org"
             },
             {
-                "name": "public_site",
+                "name": "path",
+                "type": "path",
                 "ask": {
-                    "en": "Is it a public Rocketchat ?"
+                    "en": "Choose a path for RocketChat"
+                },
+                "example": "/rocketchat",
+                "default": "/rocketchat"
+            },
+            {
+               "name": "is_public",
+                "ask": {
+                    "en": "Is it a public application?"
                 },
                 "choices": ["Yes", "No"],
-                "default": "Yes"
+                "default": "No"
+	          },
+            {
+               "name": "lang",
+                "ask": {
+                    "en": "Select default language"
+                },
+                "choices": ["English"],
+                "default": "English"
             }
-
-
         ]
     }
 }
-
-

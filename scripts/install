@@ -1,71 +1,133 @@
 #!/bin/bash
+set -eu
 
-#Retrieve arguments
-domain=$1
-is_public=$2
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+is_public=$YNH_APP_ARG_IS_PUBLIC
+language=$YNH_APP_ARG_LANG
+
+app=$YNH_APP_INSTANCE_NAME
+serviceuser=rocketchat
+
+ROCKETCHAT_VERSION=0.57.2
+NODE_VERSION=4.7.1
+
+workdir=$(pwd)
+
+# find suitable port (default 3000)
+port=$(ynh_find_port 3000)
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain -a rocketchat
+sudo yunohost app checkurl $domain -a $app
 if [[ ! $? -eq 0 ]]; then
-exit 1
+  ynh_die "domain not available"
 fi
 
-# Save specific settings
-sudo yunohost app setting rocketchat is_public -v $is_public
+final_path="/var/lib/$app"
+[[ -d $final_path ]] && ynh_die \
+"The destination directory '$final_path' already exists.\
+ You should safely delete it before installing this app."
 
+# Save specific settings
+ynh_app_setting_set $app serviceuser $serviceuser
+ynh_app_setting_set $app final_path $final_path
+ynh_app_setting_set $app is_public $is_public
+
+function waitforservice {
+  isup=false; x=90; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
+  x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port${path:-/}/api/v1/info | \
+  grep -e "success.*true" >/dev/null 2>&1); then isup=true; break; fi; done && if $isup; \
+  then echo "service is up"; else ynh_die "$app could not be started"; fi
+}
 
 #Install dependencies
-
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 >/dev/null
 echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 sudo apt-get update
-sudo apt-get install -y mongodb-org curl graphicsmagick
-sudo apt-get install -y npm
-sudo npm install -g n
+sudo apt-get install -y mongodb-org gzip curl graphicsmagick npm
+
+# add mongodb to services
+sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
 
 # Meteor needs at least this version of node to work.
-sudo n 0.10.40
+sudo npm install -g n
+sudo n $NODE_VERSION
 
-sed -i "s@ALIASTOCHANGE@$final_path/@g" ../conf/nginx.conf*
-sed -i "s@CHANGEMETOROOTURL@$domain/@g" ../conf/Rocketchat.service
-
-
-sudo cp ../conf/nginx.conf-nosub /etc/nginx/conf.d/$domain.d/rocketchat.conf
-
-pkgdir=$(pwd)
-
-# Copy files to the right place
-final_path=/var/www/rocketchat
+# Create destination
 sudo mkdir -p $final_path
-sudo cp -a ../sources/* $final_path
 
-sudo cp ../conf/Rocketchat.service /etc/systemd/system/
+# Copy and set systemd configuration
+sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
+sed -i "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
+sed -i "s@#PORT#@$port@g" ../conf/rocketchat.service
+sed -i "s@#USER#@$serviceuser@g" ../conf/rocketchat.service
+sudo cp ../conf/rocketchat.service /etc/systemd/system/
+sudo systemctl daemon-reload
+
+# Copy and set nginx configuration
+nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
+sed -i "s@#APP#@$app@g"          ../conf/nginx.conf
+sed -i "s@#PATH#@$path@g"        ../conf/nginx.conf
+sed -i "s@#PORT#@$port@g"        ../conf/nginx.conf
+sed -i "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
+sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
+
+sudo cp ../conf/nginx.conf "$nginx_conf"
+
+# download and extract rocketchat
+echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
+sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
+sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
 
 cd $final_path/programs/server/
 
-sudo npm install
+sudo npm install --production
 
-cd $final_path/
+cd $workdir
 
-sudo chown -R www-data: $final_path
+sudo useradd -d "$final_path" -M $serviceuser
+sudo chown -R $serviceuser: $final_path
 
+sudo chown -R $serviceuser: $final_path
 
-
-sudo service nginx reload
+sudo systemctl reload nginx
 if [ "$is_public" = "Yes" ];
 then
-        sudo yunohost app setting rocketchat unprotected_uris -v "/"
+	ynh_app_setting_set "$app" skipped_uris "/"
 fi
-sudo systemctl start Rocketchat.service
-sudo systemctl enable Rocketchat.service
 
-sleep 25s
+sudo systemctl start rocketchat.service
+sudo systemctl enable rocketchat.service
 
-cd $pkgdir
+# add rocketchat to services
+sudo yunohost service add rocketchat
+
+# wait for rocketchat to populate db and start
+waitforservice
 
 sudo mongo < ../conf/rocketchat_ldap.js
 
+sudo systemctl restart rocketchat.service
+
+waitforservice
+
 sudo yunohost app ssowatconf
-
-
-
