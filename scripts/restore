@@ -23,19 +23,23 @@ ynh_abort_if_errors
 app=$YNH_APP_INSTANCE_NAME
 
 domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_app_setting_get $app path)
+path=$(ynh_app_setting_get $app path)
 final_path=$(ynh_app_setting_get $app final_path)
-db_name=$(ynh_app_setting_get $app db_name)
+serviceuser=$(ynh_app_setting_get $app serviceuser)
 
 # Check domain/path availability
-	sudo yunohost app checkurl "${domain}${path}" -a "$app" \
-	  || ynh_die
+sudo yunohost app checkurl "${domain}${path}" -a "$app" || ynh_die
 
 # Check destination directory
-	DESTDIR="/var/www/$app"
-	[[ -d $DESTDIR ]] && ynh_die \
-	"The destination directory '$DESTDIR' already exists.\
-	 You should safely delete it before restoring this app."
+[[ -d $final_path ]] && ynh_die \
+"The destination directory '$final_path' already exists.\
+ You should safely delete it before restoring this app."
+
+# Create destination
+sudo mkdir -p $final_path
+
+# Create user
+sudo useradd -d "$final_path" -M $serviceuser
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -43,16 +47,31 @@ db_name=$(ynh_app_setting_get $app db_name)
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 
-ynh_restore_file "nginx"
+sudo cp -a "conf/nginx" "/etc/nginx/conf.d/$domain.d/$app.conf"
+sudo systemctl reload nginx
+
+#=================================================
+# RESTORE THE SYSTEMD CONFIGURATION
+#=================================================
+sudo cp -a "conf/service" "/etc/systemd/system/rocketchat.service"
+sudo systemctl daemon-reload
+sudo systemctl enable rocketchat
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 
-ynh_restore_file "app"
+sudo tar -xzf ./rocket.chat.gtar -C $final_path
+sudo chown -R $serviceuser: $final_path
 
 #=================================================
 # RESTORE THE MONGODB
 #=================================================
 
-sudo mongorestore --dbpath /var/lib/mongodb ./dump
+sudo mongorestore ./dump
+
+#=================================================
+# START APP RELATED SERVICES
+#=================================================
+
+sudo systemctl start rocketchat
