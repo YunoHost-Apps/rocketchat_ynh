@@ -26,6 +26,8 @@ final_path=$(ynh_app_setting_get $app final_path)
 domain=$(ynh_app_setting_get $app domain)
 db_name=$(ynh_app_setting_get $app db_name)
 db_pwd=$(ynh_app_setting_get $app mysqlpwd)
+bkpdate="$(date +%d-%m-%Y_%H%M%S)"
+backup_dir=$final_path/backup-$bkpdate
 
 #=================================================
 # STANDARD BACKUP STEPS
