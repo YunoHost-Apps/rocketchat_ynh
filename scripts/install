@@ -100,7 +100,7 @@ sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --
 
 cd $final_path/programs/server/
 
-sudo npm install
+sudo npm install --production
 
 cd $final_path
 
