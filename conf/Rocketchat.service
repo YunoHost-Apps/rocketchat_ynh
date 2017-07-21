@@ -1,17 +1,16 @@
 [Unit]
-Description=Rocket.Chat
+Description=rocketchat
 After=network.target
 
 [Service]
 Type=simple
 WorkingDirectory=/var/www/rocketchat
-User=www-data
-Group=www-data
+User=#USER#
 ExecStart=/usr/local/bin/node main.js
 Restart=always
 SyslogIdentifier=Rocket.Chat
 Environment="BIND_IP=127.0.0.1"
-Environment="ROOT_URL=https://#ROOTURL##LOCATION#"  
+Environment="ROOT_URL=https://#ROOTURL##LOCATION#"
 Environment="PORT=3000"
 Environment="MONGO_URL=mongodb://localhost:27017/rocketchat"
 

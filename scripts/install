@@ -26,11 +26,15 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 language=$YNH_APP_ARG_LANG
 
 app=$YNH_APP_INSTANCE_NAME
+user=$app
 
 ROCKETCHAT_VERSION=0.57.2
 NODE_VERSION=4.7.1
 
 workdir=$(pwd)
+
+# find suitable port (default 3000)
+port=$(ynh_find_port 3000)
 
 # Check domain/path availability
 sudo yunohost app checkurl $domain -a $app
@@ -38,7 +42,7 @@ if [[ ! $? -eq 0 ]]; then
   ynh_die "domain not available"
 fi
 
-final_path="/var/www/$app"
+final_path="/var/lib/$app"
 [[ -d $final_path ]] && ynh_die \
 "The destination directory '$final_path' already exists.\
  You should safely delete it before installing this app."
@@ -46,6 +50,13 @@ final_path="/var/www/$app"
 # Save specific settings
 ynh_app_setting_set $app final_path $final_path
 ynh_app_setting_set $app is_public $is_public
+
+function waitforservice {
+  isup=false; x=45; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
+  x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port${path:-/}/api/v1/info | \
+  grep -e "success.*true" >/dev/null 2>&1); then isup=true; break; fi; done && if $isup; \
+  then echo "service is up"; else ynh_die "$app could not be started"; fi
+}
 
 #Install dependencies
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 >/dev/null
@@ -60,17 +71,14 @@ sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
 sudo npm install -g n
 sudo n $NODE_VERSION
 
-# find suitable port (default 3000)
-port=$(ynh_find_port 3000)
-
 # Create destination
 sudo mkdir -p $final_path
 
 # Copy and set systemd configuration
-sed -i "s@#ROOTURL#@$domain@g" ../conf/Rocketchat.service
-sed -i "s@#LOCATION#@${path:-/}@g" ../conf/Rocketchat.service
-sed -i "s@#PORT#@/$port@g" ../conf/Rocketchat.service
-sudo cp ../conf/Rocketchat.service /etc/systemd/system/
+sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
+sed -i "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
+sed -i "s@#PORT#@/$port@g" ../conf/rocketchat.service
+sudo cp ../conf/rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
 # Copy and set nginx configuration
@@ -92,32 +100,32 @@ cd $final_path/programs/server/
 
 sudo npm install
 
-cd $final_path/
+cd $final_path
 
-sudo chown -R www-data: $final_path
+sudo useradd -d "$final_path" -M $user
+sudo chown -R $user: $final_path
 
-sudo service nginx reload
+sudo chown -R $user: $final_path
+
+sudo systemctl reload nginx
 if [ "$is_public" = "Yes" ];
 then
 	ynh_app_setting_set "$app" skipped_uris "/"
 fi
 
-sudo systemctl start Rocketchat.service
-sudo systemctl enable Rocketchat.service
+sudo systemctl start rocketchat.service
+sudo systemctl enable rocketchat.service
 
-# add Rocketchat to services
-sudo yunohost service add Rocketchat
+# add rocketchat to services
+sudo yunohost service add rocketchat
 
-# wait for rocketchat to populate db and start (oneliner has to be improved)
-isup=false; x=45; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
-x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port${path:-/}/api/v1/info | \
-grep -e "success.*true" >/dev/null 2>%1); then isup=true; break; fi; done && if $isup; \
-then echo "service is up"; else ynh_die "$app could not be started"; fi
+# wait for rocketchat to populate db and start
+waitforservice
 
-cd $workdir
+sudo mongo < $workdir/conf/rocketchat_ldap.js
 
-sudo mongo < ../conf/rocketchat_ldap.js
+sudo systemctl restart rocketchat.service
 
-sudo systemctl restart Rocketchat.service
+waitforservice
 
 sudo yunohost app ssowatconf

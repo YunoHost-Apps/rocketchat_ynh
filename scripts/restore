@@ -54,4 +54,4 @@ ynh_restore_file "$final_path"
 # RESTORE THE MONGODB
 #=================================================
 
-sudo mongorestore --dbpath /var/lib/mongo "$final_path/dump"
+sudo mongorestore --dbpath /var/lib/mongodb ./dump

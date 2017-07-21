@@ -11,16 +11,18 @@ source /usr/share/yunohost/helpers
 
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
+final_path=$(ynh_app_setting_get $app final_path)
 
-sudo systemctl stop Rocketchat.service
+sudo systemctl stop $app.service
 
 # remove Rocketchat from services
-sudo yunohost service remove Rocketchat
+sudo yunohost service remove $app
 
-sudo rm -rf /var/www/rocketchat
-sudo rm -f /etc/nginx/conf.d/$domain.d/rocketchat.conf
-sudo rm -rf /var/log/rocketchat/
-sudo rm -f /etc/systemd/system/Rocketchat.service
+sudo rm -rf $final_path
+sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
+sudo rm -rf /var/log/$app
+sudo rm -f /etc/systemd/system/$app.service
+sudo userdel -r $app
 
 sudo systemctl daemon-reload
-sudo systemctl restart nginx
+sudo systemctl reload nginx

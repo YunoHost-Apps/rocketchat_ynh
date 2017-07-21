@@ -45,4 +45,4 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf" "${backup_dir}/etc/nginx/conf
 # BACKUP THE MONGODB DATABASE
 #=================================================
 
-sudo mongodump -o "$final_path/dump"
+sudo mongodump -o "${backup_dir}/dump"

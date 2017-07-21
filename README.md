@@ -1,7 +1,7 @@
 # rocketchat_ynh
 [![Build Status](https://travis-ci.org/selamanse/rocketchat_ynh.svg?branch=master)](https://travis-ci.org/selamanse/rocketchat_ynh)
 
-rocket.chat for yunohost
+Rocketchat for yunohost
 
 ## Install with
 
