@@ -26,7 +26,7 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 language=$YNH_APP_ARG_LANG
 
 app=$YNH_APP_INSTANCE_NAME
-user=$app
+serviceuser=rocketchat
 
 ROCKETCHAT_VERSION=0.57.2
 NODE_VERSION=4.7.1
@@ -48,6 +48,7 @@ final_path="/var/lib/$app"
  You should safely delete it before installing this app."
 
 # Save specific settings
+ynh_app_setting_set $app serviceuser $serviceuser
 ynh_app_setting_set $app final_path $final_path
 ynh_app_setting_set $app is_public $is_public
 
@@ -78,7 +79,7 @@ sudo mkdir -p $final_path
 sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
 sed -i "s@#PORT#@/$port@g" ../conf/rocketchat.service
-sed -i "s@#USER#@/$user@g" ../conf/rocketchat.service
+sed -i "s@#USER#@/$serviceuser@g" ../conf/rocketchat.service
 sudo cp ../conf/rocketchat.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
@@ -103,10 +104,10 @@ sudo npm install
 
 cd $final_path
 
-sudo useradd -d "$final_path" -M $user
-sudo chown -R $user: $final_path
+sudo useradd -d "$final_path" -M $serviceuser
+sudo chown -R $serviceuser: $final_path
 
-sudo chown -R $user: $final_path
+sudo chown -R $serviceuser: $final_path
 
 sudo systemctl reload nginx
 if [ "$is_public" = "Yes" ];
