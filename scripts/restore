@@ -43,13 +43,13 @@ db_name=$(ynh_app_setting_get $app db_name)
 # RESTORE THE NGINX CONFIGURATION
 #=================================================
 
-ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore_file "nginx"
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 
-ynh_restore_file "$final_path"
+ynh_restore_file "app"
 
 #=================================================
 # RESTORE THE MONGODB
