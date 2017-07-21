@@ -48,3 +48,4 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf" "${backup_dir}/etc/nginx/conf
 #=================================================
 
 sudo mongodump -o "${backup_dir}/dump"
+ynh_backup "${backup_dir}/dump" "dump"
