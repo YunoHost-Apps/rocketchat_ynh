@@ -94,6 +94,11 @@ sudo cp ../conf/nginx.conf "$nginx_conf"
 # download and extract rocketchat
 echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
 sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
+SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
+if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
+  ynh_die "The sha256sum does not match the configured one"
+fi
+
 sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
 sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
 
