@@ -5,8 +5,8 @@
     "description": {
         "en": "the ultimate chat platform"
     },
-    "url": "https://github.com/selamanse/rocketchat_ynh",
-    "license": "MIT",
+    "url": "https://github.com/realitygaps/rocketchat_ynh",
+    "license": "GNU GPLv3",
     "version": "0.57.2-rc.2",
     "maintainer": {
         "name": "selamanse",
