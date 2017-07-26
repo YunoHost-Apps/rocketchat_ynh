@@ -7,6 +7,7 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
+source ./_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -28,9 +29,6 @@ language=$YNH_APP_ARG_LANG
 app=$YNH_APP_INSTANCE_NAME
 serviceuser=rocketchat
 
-ROCKETCHAT_VERSION=0.57.2
-NODE_VERSION=4.7.1
-
 workdir=$(pwd)
 
 # find suitable port (default 3000)
@@ -48,16 +46,13 @@ final_path="/var/lib/$app"
  You should safely delete it before installing this app."
 
 # Save specific settings
+ynh_app_setting_set $app node_version $NODE_VERSION
+ynh_app_setting_set $app rocketchat_version $ROCKETCHAT_VERSION
 ynh_app_setting_set $app serviceuser $serviceuser
+ynh_app_setting_set $app port $port
 ynh_app_setting_set $app final_path $final_path
+ynh_app_setting_set $app path $path
 ynh_app_setting_set $app is_public $is_public
-
-function waitforservice {
-  isup=false; x=90; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
-  x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port${path:-/}/api/v1/info | \
-  grep -e "success.*true" >/dev/null 2>&1); then isup=true; break; fi; done && if $isup; \
-  then echo "service is up"; else ynh_die "$app could not be started"; fi
-}
 
 #Install dependencies
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 >/dev/null
@@ -74,6 +69,9 @@ sudo n $NODE_VERSION
 
 # Create destination
 sudo mkdir -p $final_path
+
+# Create user
+sudo useradd -d "$final_path" -M $serviceuser
 
 # Copy and set systemd configuration
 sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
@@ -97,17 +95,15 @@ sudo cp ../conf/nginx.conf "$nginx_conf"
 echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
 sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
 sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
+sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
+
+sudo chown -R $serviceuser: $final_path
 
 cd $final_path/programs/server/
 
 sudo npm install --production
 
 cd $workdir
-
-sudo useradd -d "$final_path" -M $serviceuser
-sudo chown -R $serviceuser: $final_path
-
-sudo chown -R $serviceuser: $final_path
 
 sudo systemctl reload nginx
 if [ "$is_public" = "Yes" ];

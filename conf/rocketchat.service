@@ -8,7 +8,7 @@ WorkingDirectory=/var/lib/rocketchat
 User=#USER#
 ExecStart=/usr/local/bin/node main.js
 Restart=always
-SyslogIdentifier=Rocket.Chat
+SyslogIdentifier=rocketchat
 Environment="BIND_IP=127.0.0.1"
 Environment="ROOT_URL=https://#ROOTURL##LOCATION#"
 Environment="PORT=#PORT#"

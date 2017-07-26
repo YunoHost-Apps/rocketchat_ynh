@@ -7,6 +7,7 @@ set -u
 # IMPORT GENERIC HELPERS
 #=================================================
 
+source ./_common.sh
 source /usr/share/yunohost/helpers
 
 app=$YNH_APP_INSTANCE_NAME
@@ -23,6 +24,11 @@ sudo rm -rf $final_path
 sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
 sudo rm -rf /var/log/$app
 sudo rm -f /etc/systemd/system/$app.service
+
+# remove database!!!
+sudo mongo rocketchat --eval "db.dropDatabase()"
+
+# remove user!!!
 sudo userdel -r $serviceuser
 
 sudo systemctl daemon-reload

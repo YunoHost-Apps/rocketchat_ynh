@@ -8,26 +8,29 @@ set -eu
 #=================================================
 
 source /usr/share/yunohost/helpers
-
-ROCKETCHAT_VERSION=0.57.2
-NODE_VERSION=4.7.1
+# Source common variables and helpers
+source ./_common.sh
 
 app=$YNH_APP_INSTANCE_NAME
-final_path="/var/www/$app"
+final_path=$(ynh_app_setting_get $app final_path)
+serviceuser=$(ynh_app_setting_get $app serviceuser)
+path=$(ynh_app_setting_get $app path)
+port=$(ynh_app_setting_get $app port)
 
-# remove old things
-sudo systemctl stop Rocketchat.service
-sudo m -rf $final_path
-sudo mkdir $final_path
+sudo systemctl stop rocketchat
 
-# install newer node version
-sudo n $NODE_VERSION
+sudo rm -rf $final_path
+sudo mkdir -p $final_path
 
-# download install newer rocketchat version
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
-sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
+# upgrade to the latest rocketchat
+sudo curl -s -L -o $final_path/rocket.chat-latest.gtar "https://rocket.chat/releases/latest/download"
+sudo tar -xzf $final_path/rocket.chat-latest.gtar -C $final_path --strip-components=1 bundle
+sudo rm $final_path/rocket.chat-latest.gtar
+
 cd $final_path/programs/server/
-sudo npm install
+sudo npm install --production
 
-sudo systemctl start Rocketchat.service
+sudo chown -R $serviceuser: $final_path
+
+sudo systemctl start rocketchat
+waitforservice
