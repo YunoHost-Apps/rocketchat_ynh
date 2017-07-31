@@ -1,6 +1,7 @@
 # common.sh
 
 ROCKETCHAT_VERSION=0.57.2
+ROCKETCHAT_SHASUM=ca43b8d3487d0c8cd82dae5a4f66ef89c9ad7c202c67ff79096bbad696da6a07
 NODE_VERSION=4.7.1
 
 waitforservice() {
