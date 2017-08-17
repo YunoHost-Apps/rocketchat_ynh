@@ -13,7 +13,6 @@ source /usr/share/yunohost/helpers
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 final_path=$(ynh_app_setting_get $app final_path)
-serviceuser=$(ynh_app_setting_get $app serviceuser)
 
 sudo systemctl stop $app.service
 
@@ -27,9 +26,6 @@ sudo rm -f /etc/systemd/system/$app.service
 
 # remove database!!!
 sudo mongo rocketchat --eval "db.dropDatabase()"
-
-# remove user!!!
-sudo userdel -r $serviceuser
 
 sudo systemctl daemon-reload
 sudo systemctl reload nginx

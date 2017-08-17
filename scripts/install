@@ -56,7 +56,7 @@ ynh_app_setting_set $app is_public $is_public
 
 #Install dependencies
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 >/dev/null
-echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org gzip curl graphicsmagick npm
 
@@ -71,7 +71,7 @@ sudo n $NODE_VERSION
 sudo mkdir -p $final_path
 
 # Create user
-sudo useradd -d "$final_path" -M $serviceuser
+id -u $serviceuser || sudo useradd -d "$final_path" -M $serviceuser
 
 # Copy and set systemd configuration
 sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
