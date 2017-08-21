@@ -39,7 +39,7 @@ sudo yunohost app checkurl "${domain}${path}" -a "$app" || ynh_die
 sudo mkdir -p $final_path
 
 # Create user
-sudo useradd -d "$final_path" -M $serviceuser
+id -u $serviceuser || sudo useradd -d "$final_path" -M $serviceuser
 
 #=================================================
 # STANDARD RESTORATION STEPS
