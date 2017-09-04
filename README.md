@@ -22,6 +22,6 @@ Backup stores:
 
 ## Links
 
- * Report a bug: https://dev.yunohost.org/projects/apps/issues
+ * Report a bug: [Issues](/../../issues)
  * Rocketchat website: https://rocket.chat/
  * YunoHost website: https://yunohost.org/
