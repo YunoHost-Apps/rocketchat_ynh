@@ -4,7 +4,12 @@ set -eu
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-
+if [ ! -e _common ]; then
+	# Fetch helpers file if not in current directory
+	sudo cp ../settings/scripts/_common.sh ./_common.sh
+	sudo chmod a+rx _common
+fi
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -63,6 +68,12 @@ sudo systemctl enable rocketchat
 
 sudo tar -xzf ./rocket.chat.gtar -C $final_path
 sudo chown -R $serviceuser: $final_path
+
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+installdeps
 
 #=================================================
 # RESTORE THE MONGODB
