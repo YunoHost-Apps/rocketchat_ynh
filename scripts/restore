@@ -4,10 +4,10 @@ set -eu
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-if [ ! -e _common ]; then
+if [ ! -e _common.sh ]; then
 	# Fetch helpers file if not in current directory
 	sudo cp ../settings/scripts/_common.sh ./_common.sh
-	sudo chmod a+rx _common
+	sudo chmod a+rx _common.sh
 fi
 source _common.sh
 source /usr/share/yunohost/helpers
