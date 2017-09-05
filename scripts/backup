@@ -6,6 +6,7 @@ set -eu
 #=================================================
 
 source /usr/share/yunohost/helpers
+ynh_abort_if_errors
 
 #=================================================
 # LOAD SETTINGS

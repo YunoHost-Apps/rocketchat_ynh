@@ -7,9 +7,10 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source /usr/share/yunohost/helpers
-# Source common variables and helpers
 source ./_common.sh
+source /usr/share/yunohost/helpers
+
+ynh_abort_if_errors
 
 app=$YNH_APP_INSTANCE_NAME
 final_path=$(ynh_app_setting_get $app final_path)
