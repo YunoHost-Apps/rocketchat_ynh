@@ -7,8 +7,8 @@ set -u
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source ./_common.sh
 source /usr/share/yunohost/helpers
+source ./_common.sh
 
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)

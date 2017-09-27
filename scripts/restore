@@ -9,8 +9,8 @@ if [ ! -e _common.sh ]; then
 	sudo cp ../settings/scripts/_common.sh ./_common.sh
 	sudo chmod a+rx _common.sh
 fi
-source _common.sh
 source /usr/share/yunohost/helpers
+source _common.sh
 
 #=================================================
 # GENERIC START
@@ -31,6 +31,7 @@ domain=$(ynh_app_setting_get $app domain)
 path=$(ynh_app_setting_get $app path)
 final_path=$(ynh_app_setting_get $app final_path)
 serviceuser=$(ynh_app_setting_get $app serviceuser)
+port=$(ynh_app_setting_get $app port)
 
 # Check domain/path availability
 sudo yunohost app checkurl "${domain}${path}" -a "$app" || ynh_die
@@ -87,4 +88,3 @@ sudo mongorestore ./dump
 
 sudo systemctl start rocketchat
 waitforservice
-
