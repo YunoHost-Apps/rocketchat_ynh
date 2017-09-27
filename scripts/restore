@@ -86,3 +86,5 @@ sudo mongorestore ./dump
 #=================================================
 
 sudo systemctl start rocketchat
+waitforservice
+
