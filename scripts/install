@@ -7,8 +7,8 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source ./_common.sh
 source /usr/share/yunohost/helpers
+source ./_common.sh
 
 #=================================================
 # MANAGE SCRIPT FAILURE
