@@ -12,11 +12,18 @@ waitforservice() {
 }
 
 installdeps(){
-  #Install dependencies
-  sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-  echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-  sudo apt-get update
-  sudo apt-get install -y mongodb-org gzip curl graphicsmagick npm
+
+  if [ $(dpkg --print-architecture) == "armhf" ]; then
+    #Install mongodb for debian armhf
+    sudo apt-get update
+    sudo apt-get install -y mongodb-server
+  else
+    #Install mongodb for debian x86/x64
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+    sudo apt-get update
+    sudo apt-get install -y mongodb-org
+  fi
 
   # start mongodb service
   sudo systemctl enable mongod.service
@@ -24,6 +31,9 @@ installdeps(){
 
   # add mongodb to services
   sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
+
+  #Install other dependencies
+  sudo apt-get install -y gzip curl graphicsmagick npm
 
   # Meteor needs at least this version of node to work.
   sudo npm install -g n
