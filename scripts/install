@@ -82,15 +82,18 @@ sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
 sudo cp ../conf/nginx.conf "$nginx_conf"
 
 # download and extract rocketchat
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
-SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
+tarball=rocket.chat-$ROCKETCHAT_VERSION.gtar
+tarpath=$final_path/$tarball
+url=https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download
+echo "Downloading $tarball from $url"
+sudo curl -s -L -o $tarpath "$url"
+SHA_DOWNLOAD=$(sha256sum $tarpath | grep -o "^[a-f0-9]*")
 if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
   ynh_die "The sha256sum does not match the configured one"
 fi
 
-sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
-sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
+sudo tar -xzf $tarpath -C $final_path --strip-components=1 bundle
+sudo rm $tarpath
 
 sudo chown -R $serviceuser: $final_path
 
@@ -103,7 +106,7 @@ cd $workdir
 sudo systemctl reload nginx
 if [ "$is_public" = "Yes" ];
 then
-	ynh_app_setting_set "$app" skipped_uris "/"
+  ynh_app_setting_set "$app" skipped_uris "/"
 fi
 
 sudo systemctl start rocketchat.service
