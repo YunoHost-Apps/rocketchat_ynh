@@ -20,11 +20,15 @@ waitforservice() {
 }
 
 installdeps(){
+  mongo=mongod
 
   if [ $(dpkg --print-architecture) == "armhf" ]; then
     #Install mongodb for debian armhf
     sudo apt-get update
     sudo apt-get install -y mongodb-server
+
+    # armhf has the old version of mongod, called mongodb
+    mongo=mongodb
   else
     #Install mongodb for debian x86/x64
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
@@ -34,11 +38,11 @@ installdeps(){
   fi
 
   # start mongodb service
-  sudo systemctl enable mongodb.service
-  sudo systemctl start mongodb.service
+  sudo systemctl enable ${mongo}.service
+  sudo systemctl start ${mongo}.service
 
   # add mongodb to services
-  sudo yunohost service add mongodb -l /var/log/mongodb/mongod.log
+  sudo yunohost service add ${mongo} -l /var/log/${mongo}/${mongo}.log
 
   #Install other dependencies
   sudo apt-get install -y gzip curl graphicsmagick npm
