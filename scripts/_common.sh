@@ -26,11 +26,11 @@ installdeps(){
   fi
 
   # start mongodb service
-  sudo systemctl enable mongod.service
-  sudo systemctl start mongod.service
+  sudo systemctl enable mongodb.service
+  sudo systemctl start mongodb.service
 
   # add mongodb to services
-  sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
+  sudo yunohost service add mongodb -l /var/log/mongodb/mongod.log
 
   #Install other dependencies
   sudo apt-get install -y gzip curl graphicsmagick npm
