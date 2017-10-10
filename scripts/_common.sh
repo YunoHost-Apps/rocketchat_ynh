@@ -23,11 +23,18 @@ installdeps(){
   mongo=mongod
 
   if [ $(dpkg --print-architecture) == "armhf" ]; then
-    #Install mongodb for debian armhf
+    # We instal this for the user and service files
     sudo apt-get update
     sudo apt-get install -y mongodb-server
 
-    # armhf has the old version of mongod, called mongodb
+    # Rocket chat requires mongodb > 2.4, which raspbian does not provide
+    tarball=mongodb-linux-i686-v3.2-latest.tgz
+    wget http://downloads.mongodb.org/linux/$tarball
+    tar xf tarball
+    sudo cp ${tarball%%.tgz}*/bin/* /usr/local/bin
+
+    sudo sed -i -e's/bin/local\/bin/' /lib/systemd/system/mongodb.service
+
     mongo=mongodb
   else
     #Install mongodb for debian x86/x64
@@ -42,7 +49,7 @@ installdeps(){
   sudo systemctl start ${mongo}.service
 
   # add mongodb to services
-  sudo yunohost service add ${mongo} -l /var/log/${mongo}/${mongo}.log
+  sudo yunohost service add ${mongo} -l /var/log/mongodb/${mongo}.log
 
   #Install other dependencies
   sudo apt-get install -y gzip curl graphicsmagick npm
