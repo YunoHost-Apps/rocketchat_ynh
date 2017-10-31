@@ -2,7 +2,7 @@
 
 ROCKETCHAT_VERSION=0.58.4
 ROCKETCHAT_SHASUM=ed53712b37571b959b5c8c8947d6335c21fced316f2b3174bfe027fa25700c44
-NODE_VERSION=4.7.1
+NODE_VERSION=4.8.4
 
 waitforservice() {
   isup=false; x=90; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
