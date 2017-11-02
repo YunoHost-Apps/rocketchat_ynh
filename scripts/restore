@@ -34,7 +34,13 @@ serviceuser=$(ynh_app_setting_get $app serviceuser)
 port=$(ynh_app_setting_get $app port)
 
 # Check domain/path availability
-sudo yunohost app checkurl "${domain}${path}" -a "$app" || ynh_die
+ynh_webpath_available $domain $path
+if [[ ! $? -eq 0 ]]; then
+  ynh_die "domain not available"
+fi
+
+# Register/book a web path for an app
+ynh_webpath_register $app $domain $path
 
 # Check destination directory
 [[ -d $final_path ]] && ynh_die \
