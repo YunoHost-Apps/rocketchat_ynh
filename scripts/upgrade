@@ -24,7 +24,7 @@ sudo rm -rf $final_path
 sudo mkdir -p $final_path
 
 # upgrade to the latest rocketchat
-sudo curl -s -L -o $final_path/rocket.chat-latest.gtar "https://rocket.chat/releases/latest/download"
+sudo curl -s -L -o $final_path/rocket.chat-latest.gtar "https://download.rocket.chat/stable"
 sudo tar -xzf $final_path/rocket.chat-latest.gtar -C $final_path --strip-components=1 bundle
 sudo rm $final_path/rocket.chat-latest.gtar
 

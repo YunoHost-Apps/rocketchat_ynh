@@ -35,10 +35,13 @@ workdir=$(pwd)
 port=$(ynh_find_port 3000)
 
 # Check domain/path availability
-sudo yunohost app checkurl $domain -a $app
+ynh_webpath_available $domain $path
 if [[ ! $? -eq 0 ]]; then
   ynh_die "domain not available"
 fi
+
+# Register/book a web path for an app
+ynh_webpath_register $app $domain $path
 
 final_path="/var/lib/$app"
 [[ -d $final_path ]] && ynh_die \
@@ -82,8 +85,8 @@ sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
 sudo cp ../conf/nginx.conf "$nginx_conf"
 
 # download and extract rocketchat
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://rocket.chat/releases/${ROCKETCHAT_VERSION}/download"
+echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz."
+sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz"
 SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
 if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
   ynh_die "The sha256sum does not match the configured one"
