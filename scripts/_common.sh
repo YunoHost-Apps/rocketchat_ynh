@@ -6,7 +6,7 @@ NODE_VERSION=4.7.1
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
-    python -c "import sys, json; print json.load(sys.stdin)['success']" | \
+    python -c "import sys, json; print json.load(sys.stdin)['success']" >/dev/null 2>&1 | \
     grep "True" >/dev/null 2>&1
 }
 
