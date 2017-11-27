@@ -4,11 +4,30 @@ ROCKETCHAT_VERSION=0.58.4
 ROCKETCHAT_SHASUM=ed53712b37571b959b5c8c8947d6335c21fced316f2b3174bfe027fa25700c44
 NODE_VERSION=4.8.4
 
+checkcmd() {
+  curl -m 1 -s localhost:$port$path/api/v1/info | \
+    python -c "import sys, json; print json.load(sys.stdin)['success']" 2>/dev/null | \
+    grep "True" >/dev/null 2>&1
+}
+
 waitforservice() {
-  isup=false; x=90; while [ $x -gt 0 ];do echo "Waiting approx. $x seconds..."; \
-  x=$(( $x - 1 )); sleep 1; if $(curl -m 1 -s localhost:$port${path:-/}/api/v1/info | \
-  grep -e "success.*true" >/dev/null 2>&1); then isup=true; break; fi; done && if $isup; \
-  then echo "service is up"; else {ynh_die "$app could not be started"; fi
+  isup=false
+  x=90
+  while [ $x -gt 0 ]; do
+    echo "Waiting approx. $x seconds..."
+    x=$(( $x - 1 ))
+    sleep 1
+
+    if checkcmd; then
+      isup=true; break;
+    fi;
+  done
+
+  if $isup; then
+    echo "service is up"
+  else
+    ynh_die "$app could not be started"
+  fi
 }
 
 installdeps(){

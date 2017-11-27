@@ -23,10 +23,18 @@ sudo systemctl stop rocketchat
 sudo rm -rf $final_path
 sudo mkdir -p $final_path
 
-# upgrade to the latest rocketchat
-sudo curl -s -L -o $final_path/rocket.chat-latest.gtar "https://download.rocket.chat/stable"
-sudo tar -xzf $final_path/rocket.chat-latest.gtar -C $final_path --strip-components=1 bundle
-sudo rm $final_path/rocket.chat-latest.gtar
+# download and extract rocketchat
+echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz."
+sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz"
+SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
+if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
+  ynh_die "The sha256sum does not match the configured one"
+fi
+
+sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
+sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
+
+sudo chown -R $serviceuser: $final_path
 
 cd $final_path/programs/server/
 sudo npm install --production
