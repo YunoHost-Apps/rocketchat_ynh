@@ -39,9 +39,6 @@ if [[ ! $? -eq 0 ]]; then
   ynh_die "domain not available"
 fi
 
-# Register/book a web path for an app
-ynh_webpath_register $app $domain $path
-
 # Check destination directory
 [[ -d $final_path ]] && ynh_die \
 "The destination directory '$final_path' already exists.\
