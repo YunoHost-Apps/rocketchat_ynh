@@ -2,7 +2,7 @@
 
 ROCKETCHAT_VERSION=0.58.4
 ROCKETCHAT_SHASUM=ed53712b37571b959b5c8c8947d6335c21fced316f2b3174bfe027fa25700c44
-NODE_VERSION=4.7.1
+NODE_VERSION=4.8.4
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
