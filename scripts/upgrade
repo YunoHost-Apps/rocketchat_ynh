@@ -23,6 +23,9 @@ sudo systemctl stop rocketchat
 sudo rm -rf $final_path
 sudo mkdir -p $final_path
 
+# update to latest required node setup
+installnode
+
 # download and extract rocketchat
 echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz."
 sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz"

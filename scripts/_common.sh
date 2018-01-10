@@ -1,8 +1,8 @@
 # common.sh
 
-ROCKETCHAT_VERSION=0.58.4
-ROCKETCHAT_SHASUM=ed53712b37571b959b5c8c8947d6335c21fced316f2b3174bfe027fa25700c44
-NODE_VERSION=4.8.4
+ROCKETCHAT_VERSION=0.60.4
+ROCKETCHAT_SHASUM=6eba8f765fcbc107eccacdccb5b20fa57a9970f3743fb23de43e219a09845155
+NODE_VERSION=8.9.4
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
@@ -30,6 +30,14 @@ waitforservice() {
   fi
 }
 
+installnode(){
+
+  sudo apt-get install -y npm
+  # Meteor needs at least this version of node to work.
+  sudo npm install -g n
+  sudo n $NODE_VERSION
+}
+
 installdeps(){
 
   if [ $(dpkg --print-architecture) == "armhf" ]; then
@@ -52,9 +60,7 @@ installdeps(){
   sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
 
   #Install other dependencies
-  sudo apt-get install -y gzip curl graphicsmagick npm
+  sudo apt-get install -y gzip curl graphicsmagick
 
-  # Meteor needs at least this version of node to work.
-  sudo npm install -g n
-  sudo n $NODE_VERSION
+  installnode
 }
