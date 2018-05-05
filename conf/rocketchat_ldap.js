@@ -1,4 +1,4 @@
-use rocketchat
+use #DBNAME#
 
 
 db.rocketchat_settings.update(
