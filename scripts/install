@@ -34,6 +34,16 @@ workdir=$(pwd)
 # find suitable port (default 3000)
 port=$(ynh_find_port 3000)
 
+# if path do not begin with / add a / at the begining
+if [ "${path:0:1}" != "/" ]; then
+       path="/$path"
+fi
+# if path do not end with / add a / at the end
+if [ "${path:${#path}-1}" != "/" ] && [ ${#path} -gt 1 ]; then
+       path="$path/"
+fi
+
+
 # Check domain/path availability
 ynh_webpath_available $domain $path
 if [[ ! $? -eq 0 ]]; then
