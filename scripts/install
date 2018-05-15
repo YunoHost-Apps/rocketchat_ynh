@@ -27,12 +27,23 @@ is_public=$YNH_APP_ARG_IS_PUBLIC
 language=$YNH_APP_ARG_LANG
 
 app=$YNH_APP_INSTANCE_NAME
+dbname=$app
 serviceuser=rocketchat
 
 workdir=$(pwd)
 
 # find suitable port (default 3000)
 port=$(ynh_find_port 3000)
+
+# if path do not begin with / add a / at the begining
+if [ "${path:0:1}" != "/" ]; then
+       path="/$path"
+fi
+# if path do not end with / add a / at the end
+if [ "${path:${#path}-1}" != "/" ] && [ ${#path} -gt 1 ]; then
+       path="$path/"
+fi
+
 
 # Check domain/path availability
 ynh_webpath_available $domain $path
@@ -71,7 +82,9 @@ sed -i "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
 sed -i "s@#PORT#@$port@g" ../conf/rocketchat.service
 sed -i "s@#USER#@$serviceuser@g" ../conf/rocketchat.service
-sudo cp ../conf/rocketchat.service /etc/systemd/system/
+sed -i "s@#DESTDIR#@$final_path@g" ../conf/rocketchat.service
+sed -i "s@#DBNAME#@$dbname@g" ../conf/rocketchat.service
+sudo cp ../conf/rocketchat.service /etc/systemd/system/$app.service
 sudo systemctl daemon-reload
 
 # Copy and set nginx configuration
@@ -80,7 +93,9 @@ sed -i "s@#APP#@$app@g"          ../conf/nginx.conf
 sed -i "s@#PATH#@$path@g"        ../conf/nginx.conf
 sed -i "s@#PORT#@$port@g"        ../conf/nginx.conf
 sed -i "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
-sed -i "s@#DESTDIR#@$final_path@g"  ../conf/nginx.conf
+
+#set db name into ldap config
+sed -i "s@#DBNAME#@$dbname@g" ../conf/rocketchat_ldap.js
 
 sudo cp ../conf/nginx.conf "$nginx_conf"
 
@@ -109,18 +124,18 @@ then
 	ynh_app_setting_set "$app" skipped_uris "/"
 fi
 
-sudo systemctl start rocketchat.service
-sudo systemctl enable rocketchat.service
+sudo systemctl start $app.service
+sudo systemctl enable $app.service
 
 # add rocketchat to services
-sudo yunohost service add rocketchat
+sudo yunohost service add $app
 
 # wait for rocketchat to populate db and start
 waitforservice
 
 sudo mongo < ../conf/rocketchat_ldap.js
 
-sudo systemctl restart rocketchat.service
+sudo systemctl restart $app.service
 
 waitforservice
 
