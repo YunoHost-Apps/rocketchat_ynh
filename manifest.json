@@ -13,7 +13,7 @@
         "email": "selamanse@scheinfrei.info",
         "url": "https://github.com/selamanse"
     },
-    "multi_instance": true,
+    "multi_instance": false,
     "services": [
         "nginx"
     ],
