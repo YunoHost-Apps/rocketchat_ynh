@@ -33,7 +33,7 @@ waitforservice() {
 
 installnode(){
 
-  curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  sudo apt-get install -y nodejs
   # Meteor needs at least this version of node to work.
   sudo npm install -g n
   sudo n $NODE_VERSION
