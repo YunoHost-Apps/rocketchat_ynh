@@ -33,7 +33,11 @@ waitforservice() {
 
 installnode(){
 
-  sudo apt-get install -y nodejs
+  if [ $DEBIAN_ISSUE ==  "stretch"]; then
+    sudo apt-get install -y nodejs
+  else
+    sudo apt-get install -y npm
+  fi
   # Meteor needs at least this version of node to work.
   sudo npm install -g n
   sudo n $NODE_VERSION
