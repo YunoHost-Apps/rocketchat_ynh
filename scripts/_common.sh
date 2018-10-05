@@ -3,7 +3,7 @@
 ROCKETCHAT_VERSION=0.65.1
 ROCKETCHAT_SHASUM=6484c19ad922520e8ca45b2d09eff3be33f227dd74f737b67c437fb3e6c6fc4b
 NODE_VERSION=8.9.4
-DEBIAN_ISSUE=$(grep 8 /etc/issue >/dev/null && echo jessie || echo stretch)
+DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
