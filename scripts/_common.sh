@@ -33,7 +33,7 @@ waitforservice() {
 
 installnode(){
 
-  if [ $DEBIAN_ISSUE == "stretch"]; then
+  if [ $DEBIAN_ISSUE == "stretch" ]; then
     sudo apt-get install -y nodejs
   else
     sudo apt-get install -y npm
