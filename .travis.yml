@@ -15,18 +15,17 @@ install:
   - echo "Host *" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
   - echo "   StrictHostKeyChecking=no" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
   - echo "   UserKnownHostsFile=/dev/null" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
-  - curl -L https://github.com/digitalocean/doctl/releases/download/v1.8.0/doctl-1.8.0-linux-amd64.tar.gz  | tar xz
+  - curl -L https://github.com/digitalocean/doctl/releases/download/v1.11.0/doctl-1.11.0-linux-amd64.tar.gz  | tar xz
   - echo "creating droplet with name ${DROPLET_NAME}"
   - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute ssh-key create ${DROPLET_NAME} --no-header --public-key "$(cat ~/.ssh/id_rsa.pub)"
   - sleep 2
-  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --region fra1 --image debian-8-x64 --size 8gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}')
+  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --wait --region fra1 --image debian-8-x64 --size 8gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}')
 
 after_script:
   - ${DOCTL} compute droplet delete ${DROPLET_NAME} -f
   - ${DOCTL} compute ssh-key delete $(${DOCTL} compute ssh-key list | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') -f
 
 script:
-  - sleep 60 #$doctl vm needs a few seconds to boot...60 proved to be safe.
   - $dropletsshcmd "apt-get update -y"
   - $dropletsshcmd "apt-get install git -y"
   - $dropletsshcmd "git clone https://github.com/YunoHost/package_check"
