@@ -1,8 +1,8 @@
 # common.sh
 
-ROCKETCHAT_VERSION=0.65.1
-ROCKETCHAT_SHASUM=6484c19ad922520e8ca45b2d09eff3be33f227dd74f737b67c437fb3e6c6fc4b
-NODE_VERSION=8.11.1
+ROCKETCHAT_VERSION=0.70.4
+ROCKETCHAT_SHASUM=62be1d3be0c12f37c69b24c7b898030a43550afcb9d4fac24c8f301b939b7dc1
+NODE_VERSION=8.11.3
 DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
 
 checkcmd() {
