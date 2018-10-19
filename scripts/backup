@@ -23,11 +23,7 @@ domain=$(ynh_app_setting_get $app domain)
 # BACKUP THE APP MAIN DIR
 #=================================================
 
-workdir=$(pwd)
-cd $final_path
-tar -czf $workdir/rocket.chat.gtar .
-cd $workdir
-ynh_backup ./rocket.chat.gtar
+ynh_backup "$final_path"
 
 #=================================================
 # BACKUP THE CONFIGURATION
