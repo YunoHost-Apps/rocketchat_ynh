@@ -25,11 +25,9 @@ domain=$(ynh_app_setting_get $app domain)
 
 workdir=$(pwd)
 cd $final_path
-backupfile="rocket.chat.gtar"
-touch $backupfile
-tar --exclude=$backupfile -czvf $workdir/$backupfile .
+tar -czf $workdir/rocket.chat.gtar .
 cd $workdir
-ynh_backup ./$backupfile
+ynh_backup ./rocket.chat.gtar
 
 #=================================================
 # BACKUP THE CONFIGURATION

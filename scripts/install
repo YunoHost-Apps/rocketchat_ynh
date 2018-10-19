@@ -84,6 +84,9 @@ sed -i "s@#PORT#@$port@g" ../conf/rocketchat.service
 sed -i "s@#USER#@$serviceuser@g" ../conf/rocketchat.service
 sed -i "s@#DESTDIR#@$final_path@g" ../conf/rocketchat.service
 sed -i "s@#DBNAME#@$dbname@g" ../conf/rocketchat.service
+# absolute node path needed
+NODE_BIN=$(which node)
+sed -i "s@#NODE#@$NODE_BIN@g" ../conf/rocketchat.service
 sudo cp ../conf/rocketchat.service /etc/systemd/system/$app.service
 sudo systemctl daemon-reload
 

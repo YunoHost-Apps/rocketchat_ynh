@@ -1,9 +1,9 @@
 # common.sh
 
-ROCKETCHAT_VERSION=0.65.1
-ROCKETCHAT_SHASUM=6484c19ad922520e8ca45b2d09eff3be33f227dd74f737b67c437fb3e6c6fc4b
-NODE_VERSION=8.9.4
-DEBIAN_ISSUE=$(grep 8 /etc/issue >/dev/null && echo jessie || echo stretch)
+ROCKETCHAT_VERSION=0.70.4
+ROCKETCHAT_SHASUM=62be1d3be0c12f37c69b24c7b898030a43550afcb9d4fac24c8f301b939b7dc1
+NODE_VERSION=8.11.3
+DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
@@ -32,11 +32,18 @@ waitforservice() {
 }
 
 installnode(){
-
-  sudo apt-get install -y nodejs
-  # Meteor needs at least this version of node to work.
-  sudo npm install -g n
-  sudo n $NODE_VERSION
+  if [ $DEBIAN_ISSUE == "stretch" ]; then
+    sudo curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+    sudo bash nodesource_setup.sh
+    sudo apt-get install -y nodejs
+  else
+    sudo apt-get install -y npm
+    # Meteor needs at least this version of node to work.
+    sudo npm install -g n
+    sudo n $NODE_VERSION
+  fi
+  echo "node version is now: "
+  node --version
 }
 
 installdeps(){
