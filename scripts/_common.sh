@@ -2,7 +2,8 @@
 
 ROCKETCHAT_VERSION=0.65.1
 ROCKETCHAT_SHASUM=6484c19ad922520e8ca45b2d09eff3be33f227dd74f737b67c437fb3e6c6fc4b
-NODE_VERSION=8.9.4
+NODE_VERSION=8.11.1
+DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
 
 checkcmd() {
   curl -m 1 -s localhost:$port$path/api/v1/info | \
@@ -31,11 +32,18 @@ waitforservice() {
 }
 
 installnode(){
-
-  sudo apt-get install -y npm
-  # Meteor needs at least this version of node to work.
-  sudo npm install -g n
-  sudo n $NODE_VERSION
+  if [ $DEBIAN_ISSUE == "stretch" ]; then
+    sudo curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+    sudo bash nodesource_setup.sh
+    sudo apt-get install -y nodejs
+  else
+    sudo apt-get install -y npm
+    # Meteor needs at least this version of node to work.
+    sudo npm install -g n
+    sudo n $NODE_VERSION
+  fi
+  echo "node version is now: "
+  node --version
 }
 
 installdeps(){
@@ -46,8 +54,8 @@ installdeps(){
     sudo apt-get install -y mongodb-server
   else
     #Install mongodb for debian x86/x64
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-    echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+    echo "deb http://repo.mongodb.org/apt/debian ${DEBIAN_ISSUE}/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     sudo apt-get update
     sudo apt-get install -y mongodb-org
   fi
