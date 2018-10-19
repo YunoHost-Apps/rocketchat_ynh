@@ -1,4 +1,0 @@
-DOMAIN=domain.local
-YUNO_PWD=admin
-LXC_NAME=pchecker_lxc
-LXC_BRIDGE=lxc-pchecker
