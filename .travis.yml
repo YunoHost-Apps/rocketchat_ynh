@@ -26,6 +26,7 @@ after_script:
   - ${DOCTL} compute ssh-key delete $(${DOCTL} compute ssh-key list | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') -f
 
 script:
+  - sleep 2
   - $dropletsshcmd "apt-get update -y"
   - $dropletsshcmd "apt-get install git -y"
   - $dropletsshcmd "git clone https://github.com/YunoHost/package_check"
