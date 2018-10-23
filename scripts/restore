@@ -53,24 +53,25 @@ id -u $serviceuser || sudo useradd -d "$final_path" -M $serviceuser
 #=================================================
 # STANDARD RESTORATION STEPS
 #=================================================
-# RESTORE THE NGINX CONFIGURATION
+
+ynh_restore
+
+#=================================================
+# RELOAD THE NGINX CONFIGURATION
 #=================================================
 
-sudo cp -a "conf/nginx" "/etc/nginx/conf.d/$domain.d/$app.conf"
 sudo systemctl reload nginx
 
 #=================================================
-# RESTORE THE SYSTEMD CONFIGURATION
+# RELOAD AND ENABLE THE SYSTEMD CONFIGURATION
 #=================================================
-sudo cp -a "conf/service" "/etc/systemd/system/rocketchat.service"
 sudo systemctl daemon-reload
 sudo systemctl enable rocketchat
 
 #=================================================
-# RESTORE THE APP MAIN DIR
+# RESTORE PERMISSIONS IN THE APP MAIN DIR
 #=================================================
 
-sudo tar -xzf ./rocket.chat.gtar -C $final_path
 sudo chown -R $serviceuser: $final_path
 
 #=================================================
