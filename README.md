@@ -2,6 +2,7 @@
 
 Rocketchat for yunohost
 
+[![Integration level](https://dash.yunohost.org/integration/rocketchat.svg)](https://ci-apps.yunohost.org/jenkins/job/rocketchat%20%28Community%29/lastBuild/consoleFull)  
 [![Install RocketChat with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=rocketchat)
 
 ## Install with
