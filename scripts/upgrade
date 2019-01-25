@@ -27,8 +27,8 @@ sudo mkdir -p $final_path
 installnode
 
 # download and extract rocketchat
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://s3.amazonaws.com/download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://s3.amazonaws.com/download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz"
+echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from ${ROCKETCHAT_DOWNLOAD_URI}."
+sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "${ROCKETCHAT_DOWNLOAD_URI}"
 SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
 if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
   ynh_die "The sha256sum does not match the configured one"

@@ -1,8 +1,9 @@
 # common.sh
 
-ROCKETCHAT_VERSION=0.70.4
-ROCKETCHAT_SHASUM=62be1d3be0c12f37c69b24c7b898030a43550afcb9d4fac24c8f301b939b7dc1
-NODE_VERSION=8.11.3
+ROCKETCHAT_VERSION=0.73.2
+ROCKETCHAT_SHASUM=3dc3eb11f383f7b72b0f23fedb305b6a566fa536a1e5087a4398255deeb864d8
+ROCKETCHAT_DOWNLOAD_URI=https://releases.rocket.chat/${ROCKETCHAT_VERSION}/download
+NODE_VERSION=8.11.4
 DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
 
 checkcmd() {
@@ -38,8 +39,8 @@ installnode(){
     sudo apt-get install -y nodejs
   else
     sudo apt-get install -y npm
-    # Meteor needs at least this version of node to work.
-    sudo npm install -g n
+    # Using npm install inherits and n, and the node version required by Rocket.Chat:
+    sudo npm install -g inherits n
     sudo n $NODE_VERSION
   fi
   echo "node version is now: "
@@ -52,23 +53,30 @@ installdeps(){
     #Install mongodb for debian armhf
     sudo apt-get update
     sudo apt-get install -y mongodb-server
+
+    # start mongodb service
+    sudo systemctl enable mongodb.service
+    sudo systemctl start mongodb.service
+
+    # add mongodb to services
+    sudo yunohost service add mongodb -l /var/log/mongodb/mongodb.log
   else
     #Install mongodb for debian x86/x64
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+    sudo apt-get install dirmngr && sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
     echo "deb http://repo.mongodb.org/apt/debian ${DEBIAN_ISSUE}/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
     sudo apt-get update
     sudo apt-get install -y mongodb-org
+
+    # start mongodb service
+    sudo systemctl enable mongod.service
+    sudo systemctl start mongod.service
+
+    # add mongodb to services
+    sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
   fi
 
-  # start mongodb service
-  sudo systemctl enable mongod.service
-  sudo systemctl start mongod.service
-
-  # add mongodb to services
-  sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
-
   #Install other dependencies
-  sudo apt-get install -y gzip curl graphicsmagick
+  sudo apt-get install -y build-essential gzip curl graphicsmagick
 
   installnode
 }
