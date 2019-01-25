@@ -1,8 +1,0 @@
-iface=eth0
-dns=8.8.8.8
-dnsforce=1
-PLAGE_IP=10.1.4
-DOMAIN=domain.local
-YUNO_PWD=admin
-LXC_NAME=pchecker_lxc
-LXC_BRIDGE=lxc-pchecker

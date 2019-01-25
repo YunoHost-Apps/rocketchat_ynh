@@ -1,41 +1,7 @@
-dist: trusty
-sudo: false
+language: node_js
 
-language: python
-
-branches:
-  only:
-  - integration-test
-
-env:
-  global:
-    - secure: "hqvINLgdxfGqZju03GgBWzZ1pdJkoIzx78FULktXkYGUXYRDSMh/tONjtKDMKJvK9rFflkZNIrTZ5j2ueipd73iXl2pM0+jXl3Z64rBa+XK6Kq78p/qP4XdpFoMmOVvs6YIumXHmtxCfcT6EtvHrDkkoNF7oKpuISObKEMDONOLyuEcO6ZjexzmkUpioxjDTkvaE5+jcXflqPLp5JR9A7E75Tofct/y7i2lWOfR45FCY7DIpuE82Hkic41ZhHWuMguedw7L+cIow449ynZQpGSGjpsOciu9OtneJB7LZakVZsOYb3e34+i0TdjqiLYwQa46vqLW4TEK5MLXQI5FF2TF3pvJXiIrFr/gAhoP5YMrbSGHkOYZtAcYVUoMX38lQctUU9NzaELkayo9RqFodXboBs2hniqFbxHuhYYC9tPsZNyTTf/+OcZXS9Ic1iE4HR2Ok4xOg6QF8iOTXW6nPt2Ct0f5oWAdGlyjmxYFVGs3l44g9HV84RkeHYP/BS43C3blAd0SIjtab/4TSgFcmSfv+M/5yl3ZsidBc9yTMvgOvZXPIhOFJq+XLTL4QB0tN1Sdy1wofs7wnRFjbGrw4kOTBrcCkBioqMiMZzTtmeVejjMr61cSmLG7lzPoYCvc5vpS3xAca5XiOECb50oCwkxxoXDoqdEGLz3RQQfnJWRk="
-    - DROPLET_NAME="ynh26-pkgchk-${TRAVIS_BUILD_ID}"
-    - dropletsshcmd="./doctl compute ssh ${DROPLET_NAME} --ssh-command"
-    - DOCTL=./doctl
-
-install:
-  - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N "" # to disable Warning: Identity file...not accessible
-  - echo "Host *" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
-  - echo "   StrictHostKeyChecking=no" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
-  - echo "   UserKnownHostsFile=/dev/null" | tee -a ~/.ssh/config # to disable authenticity of host input y/n
-  - curl -L https://github.com/digitalocean/doctl/releases/download/v1.11.0/doctl-1.11.0-linux-amd64.tar.gz  | tar xz
-  - echo "creating droplet with name ${DROPLET_NAME}"
-  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute ssh-key create ${DROPLET_NAME} --no-header --public-key "$(cat ~/.ssh/id_rsa.pub)"
-  - sleep 2
-  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --wait --region fra1 --image debian-9-x64 --size 4gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}')
+before_install:
+  - git clone https://github.com/YunoHost/package_linter /tmp/package_linter
 
 script:
-  - sleep 15
-  - $dropletsshcmd "apt-get update -y"
-  - $dropletsshcmd "apt-get install git -y"
-  - $dropletsshcmd "git clone https://github.com/YunoHost/package_check"
-  - cat test/pkgchk-config | $dropletsshcmd "cat > package_check/config"
-  - $dropletsshcmd "git clone https://github.com/${TRAVIS_REPO_SLUG} package"
-  - $dropletsshcmd "cd package && git checkout ${TRAVIS_COMMIT} && cd .."
-  - $dropletsshcmd "./package_check/package_check.sh --build-lxc --bash-mode package"
-  - $dropletsshcmd "cat ./package_check/Complete.log"
-
-after_script:
-  - ${DOCTL} compute droplet delete ${DROPLET_NAME} -f
-  - ${DOCTL} compute ssh-key delete $(${DOCTL} compute ssh-key list | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') -f
+  - /tmp/package_linter/package_linter.py ./
