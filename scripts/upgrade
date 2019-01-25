@@ -18,6 +18,14 @@ serviceuser=$(ynh_app_setting_get $app serviceuser)
 path=$(ynh_app_setting_get $app path)
 port=$(ynh_app_setting_get $app port)
 
+# download and extract rocketchat
+echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from ${ROCKETCHAT_DOWNLOAD_URI}."
+sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "${ROCKETCHAT_DOWNLOAD_URI}"
+SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
+if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
+  ynh_die "The sha256sum does not match the configured one"
+fi
+
 sudo systemctl stop rocketchat
 
 sudo rm -rf $final_path
@@ -25,14 +33,6 @@ sudo mkdir -p $final_path
 
 # update to latest required node setup
 installnode
-
-# download and extract rocketchat
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from https://s3.amazonaws.com/download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "https://s3.amazonaws.com/download.rocket.chat/build/rocket.chat-${ROCKETCHAT_VERSION}.tgz"
-SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
-if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
-  ynh_die "The sha256sum does not match the configured one"
-fi
 
 sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
 sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
