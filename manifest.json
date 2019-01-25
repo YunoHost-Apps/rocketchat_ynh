@@ -45,7 +45,7 @@
                     "en": "Is it a public application?"
                 },
                 "choices": ["Yes", "No"],
-                "default": "No"
+                "default": "Yes"
             },
             {
                "name": "lang",
