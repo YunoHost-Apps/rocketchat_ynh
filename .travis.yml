@@ -25,10 +25,6 @@ install:
   - sleep 2
   - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --wait --region fra1 --image debian-9-x64 --size 4gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}')
 
-after_script:
-  - ${DOCTL} compute droplet delete ${DROPLET_NAME} -f
-  - ${DOCTL} compute ssh-key delete $(${DOCTL} compute ssh-key list | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') -f
-
 script:
   - sleep 15
   - $dropletsshcmd "apt-get update -y"
@@ -39,3 +35,7 @@ script:
   - $dropletsshcmd "cd package && git checkout ${TRAVIS_COMMIT} && cd .."
   - $dropletsshcmd "./package_check/package_check.sh --build-lxc --bash-mode package"
   - $dropletsshcmd "cat ./package_check/Complete.log"
+
+after_script:
+  - ${DOCTL} compute droplet delete ${DROPLET_NAME} -f
+  - ${DOCTL} compute ssh-key delete $(${DOCTL} compute ssh-key list | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') -f
