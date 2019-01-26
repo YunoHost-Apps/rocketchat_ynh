@@ -12,6 +12,8 @@ You can either :
 * Install from the Yunohost Admin web interface, by providing this URL: [https://github.com/YunoHost-Apps/rocketchat_ynh](https://github.com/YunoHost-Apps/rocketchat_ynh)
 * Install from the command-line: `yunohost app install https://github.com/YunoHost-Apps/rocketchat_ynh`
 
+**Please note that currently the installation does not work on raspberry pi or arm architecture in general.**
+
 ## Backup information
 
 Backup stores:
