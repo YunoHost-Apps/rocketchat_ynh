@@ -26,6 +26,8 @@ script:
   - sleep 15
   - $dropletsshcmd "apt-get update -y"
   - $dropletsshcmd "apt-get install git -y"
+  - $dropletsshcmd "rm -rf package_check"
+  - $dropletsshcmd "rm -rf package"
   - $dropletsshcmd "git clone https://github.com/YunoHost/package_check"
   - cat test/pkgchk-config | $dropletsshcmd "cat > package_check/config"
   - $dropletsshcmd "git clone https://github.com/${TRAVIS_REPO_SLUG} package"
