@@ -20,7 +20,7 @@ install:
   - echo "creating droplet with name ${DROPLET_NAME}"
   - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute ssh-key create ${DROPLET_NAME} --no-header --public-key "$(cat ~/.ssh/id_rsa.pub)"
   - sleep 2
-  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --wait --region fra1 --image debian-9-x64 --size 4gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $1}') $(${DOCTL} compute ssh-key list --no-header | grep selamanse | awk -F ' ' '{print $1}')
+  - DROPLET_NAME=${DROPLET_NAME} ${DOCTL} compute droplet create ${DROPLET_NAME} --wait --region fra1 --image debian-9-x64 --size 4gb --ssh-keys $(${DOCTL} compute ssh-key list --no-header | grep ${DROPLET_NAME} | awk -F ' ' '{print $3}'),$(${DOCTL} compute ssh-key list --no-header | grep selamanse | awk -F ' ' '{print $3}')
 
 script:
   - sleep 15
