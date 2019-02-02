@@ -30,6 +30,16 @@ app=$YNH_APP_INSTANCE_NAME
 dbname=$app
 serviceuser=rocketchat
 
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED
+#=================================================
+
+# Check for supported architecture
+arch="$(uname -m)"
+if [[ "$arch" != "x86_64" ]]; then
+    script_die "This app requires an x86_64 machine, but this one is '${arch}'."
+fi
+
 workdir=$(pwd)
 
 # find suitable port (default 3000)
@@ -102,16 +112,11 @@ sed -i "s@#DBNAME#@$dbname@g" ../conf/rocketchat_ldap.js
 
 sudo cp ../conf/nginx.conf "$nginx_conf"
 
-# download and extract rocketchat
-echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from ${ROCKETCHAT_DOWNLOAD_URI}."
-sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "${ROCKETCHAT_DOWNLOAD_URI}"
-SHA_DOWNLOAD=$(sha256sum $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar | grep -o "^[a-f0-9]*")
-if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
-  ynh_die "The sha256sum does not match the configured one"
-fi
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
-sudo tar -xzf $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar -C $final_path --strip-components=1 bundle
-sudo rm $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar
+ynh_setup_source "$final_path"
 
 sudo chown -R $serviceuser: $final_path
 
