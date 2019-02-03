@@ -2,13 +2,15 @@
 set -eu
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-
-source ./_common.sh
+if [ ! -e _common.sh ]; then
+	# Fetch helpers file if not in current directory
+	sudo cp ../settings/scripts/_common.sh ./_common.sh
+	sudo chmod a+rx _common.sh
+fi
 source /usr/share/yunohost/helpers
+source _common.sh
 
 #=================================================
 # GENERIC START
