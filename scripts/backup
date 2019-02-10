@@ -36,4 +36,4 @@ ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx"
 # BACKUP THE MONGODB DATABASE
 #=================================================
 
-sudo mongodump -o "./dump"
+mongodump -o "./dump"

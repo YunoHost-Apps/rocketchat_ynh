@@ -25,22 +25,22 @@ port=$(ynh_app_setting_get $app port)
 # Backup the current version of the app
 ynh_backup_before_upgrade > >(tee "upgrade.log")
 
-sudo systemctl stop rocketchat
+systemctl stop rocketchat
 
-sudo rm -rf $final_path
-sudo mkdir -p $final_path
+ynh_secure_remove $final_path
+mkdir -p $final_path
 
 # update to latest required node setup
 installnode
 
 ynh_setup_source "$final_path"
 
-sudo chown -R $serviceuser: $final_path
+chown -R $serviceuser: $final_path
 
 cd $final_path/programs/server/
-sudo npm install --production
+npm install --production
 
-sudo chown -R $serviceuser: $final_path
+chown -R $serviceuser: $final_path
 
-sudo systemctl start rocketchat
+systemctl start rocketchat
 waitforservice
