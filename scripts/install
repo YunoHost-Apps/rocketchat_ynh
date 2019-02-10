@@ -88,27 +88,27 @@ mkdir -p $final_path
 id -u $serviceuser || useradd -d "$final_path" -M $serviceuser
 
 # Copy and set systemd configuration
-ynh_replace_string "s@#ROOTURL#@$domain@g" ../conf/rocketchat.service
-ynh_replace_string "s@#LOCATION#@${path:-/}@g" ../conf/rocketchat.service
-ynh_replace_string "s@#PORT#@$port@g" ../conf/rocketchat.service
-ynh_replace_string "s@#USER#@$serviceuser@g" ../conf/rocketchat.service
-ynh_replace_string "s@#DESTDIR#@$final_path@g" ../conf/rocketchat.service
-ynh_replace_string "s@#DBNAME#@$dbname@g" ../conf/rocketchat.service
+ynh_replace_string "#ROOTURL#" "$domain" ../conf/rocketchat.service
+ynh_replace_string "#LOCATION#" "${path:-/}" ../conf/rocketchat.service
+ynh_replace_string "#PORT#" "$port" ../conf/rocketchat.service
+ynh_replace_string "#USER#" "$serviceuser" ../conf/rocketchat.service
+ynh_replace_string "#DESTDIR#" "$final_path" ../conf/rocketchat.service
+ynh_replace_string "#DBNAME#" "$dbname" ../conf/rocketchat.service
 # absolute node path needed
 NODE_BIN=$(which node)
-ynh_replace_string "s@#NODE#@$NODE_BIN@g" ../conf/rocketchat.service
+ynh_replace_string "#NODE#" "$NODE_BIN" ../conf/rocketchat.service
 cp ../conf/rocketchat.service /etc/systemd/system/$app.service
 systemctl daemon-reload
 
 # Copy and set nginx configuration
 nginx_conf="/etc/nginx/conf.d/${domain}.d/${app}.conf"
-ynh_replace_string "s@#APP#@$app@g"          ../conf/nginx.conf
-ynh_replace_string "s@#PATH#@$path@g"        ../conf/nginx.conf
-ynh_replace_string "s@#PORT#@$port@g"        ../conf/nginx.conf
-ynh_replace_string "s@#LOCATION#@${path:-/}@g" ../conf/nginx.conf
+ynh_replace_string "#APP#" "$app" ../conf/nginx.conf
+ynh_replace_string "#PATH#" "$path" ../conf/nginx.conf
+ynh_replace_string "#PORT#" "$port" ../conf/nginx.conf
+ynh_replace_string "#LOCATION#" "${path:-/}" ../conf/nginx.conf
 
 #set db name into ldap config
-ynh_replace_string "s@#DBNAME#@$dbname@g" ../conf/rocketchat_ldap.js
+ynh_replace_string "#DBNAME#" "$dbname" ../conf/rocketchat_ldap.js
 
 cp ../conf/nginx.conf "$nginx_conf"
 
