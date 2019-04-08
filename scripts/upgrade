@@ -18,6 +18,12 @@ serviceuser=$(ynh_app_setting_get $app serviceuser)
 path=$(ynh_app_setting_get $app path)
 port=$(ynh_app_setting_get $app port)
 
+# stop rocketchat and remove program dir
+sudo systemctl stop rocketchat
+
+sudo rm -rf $final_path
+sudo mkdir -p $final_path
+
 # download and extract rocketchat
 echo "Downloading rocket.chat-$ROCKETCHAT_VERSION.gtar from ${ROCKETCHAT_DOWNLOAD_URI}."
 sudo curl -s -L -o $final_path/rocket.chat-$ROCKETCHAT_VERSION.gtar "${ROCKETCHAT_DOWNLOAD_URI}"
@@ -26,10 +32,6 @@ if [[ ! "$SHA_DOWNLOAD" == "$ROCKETCHAT_SHASUM" ]]; then
   ynh_die "The sha256sum does not match the configured one"
 fi
 
-sudo systemctl stop rocketchat
-
-sudo rm -rf $final_path
-sudo mkdir -p $final_path
 
 # update to latest required node setup
 installnode
