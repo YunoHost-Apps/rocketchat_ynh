@@ -14,18 +14,18 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 final_path=$(ynh_app_setting_get $app final_path)
 
-sudo systemctl stop $app.service
+systemctl stop $app.service
 
 # remove Rocketchat from services
-sudo yunohost service remove $app
+yunohost service remove $app
 
-sudo rm -rf $final_path
-sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
-sudo rm -rf /var/log/$app
-sudo rm -f /etc/systemd/system/$app.service
+ynh_secure_remove $final_path
+ynh_secure_remove /etc/nginx/conf.d/$domain.d/$app.conf
+ynh_secure_remove /var/log/$app
+ynh_secure_remove /etc/systemd/system/$app.service
 
 # remove database!!!
-sudo mongo rocketchat --eval "db.dropDatabase()"
+mongo rocketchat --eval "db.dropDatabase()"
 
-sudo systemctl daemon-reload
-sudo systemctl reload nginx
+systemctl daemon-reload
+systemctl reload nginx

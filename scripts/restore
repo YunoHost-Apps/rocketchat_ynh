@@ -2,13 +2,15 @@
 set -eu
 
 #=================================================
-# GENERIC START
-#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
-
-source ./_common.sh
+if [ ! -e _common.sh ]; then
+	# Fetch helpers file if not in current directory
+	cp ../settings/scripts/_common.sh ./_common.sh
+	chmod a+rx _common.sh
+fi
 source /usr/share/yunohost/helpers
+source _common.sh
 
 #=================================================
 # GENERIC START
@@ -43,10 +45,10 @@ fi
  You should safely delete it before restoring this app."
 
 # Create destination
-sudo mkdir -p $final_path
+mkdir -p $final_path
 
 # Create user
-id -u $serviceuser || sudo useradd -d "$final_path" -M $serviceuser
+id -u $serviceuser || useradd -d "$final_path" -M $serviceuser
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -58,19 +60,19 @@ ynh_restore
 # RELOAD THE NGINX CONFIGURATION
 #=================================================
 
-sudo systemctl reload nginx
+systemctl reload nginx
 
 #=================================================
 # RELOAD AND ENABLE THE SYSTEMD CONFIGURATION
 #=================================================
-sudo systemctl daemon-reload
-sudo systemctl enable rocketchat
+systemctl daemon-reload
+systemctl enable rocketchat
 
 #=================================================
 # RESTORE PERMISSIONS IN THE APP MAIN DIR
 #=================================================
 
-sudo chown -R $serviceuser: $final_path
+chown -R $serviceuser: $final_path
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -82,11 +84,11 @@ installdeps
 # RESTORE THE MONGODB
 #=================================================
 
-sudo mongorestore ./dump
+mongorestore ./dump
 
 #=================================================
 # START APP RELATED SERVICES
 #=================================================
 
-sudo systemctl start rocketchat
+systemctl start rocketchat
 waitforservice

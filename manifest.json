@@ -5,7 +5,7 @@
     "description": {
         "en": "the ultimate chat platform"
     },
-    "url": "https://github.com/YunoHost-Apps/rocketchat_ynh",
+    "url": "https://rocket.chat",
     "license": "GPL-3.0",
     "version": "0.73.2",
     "maintainer": {
@@ -41,14 +41,15 @@
             },
             {
                 "name": "is_public",
+                "type": "boolean",
                 "ask": {
                     "en": "Is it a public application?"
                 },
-                "choices": ["Yes", "No"],
                 "default": "Yes"
             },
             {
                "name": "lang",
+               "type": "string",
                 "ask": {
                     "en": "Select default language"
                 },
