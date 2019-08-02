@@ -122,7 +122,7 @@ chown -R $serviceuser: $final_path
 
 cd $final_path/programs/server/
 
--u $serviceuser npm install --production
+sudo -u $serviceuser npm install --production
 
 cd $workdir
 
