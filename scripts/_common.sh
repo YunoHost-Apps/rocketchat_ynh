@@ -7,14 +7,10 @@
 # dependencies used by the app
 #pkg_dependencies="apt-transport-https build-essential gzip curl graphicsmagick"  dirmngr
 
-nodejs_version=12
+nodejs_version=14
 
 # dependencies used by the app
-pkg_dependencies="mongodb mongodb-server mongo-tools apt-transport-https build-essential gzip curl graphicsmagick "
-pkg_dependencies_buster="mongodb-org mongodb-org-server mongodb-org-tools"
-
-mongodb_stretch="mongodb"
-mongodb_buster="mongod"
+pkg_dependencies="mongod mongodb-org mongodb-org-server mongodb-org-tools apt-transport-https build-essential gzip curl graphicsmagick"
 
 #=================================================
 # PERSONAL HELPERS
