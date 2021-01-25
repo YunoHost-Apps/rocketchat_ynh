@@ -1,13 +1,14 @@
 {
-    "packaging_format": 1,
     "name": "RocketChat",
     "id": "rocketchat",
+    "packaging_format": 1,
     "description": {
-        "en": "the ultimate chat platform"
+        "en": "the ultimate chat platform",
+        "fr": "the ultimate chat platform"
     },
     "url": "https://rocket.chat",
     "license": "GPL-3.0",
-    "version": "0.73.2",
+    "version": "3.4.2~ynh1",
     "maintainer": {
         "name": "selamanse",
         "email": "selamanse@scheinfrei.info",
@@ -18,7 +19,7 @@
         "nginx"
     ],
     "requirements": {
-        "yunohost": ">> 2.5.6"
+        "yunohost": ">> 3.8.1"
     },
     "arguments": {
         "install" : [
@@ -26,7 +27,8 @@
                 "name": "domain",
                 "type": "domain",
                 "ask": {
-                    "en": "Choose a domain for Rocketchat"
+                    "en": "Choose a domain for RocketChat",
+                    "fr": "Choose a domain for RocketChat"
                 },
                 "example": "domain.org"
             },
@@ -34,7 +36,8 @@
                 "name": "path",
                 "type": "path",
                 "ask": {
-                    "en": "Choose a path for RocketChat"
+                    "en": "Choose a path for RocketChat",
+                    "fr": "Choose a path for RocketChat"
                 },
                 "example": "/rocketchat",
                 "default": "/rocketchat"
@@ -43,15 +46,17 @@
                 "name": "is_public",
                 "type": "boolean",
                 "ask": {
-                    "en": "Is it a public application?"
+                    "en": "Is it a public application?",
+                    "fr": "Is it a public application ?"
                 },
-                "default": "Yes"
+                "default": true
             },
             {
                "name": "lang",
                "type": "string",
                 "ask": {
-                    "en": "Select default language"
+                    "en": "Select default language",
+                    "fr": "Select default language"
                 },
                 "choices": ["English"],
                 "default": "English"
