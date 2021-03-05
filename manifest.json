@@ -6,9 +6,9 @@
         "en": "the ultimate chat platform",
         "fr": "the ultimate chat platform"
     },
+    "version": "3.4.2~ynh1",
     "url": "https://rocket.chat",
     "license": "GPL-3.0",
-    "version": "3.4.2~ynh1",
     "maintainer": {
         "name": "selamanse",
         "email": "selamanse@scheinfrei.info",
@@ -19,7 +19,7 @@
         "nginx"
     ],
     "requirements": {
-        "yunohost": ">> 3.8.1"
+        "yunohost": ">> 4.1.7"
     },
     "arguments": {
         "install" : [

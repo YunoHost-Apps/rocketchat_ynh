@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/RocketChat/Rocket.Chat/archive/3.10.4.zip
-SOURCE_SUM=7edb0af029d205eeeeca741f9aff7879842df90624b9aa1d11921a46a18f7757
+SOURCE_URL=https://github.com/RocketChat/Rocket.Chat/archive/3.12.0.zip
+SOURCE_SUM=f955d2dc4ace5c16b7ac1e5134128ace37c372188d617ae6d4550c9cd4be4c6c
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
