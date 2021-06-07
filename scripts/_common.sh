@@ -370,3 +370,29 @@ ynh_remove_mongo() {
         # ynh_secure_remove --file=$MONGO_ROOT_PWD_FILE
     fi
 }
+
+
+
+ynh_install_mongo() {
+    ynh_print_info --message="Installing MongoDB..."
+
+    # Define Mongo Service Name
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" --package="mongodb-org mongodb-org-server mongodb-org-tools" --key="https://www.mongodb.org/static/pgp/server-4.4.asc"
+    
+    # Make sure MongoDB is started and enabled
+    systemctl is-enabled mongod -q || systemctl enable mongod --quiet
+    systemctl is-active mongod -q || ynh_systemd_action --service_name=mongod --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/mongod.log"
+    
+    # Integrate MongoDB service in YunoHost
+    yunohost service add mongod --description "MongoDB daemon" --log "/var/log/mongodb/mongod.log"
+}
+
+
+MONGO_SERVICENAME_STRETCH="mongodb"
+MONGO_SERVICENAME_BUSTER="mongod"
+MONGO_DEPENDENCIES_STRETCH="mongodb mongodb-server mongo-tools"
+MONGO_DEPENDENCIES_BUSTER="mongodb-org mongodb-org-server mongodb-org-tools"
+MONGO_CONFIG_STRETCH="/etc/mongodb.conf"
+MONGO_CONFIG_BUSTER="/etc/mongod.conf"
+MONGO_REPO_BUSTER="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
+MONGO_KEY_BUSTER="https://www.mongodb.org/static/pgp/server-4.4.asc"

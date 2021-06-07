@@ -74,18 +74,22 @@ ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
 # Install Yarn
 #ynh_install_extra_app_dependencies --repo="deb https://dl.yarnpkg.com/debian/ stable main" --package="yarn" --key="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
-ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" --package="mongod mongodb-org mongodb-org-server mongodb-org-tools" --key="https://www.mongodb.org/static/pgp/server-4.2.asc"
-	mongodb_servicename=$mongodb_buster
+    ynh_print_info --message="Installing MongoDB..."
 
+    # Define Mongo Service Name
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" --package="mongodb-org mongodb-org-server mongodb-org-tools" --key="https://www.mongodb.org/static/pgp/server-4.4.asc"
+    
+    # Make sure MongoDB is started and enabled
+    systemctl is-enabled mongod -q || systemctl enable mongod --quiet
+    systemctl is-active mongod -q || ynh_systemd_action --service_name=mongod --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/mongod.log"
+    
+    # Integrate MongoDB service in YunoHost
+    yunohost service add mongod --description "MongoDB daemon" --log "/var/log/mongodb/mongod.log"
 
 #=================================================
 # CREATE A MONGODB DATABASE
 #=================================================
 ynh_print_info --message="Creating a MongoDB database..."
-
-# Start mongodb
-systemctl enable $mongodb_servicename
-systemctl start $mongodb_servicename
 
 # Registering db name
 db_name=$(ynh_sanitize_dbid --db_name=$app)

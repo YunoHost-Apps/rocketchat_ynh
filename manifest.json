@@ -38,12 +38,6 @@
                 "name": "is_public",
                 "type": "boolean",
                 "default": true
-            },
-            {
-               "name": "language",
-               "type": "string",
-                "choices": ["English"],
-                "default": "English"
             }
         ]
     }
