@@ -11,7 +11,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 ## Overview
 Quick description of this app.
 
-**Shipped version:** 1.0
+**Shipped version:** 3.12.0
 
 ## Screenshots
 
