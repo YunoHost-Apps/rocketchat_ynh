@@ -45,8 +45,8 @@ ynh_webpath_register --app=$app --domain=$domain --path_url=$path_url
 #=================================================
 ynh_script_progression --message="Storing installation settings..." --weight=2
 
-ynh_app_setting_set --app=$app --key=domain    --value=$domain
-ynh_app_setting_set --app=$app --key=path      --value=$path_url
+ynh_app_setting_set --app=$app --key=domain --value=$domain
+ynh_app_setting_set --app=$app --key=path --value=$path_url
 
 #=================================================
 # STANDARD MODIFICATIONS
@@ -72,26 +72,25 @@ ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
 # Install Yarn
 #ynh_install_extra_app_dependencies --repo="deb https://dl.yarnpkg.com/debian/ stable main" --package="yarn" --key="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
-    ynh_print_info --message="Installing MongoDB..."
-
-    # Define Mongo Service Name
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" --package="mongodb-org mongodb-org-server mongodb-org-tools" --key="https://www.mongodb.org/static/pgp/server-4.4.asc"
-    
-    # Make sure MongoDB is started and enabled
-    systemctl is-enabled mongod -q || systemctl enable mongod --quiet
-    systemctl is-active mongod -q || ynh_systemd_action --service_name=mongod --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/mongod.log"
-    
-    # Integrate MongoDB service in YunoHost
-    yunohost service add mongod --description "MongoDB daemon" --log "/var/log/mongodb/mongod.log"
+ynh_install_mongo
 
 #=================================================
 # CREATE A MONGODB DATABASE
 #=================================================
-ynh_print_info --message="Creating a MongoDB database..."
+ynh_script_progression --message="Creating a MongoDB database..."
 
-# Registering db name
 db_name=$(ynh_sanitize_dbid --db_name=$app)
+db_user=$db_name
 ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name
+
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Configuring system user..." --weight=3
+
+# Create a system user
+ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -102,6 +101,10 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir=$final_path
 
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:$app "$final_path"
+
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
@@ -109,14 +112,6 @@ ynh_script_progression --message="Configuring NGINX web server..." --weight=2
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
-
-#=================================================
-# CREATE DEDICATED USER
-#=================================================
-ynh_script_progression --message="Configuring system user..." --weight=3
-
-# Create a system user
-ynh_system_user_create --username=$app --home_dir=$final_path
 
 #=================================================
 # SPECIFIC SETUP
@@ -152,25 +147,11 @@ ynh_replace_string --match_string="  engine:/"  --replace_string="engine: wiredT
 ynh_replace_string --match_string="replication:/replication:\n"  --replace_string="replSetName: rs01/" --target_file="/etc/mongod.conf"
 
 #=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-ynh_script_progression --message="Securing files and directories..."
-
-# Set permissions to app files
-chown -R $app: $final_path
-
-#=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
 yunohost service add $app --description "Chat" --log="/var/log/$app/$app.log"
-yunohost service add mongodb --description "MongoDB daemon" --log "/var/log/mongodb/mongodb.log"
-
-
-mongo --eval "printjson(rs.initiate())"
 
 #=================================================
 # START SYSTEMD SERVICE
