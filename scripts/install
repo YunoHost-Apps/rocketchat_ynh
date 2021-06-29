@@ -120,15 +120,9 @@ ynh_add_nginx_config
 #==============================================
 ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=240
 
-pushd "$final_path" || ynh_die
-curl https://install.meteor.com/ | sh 
-	sudo -u $app meteor ynh_npm install
-	sudo -u $app meteor ynh_npm run postinstall
-	sudo -u $app meteor add rocketchat:lib
-	sudo -u $app meteor build --server-only --directory $final_path
-	cd $final_path/bundle/programs/server
+pushd "$final_path"
 	ynh_npm install
-popd || ynh_die
+popd
 
 #=================================================
 # SETUP SYSTEMD
