@@ -122,8 +122,8 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path
  	ynh_use_nodejs
- 	npm install -g inherits
- 	npm install
+ 	ynh_npm install -g inherits
+ 	ynh_exec_as $app env $ynh_node_load_PATH ynh_npm install
 popd
 
 #=================================================
