@@ -6,7 +6,7 @@
         "en": "the ultimate chat platform",
         "fr": "the ultimate chat platform"
     },
-    "version": "3.12.0~ynh1",
+    "version": "3.16.0~ynh1",
     "url": "https://rocket.chat",
     "license": "GPL-3.0",
     "maintainer": {
