@@ -124,6 +124,10 @@ pushd $final_path/programs/server
  	ynh_use_nodejs
  	npm install -g inherits n
  	ynh_exec_as $app env $ynh_node_load_PATH npm install
+
+	export MONGO_URL='mongodb://$db_user:$db_pwdd@host:27017/$db_name'
+	export ROOT_URL='http://$domain'
+	#export MAIL_URL='smtp://user:password@mailhost:port/'
 popd
 
 #=================================================
