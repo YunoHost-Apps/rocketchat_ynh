@@ -137,12 +137,11 @@ ynh_replace_string --match_string="__ENV_PATH__" --replace_string="$PATH" --targ
 
 ynh_add_systemd_config
 
-# #=================================================
-# # MODIFY A CONFIG FILE
-# #=================================================
+#=================================================
+# MODIFY A CONFIG FILE
+#=================================================
 
-ynh_replace_string --match_string="  engine:/"  --replace_string="engine: wiredTiger/"  --target_file="/etc/mongod.conf"
-ynh_replace_string --match_string="replication:/replication:\n"  --replace_string="replSetName: rs01/" --target_file="/etc/mongod.conf"
+ynh_add_config --template="../conf/mongod.conf" --destination="/etc/mongod.conf"
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
