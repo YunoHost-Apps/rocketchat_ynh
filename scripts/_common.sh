@@ -20,14 +20,16 @@ pkg_dependencies="mongodb-org apt-transport-https build-essential gzip curl grap
 # EXPERIMENTAL HELPERS
 #=================================================
 
-MONGO_SERVICENAME_STRETCH="mongodb"
-MONGO_SERVICENAME_BUSTER="mongod"
-MONGO_DEPENDENCIES_STRETCH="mongodb mongodb-server mongo-tools"
-MONGO_DEPENDENCIES_BUSTER="mongodb-org mongodb-org-server mongodb-org-tools"
-MONGO_CONFIG_STRETCH="/etc/mongodb.conf"
-MONGO_CONFIG_BUSTER="/etc/mongod.conf"
-MONGO_REPO_BUSTER="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
-MONGO_KEY_BUSTER="https://www.mongodb.org/static/pgp/server-4.4.asc"
+#!/bin/bash
+
+MONGO_DEBIAN_SERVICENAME="mongodb"
+MONGO_CE_SERVICENAME="mongod"
+MONGO_DEBIAN_DEPENDENCIES="mongodb mongodb-server mongo-tools"
+MONGO_CE_DEPENDENCIES="mongodb-org mongodb-org-server mongodb-org-tools"
+MONGO_DEBIAN_CONFIG="/etc/mongodb.conf"
+MONGO_CE_CONFIG="/etc/mongod.conf"
+MONGO_CE_REPO="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
+MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-4.4.asc"
 
 # Execute a mongo command
 #
@@ -330,12 +332,15 @@ ynh_install_mongo() {
     ynh_print_info --message="Installing MongoDB..."
 
     # Define Mongo Service Name
-    if [ "$(lsb_release --codename --short)" = "buster" ]; then
-        ynh_install_extra_app_dependencies --repo="$MONGO_REPO_BUSTER" --package="$MONGO_DEPENDENCIES_BUSTER" --key="$MONGO_KEY_BUSTER"
-        MONGODB_SERVICENAME=$MONGO_SERVICENAME_BUSTER
+    if $(dpkg --compare-versions $(cat /etc/debian_version) gt "10.0")
+    then
+        ynh_print_info --message="Installing MongoDB Community Edition..."
+        ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
+        MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
     else
-        ynh_install_app_dependencies $MONGO_DEPENDENCIES_STRETCH
-        MONGODB_SERVICENAME=$MONGO_SERVICENAME_STRETCH
+        ynh_print_info --message="Installing MongoDB Debian..."
+        ynh_install_app_dependencies $MONGO_DEBIAN_DEPENDENCIES
+        MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
     fi
     mongodb_servicename=$MONGODB_SERVICENAME
     
@@ -344,7 +349,7 @@ ynh_install_mongo() {
     systemctl is-active $MONGODB_SERVICENAME -q || ynh_systemd_action --service_name=$MONGODB_SERVICENAME --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/$MONGODB_SERVICENAME.log"
     
     # Integrate MongoDB service in YunoHost
-    yunohost service add $MONGODB_SERVICENAME --description "MongoDB daemon" --log "/var/log/mongodb/$MONGODB_SERVICENAME.log"
+    yunohost service add $MONGODB_SERVICENAME --description="MongoDB daemon" --log="/var/log/mongodb/$MONGODB_SERVICENAME.log"
 }
 
 # Remove MongoDB
@@ -361,38 +366,12 @@ ynh_remove_mongo() {
         ynh_print_info --message="Removing MongoDB service..."
         # Define Mongo Service Name
         if [ "$(lsb_release --codename --short)" = "buster" ]; then
-            MONGODB_SERVICENAME=$MONGO_SERVICENAME_BUSTER
+            MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
         else
-            MONGODB_SERVICENAME=$MONGO_SERVICENAME_STRETCH
+            MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
         fi
         # Remove the mongodb service
         yunohost service remove $MONGODB_SERVICENAME
         # ynh_secure_remove --file=$MONGO_ROOT_PWD_FILE
     fi
 }
-
-
-
-ynh_install_mongo() {
-    ynh_print_info --message="Installing MongoDB..."
-
-    # Define Mongo Service Name
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" --package="mongodb-org mongodb-org-server mongodb-org-tools" --key="https://www.mongodb.org/static/pgp/server-4.4.asc"
-    
-    # Make sure MongoDB is started and enabled
-    systemctl is-enabled mongod -q || systemctl enable mongod --quiet
-    systemctl is-active mongod -q || ynh_systemd_action --service_name=mongod --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/mongod.log"
-    
-    # Integrate MongoDB service in YunoHost
-    yunohost service add mongod --description "MongoDB daemon" --log "/var/log/mongodb/mongod.log"
-}
-
-
-MONGO_SERVICENAME_STRETCH="mongodb"
-MONGO_SERVICENAME_BUSTER="mongod"
-MONGO_DEPENDENCIES_STRETCH="mongodb mongodb-server mongo-tools"
-MONGO_DEPENDENCIES_BUSTER="mongodb-org mongodb-org-server mongodb-org-tools"
-MONGO_CONFIG_STRETCH="/etc/mongodb.conf"
-MONGO_CONFIG_BUSTER="/etc/mongod.conf"
-MONGO_REPO_BUSTER="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
-MONGO_KEY_BUSTER="https://www.mongodb.org/static/pgp/server-4.4.asc"
