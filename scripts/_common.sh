@@ -20,8 +20,6 @@ pkg_dependencies="mongodb-org apt-transport-https build-essential gzip curl grap
 # EXPERIMENTAL HELPERS
 #=================================================
 
-#!/bin/bash
-
 MONGO_DEBIAN_SERVICENAME="mongodb"
 MONGO_CE_SERVICENAME="mongod"
 MONGO_DEBIAN_DEPENDENCIES="mongodb mongodb-server mongo-tools"
