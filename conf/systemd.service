@@ -7,7 +7,7 @@ User=__APP__
 WorkingDirectory=__FINALPATH__
 Environment="PATH=__ENV_PATH__"
 Environment="NODE_ENV=production"
-ExecStart=__YNH_NODE__ __FINALPATH__main.js
+ExecStart=__YNH_NODE__ __FINALPATH__/main.js
 
 StandardOutput=syslog
 StandardError=syslog

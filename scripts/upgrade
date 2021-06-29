@@ -34,12 +34,6 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
 
-#
-# N.B. : the followings setting migrations snippets are provided as *EXAMPLES*
-# of what you may want to do in some cases (e.g. a setting was not defined on
-# some legacy installs and you therefore want to initiaze stuff during upgrade)
-#
-
 # If db_name doesn't exist, create it
 #if [ -z "$db_name" ]; then
 #	db_name=$(ynh_sanitize_dbid --db_name=$app)
