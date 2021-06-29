@@ -120,13 +120,11 @@ ynh_add_nginx_config
 #==============================================
 ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=240
 
-chown -R $app: $final_path
-
-pushd $final_path || ynh_die
+pushd $final_path
  	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install -g inherits
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install
-popd || ynh_die
+ 	npm install -g inherits
+ 	npm install
+popd
 
 #=================================================
 # SETUP SYSTEMD
