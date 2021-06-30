@@ -137,8 +137,9 @@ ynh_add_systemd_config
 #=================================================
 # MODIFY A CONFIG FILE
 #=================================================
+ynh_script_progression --message="Configuring a mongod..." --weight=1
 
-echo -e "replication:\n  replSetName: \"rs01\"" | sudo tee -a /etc/mongod.conf
+echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -153,8 +154,8 @@ yunohost service add $app --description="Team collaboration communication platfo
 ynh_script_progression --message="Starting a systemd service..." --weight=2
 
 # Start a systemd service
-ynh_systemd_action --service_name=$app --action=start --log_path=systemd --line_match="➔ System ➔ startup"
 ynh_systemd_action --service_name=mongod --action=restart --log_path=systemd 
+ynh_systemd_action --service_name=$app --action=start --log_path=systemd --line_match="➔ System ➔ startup"
 
 #=================================================
 # SETUP SSOWAT
