@@ -143,14 +143,14 @@ ynh_add_systemd_config
 # MODIFY A CONFIG FILE
 #=================================================
 
-#ynh_add_config --template="../conf/mongod.conf" --destination="/etc/mongod.conf"
 echo -e "replication:\n  replSetName: \"rs01\"" | sudo tee -a /etc/mongod.conf
+
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description "Chat" --log="/var/log/$app/$app.log"
+yunohost service add $app --description "Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SYSTEMD SERVICE

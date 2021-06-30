@@ -8,11 +8,18 @@
     },
     "version": "3.16.0~ynh1",
     "url": "https://rocket.chat",
+    "upstream": {
+        "license": "GPL-3.0",
+        "website": "https://rocket.chat/",
+        "demo": "https://cloud.rocket.chat/trial",
+        "admindoc": "https://docs.rocket.chat/",
+        "userdoc": "https://yunohost.org/apps",
+        "code": "https://github.com/RocketChat/Rocket.Chat"
+    },
     "license": "GPL-3.0",
     "maintainer": {
-        "name": "selamanse",
-        "email": "selamanse@scheinfrei.info",
-        "url": "https://github.com/selamanse"
+        "name": "",
+        "email": ""
     },
     "multi_instance": false,
     "services": [
