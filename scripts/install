@@ -144,7 +144,7 @@ ynh_add_systemd_config
 #=================================================
 
 #ynh_add_config --template="../conf/mongod.conf" --destination="/etc/mongod.conf"
-
+echo -e "replication:\n  replSetName: \"rs01\"" | sudo tee -a /etc/mongod.conf
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
