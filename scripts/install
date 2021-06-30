@@ -116,18 +116,13 @@ ynh_add_nginx_config
 #=================================================
 # SPECIFIC SETUP
 #==============================================
-# INSTALL HEDGEDOC
+# INSTALL ROCKETCHAT
 #==============================================
-ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=240
+ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=20
 
 pushd $final_path/programs/server
  	ynh_use_nodejs
- 	#npm install -g inherits n
  	ynh_exec_as $app env $ynh_node_load_PATH npm install
-
-	#export MONGO_URL='mongodb://$db_user:$db_pwdd@host:27017/$db_name'
-	#export ROOT_URL='http://$domain'
-	#export MAIL_URL='smtp://localhost:25'
 popd
 
 #=================================================
@@ -159,7 +154,6 @@ ynh_script_progression --message="Starting a systemd service..." --weight=2
 
 # Start a systemd service
 ynh_systemd_action --service_name=$app --action=start --log_path=systemd #--line_match="HTTP Server listening"
-
 ynh_systemd_action --service_name=mongod --action=restart --log_path=systemd 
 
 #=================================================
