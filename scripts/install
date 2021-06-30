@@ -153,9 +153,9 @@ ynh_script_progression --message="Starting a systemd service..." --weight=2
 
 # Start a systemd service
 #ynh_systemd_action --service_name=mongod --action=restart --log_path=systemd
-systemctl enable mongod --quiet && systemctl restart mongod
-mongo --eval "printjson(rs.initiate())"
-
+systemctl enable mongod && systemctl restart mongod
+#mongo --eval "printjson(rs.initiate())"
+mongo --eval "rs.initiate()"
 ynh_systemd_action --service_name=$app --action=start --log_path=systemd --line_match="➔ System ➔ startup"
 
 #=================================================
