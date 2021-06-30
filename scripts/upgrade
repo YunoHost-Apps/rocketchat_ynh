@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eu
 
 #=================================================
 # GENERIC START
@@ -7,40 +6,175 @@ set -eu
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source ./_common.sh
+source _common.sh
 source /usr/share/yunohost/helpers
 
-ynh_abort_if_errors
+#=================================================
+# LOAD SETTINGS
+#=================================================
+ynh_script_progression --message="Loading installation settings..." --time --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
-final_path=$(ynh_app_setting_get $app final_path)
-serviceuser=$(ynh_app_setting_get $app serviceuser)
-path=$(ynh_app_setting_get $app path)
-port=$(ynh_app_setting_get $app port)
+
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+language=$(ynh_app_setting_get --app=$app --key=language)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 
 #=================================================
-# BACKUP THE APPLICATION
+# CHECK VERSION
 #=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
+
+# If db_name doesn't exist, create it
+#if [ -z "$db_name" ]; then
+#	db_name=$(ynh_sanitize_dbid --db_name=$app)
+#	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+#fi
+
+# If final_path doesn't exist, create it
+#if [ -z "$final_path" ]; then
+#	final_path=/var/www/$app
+#	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+#fi
+
+### If nobody installed your app before 4.1,
+### then you may safely remove these lines
+
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+if ! ynh_permission_exists --permission="admin"; then
+	# Create the required permissions
+	ynh_permission_create --permission="admin" --url="/admin" --allowed=$admin
+fi
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --time --weight=1
 
 # Backup the current version of the app
-ynh_backup_before_upgrade > >(tee "upgrade.log")
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# Restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
-systemctl stop rocketchat
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# STOP SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Stopping a systemd service..." --time --weight=1
 
-ynh_secure_remove $final_path
-mkdir -p $final_path
+ynh_systemd_action --service_name=$app --action="stop" --log_path="/var/log/$app/$app.log"
 
-# update to latest required node setup
-installnode
+#=================================================
+# CREATE DEDICATED USER
+#=================================================
+ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
 
-ynh_setup_source "$final_path"
+# Create a dedicated user (if not existing)
+ynh_system_user_create --username=$app --home_dir="$final_path"
 
-chown -R $serviceuser: $final_path
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
-cd $final_path/programs/server/
-npm install --production
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	ynh_script_progression --message="Upgrading source files..." --time --weight=1
 
-chown -R $serviceuser: $final_path
+	# Download, check integrity, uncompress and patch the source from app.src
+	ynh_setup_source --dest_dir="$final_path"
+fi
 
-systemctl start rocketchat
-waitforservice
+chmod 750 "$final_path"
+chmod -R o-rwx "$final_path"
+chown -R $app:$app "$final_path"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
+
+#==============================================
+# INSTALL ROCKETCHAT
+#==============================================
+ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=20
+
+pushd $final_path/programs/server
+ 	ynh_use_nodejs
+ 	ynh_exec_as $app env $ynh_node_load_PATH npm install 2>/dev/null
+popd
+
+#=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Upgrading dependencies..." --weight=1
+
+ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
+# SETUP SYSTEMD
+#=================================================
+ynh_script_progression --message="Upgrading systemd configuration..." --weight=1
+
+ynh_replace_string --match_string="__ENV_PATH__" --replace_string="$PATH" --target_file="../conf/systemd.service"
+
+# Create a dedicated systemd config
+ynh_add_systemd_config
+
+#=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+
+yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting a systemd service..." --time --weight=1
+
+ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=mongod --action=restart --log_path=systemd 
+
+#=================================================
+# UPGRADE FAIL2BAN
+#=================================================
+ynh_script_progression --message="Reconfiguring Fail2Ban..." --time --weight=1
+
+# Create a dedicated Fail2Ban config
+ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+ynh_script_progression --message="Reloading NGINX web server..." --time --weight=1
+
+ynh_systemd_action --service_name=nginx --action=reload
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade of $app completed" --time --last

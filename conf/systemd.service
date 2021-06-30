@@ -1,0 +1,21 @@
+[Unit]
+Description=The Rocket.Chat server
+Wants=__MONGODB_SERVICENAME__.service
+After=network.target remote-fs.target nss-lookup.target nginx.service __MONGODB_SERVICENAME__.service
+
+[Service]
+User=__APP__
+WorkingDirectory=__FINALPATH__
+Environment="PATH=__ENV_PATH__"
+Environment="NODE_ENV=production"
+ExecStart=__YNH_NODE__ main.js
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=__APP__
+Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=rs01
+Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01
+Environment=ROOT_URL=https://__DOMAIN____PATH__
+Environment=PORT=__PORT__
+
+[Install]
+WantedBy=multi-user.target
