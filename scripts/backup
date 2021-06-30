@@ -27,8 +27,9 @@ ynh_abort_if_errors
 
 app=$YNH_APP_INSTANCE_NAME
 
-final_path=$(ynh_app_setting_get $app final_path)
-domain=$(ynh_app_setting_get $app domain)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 
 #=================================================
 # STANDARD BACKUP STEPS
@@ -39,17 +40,25 @@ domain=$(ynh_app_setting_get $app domain)
 ynh_backup --src_path="$final_path"
 
 #=================================================
-# BACKUP THE CONFIGURATION
+# BACKUP THE NGINX CONFIGURATION
+#=================================================
+
+ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx"
+
+#=================================================
+# SPECIFIC BACKUP
+#=================================================
+# BACKUP SYSTEMD
 #=================================================
 
 ynh_backup --src_path="/etc/systemd/system/$app.service" "conf/service"
-ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx"
 
 #=================================================
 # BACKUP THE MONGODB DATABASE
 #=================================================
+ynh_print_info --message="Backing up the MongoDB database..."
 
-ynh_mongo_dump_db
+ynh_mongo_dump_db --database="$db_name" > ./dump.bson
 
 #=================================================
 # END OF SCRIPT
