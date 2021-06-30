@@ -4,10 +4,6 @@
 # COMMON VARIABLES
 #=================================================
 
-
-ROCKETCHAT_VERSION=3.16.0
-ROCKETCHAT_SHASUM=c77aeed2a5eda4a3e9dfde8cfb742f32138638a3a44d0e9e38005992fcadb45b
-
 nodejs_version=12
 
 # dependencies used by the app
