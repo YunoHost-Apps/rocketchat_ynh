@@ -135,7 +135,9 @@ ynh_add_systemd_config
 #=================================================
 ynh_script_progression --message="Configuring a mongod..." --weight=1
 
-echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
+sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
+sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+#echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
