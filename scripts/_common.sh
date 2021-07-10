@@ -1,82 +1,372 @@
-# common.sh
+#!/bin/bash
 
-ROCKETCHAT_VERSION=0.73.2
-ROCKETCHAT_SHASUM=3dc3eb11f383f7b72b0f23fedb305b6a566fa536a1e5087a4398255deeb864d8
-ROCKETCHAT_DOWNLOAD_URI=https://releases.rocket.chat/${ROCKETCHAT_VERSION}/download
-NODE_VERSION=8.11.4
-DEBIAN_ISSUE=$(grep 9 /etc/debian_version >/dev/null && echo stretch || echo jessie)
+#=================================================
+# COMMON VARIABLES
+#=================================================
 
-checkcmd() {
-  curl -m 1 -s localhost:$port$path/api/v1/info | \
-    python -c "import sys, json; print json.load(sys.stdin)['success']" 2>/dev/null | \
-    grep "True" >/dev/null 2>&1
+nodejs_version=12
+
+# dependencies used by the app
+pkg_dependencies="apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
+
+#=================================================
+# PERSONAL HELPERS
+#=================================================
+
+#=================================================
+# EXPERIMENTAL HELPERS
+#=================================================
+
+MONGO_DEBIAN_SERVICENAME="mongodb"
+MONGO_CE_SERVICENAME="mongod"
+MONGO_DEBIAN_DEPENDENCIES="mongodb mongodb-server mongo-tools"
+MONGO_CE_DEPENDENCIES="mongodb-org mongodb-org-server mongodb-org-tools"
+MONGO_DEBIAN_CONFIG="/etc/mongodb.conf"
+MONGO_CE_CONFIG="/etc/mongod.conf"
+MONGO_CE_REPO="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
+MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-4.4.asc"
+
+# Execute a mongo command
+#
+# example: ynh_mongo_exec --command='db.getMongo().getDBNames().indexOf("wekan")'
+# example: ynh_mongo_exec --command="db.getMongo().getDBNames().indexOf(\"wekan\")"
+#
+# usage: ynh_mongo_exec [--user=user] [--password=password] [--authenticationdatabase=authenticationdatabase] [--database=database] [--host=host] [--port=port] --command="command" [--eval]
+# | arg: -u, --user=                      - The user name to connect as
+# | arg: -p, --password=                  - The user password
+# | arg: -d, --authenticationdatabase=    - The authenticationdatabase to connect to
+# | arg: -d, --database=                  - The database to connect to
+# | arg: -h, --host=                      - The host to connect to
+# | arg: -P, --port=                      - The port to connect to
+# | arg: -c, --command=                   - The command to evaluate
+# | arg: -e, --eval                       - Evaluate instead of execute the command.
+#
+#
+ynh_mongo_exec() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=upadhPce
+    local -A args_array=( [u]=user= [p]=password= [a]=authenticationdatabase= [d]=database= [h]=host= [P]=port= [c]=command= [e]=eval )
+    local user
+    local password
+    local authenticationdatabase
+    local database
+    local host
+    local port
+    local command
+    local eval
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
+    user="${user:-}"
+    password="${password:-}"
+    authenticationdatabase="${authenticationdatabase:-}"
+    database="${database:-}"
+    host="${host:-}"
+    port="${port:-}"
+    eval=${eval:-0}
+
+    # If user is provided
+    if [ -n "$user" ]
+    then
+        user="--username=$user"
+        
+        # If password is provided
+        if [ -n "$password" ]
+        then
+            password="--password=$password"
+        fi
+
+        # If authenticationdatabase is provided
+        if [ -n "$authenticationdatabase" ]
+        then
+            authenticationdatabase="--authenticationDatabase=$authenticationdatabase"
+        else
+            authenticationdatabase="--authenticationDatabase=admin"
+        fi
+    else
+        password=""
+        authenticationdatabase=""
+    fi
+
+    # If host is provided
+    if [ -n "$host" ]
+    then
+        host="--host=$host"
+    fi
+
+    # If port is provided
+    if [ -n "$port" ]
+    then
+        port="--port=$port"
+    fi
+
+    # If eval is not provided
+    if [ $eval -eq 0 ]
+    then
+        # If database is provided
+        if [ -n "$database" ]
+        then
+            database="use $database"
+        else
+            database=""
+        fi
+
+        mongo --quiet $user $password $authenticationdatabase $host $port <<EOF
+$database
+${command}
+quit()
+EOF
+    else
+        # If database is provided
+        if [ -n "$database" ]
+        then
+            database="$database"
+        else
+            database=""
+        fi
+        
+        mongo --quiet $database $user $password $authenticationdatabase $host $port --eval="$command"
+    fi
 }
 
-waitforservice() {
-  isup=false
-  x=90
-  while [ $x -gt 0 ]; do
-    echo "Waiting approx. $x seconds..."
-    x=$(( $x - 1 ))
-    sleep 1
+# Drop a database
+#
+# [internal]
+#
+# If you intend to drop the database *and* the associated user,
+# consider using ynh_mongo_remove_db instead.
+#
+# usage: ynh_mongo_drop_db --database=database
+# | arg: -d, --database=    - The database name to drop
+#
+#
+ynh_mongo_drop_db() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=d
+    local -A args_array=( [d]=database= )
+    local database
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
 
-    if checkcmd; then
-      isup=true; break;
-    fi;
-  done
-
-  if $isup; then
-    echo "service is up"
-  else
-    ynh_die "$app could not be started"
-  fi
+    ynh_mongo_exec --database="$database" --command='db.runCommand({dropDatabase: 1})'
 }
 
-installnode(){
-  if [ $DEBIAN_ISSUE == "stretch" ]; then
-    sudo curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
-    sudo bash nodesource_setup.sh
-    sudo apt-get install -y nodejs
-  else
-    sudo apt-get install -y npm
-    # Using npm install inherits and n, and the node version required by Rocket.Chat:
-    sudo npm install -g inherits n
-    sudo n $NODE_VERSION
-  fi
-  echo "node version is now: "
-  node --version
+# Dump a database
+#
+# example: ynh_mongo_dump_db --database=wekan > ./dump.bson
+#
+# usage: ynh_mongo_dump_db --database=database
+# | arg: -d, --database=    - The database name to dump
+# | ret: the mongodump output
+#
+#
+ynh_mongo_dump_db() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=d
+    local -A args_array=( [d]=database= )
+    local database
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
+
+    mongodump --quiet --db="$database" --archive
 }
 
-installdeps(){
+# Create a user
+#
+# [internal]
+#
+# usage: ynh_mongo_create_user --db_user=user --db_pwd=pwd --db_name=name
+# | arg: -u, --db_user=    - The user name to create
+# | arg: -p, --db_pwd=     - The password to identify user by
+# | arg: -n, --db_name=    - Name of the database to grant privilegies
+#
+#
+ynh_mongo_create_user() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=unp
+    local -A args_array=( [u]=db_user= [n]=db_name= [p]=db_pwd= )
+    local db_user
+    local db_name
+    local db_pwd
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
 
-  if [ $(dpkg --print-architecture) == "armhf" ]; then
-    #Install mongodb for debian armhf
-    sudo apt-get update
-    sudo apt-get install -y mongodb-server
+    # Create the user and set the user as admin of the db
+    ynh_mongo_exec --database="$db_name" --command='db.createUser( { user: "'${db_user}'", pwd: "'${db_pwd}'", roles: [ { role: "readWrite", db: "'${db_name}'" } ] } );'
+    
+    # Add clustermonitoring rights
+    ynh_mongo_exec --database="$db_name" --command='db.grantRolesToUser("'${db_user}'",[{ role: "clusterMonitor", db: "admin" }]);'
+}
 
-    # start mongodb service
-    sudo systemctl enable mongodb.service
-    sudo systemctl start mongodb.service
+# Check if a mongo database exists
+#
+# usage: ynh_mongo_database_exists --database=database
+# | arg: -d, --database=    - The database for which to check existence
+# | exit: Return 1 if the database doesn't exist, 0 otherwise
+#
+#
+ynh_mongo_database_exists() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=d
+    local -A args_array=([d]=database=)
+    local database
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
 
-    # add mongodb to services
-    sudo yunohost service add mongodb -l /var/log/mongodb/mongodb.log
-  else
-    #Install mongodb for debian x86/x64
-    sudo apt-get install dirmngr && sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-    echo "deb http://repo.mongodb.org/apt/debian ${DEBIAN_ISSUE}/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
-    sudo apt-get update
-    sudo apt-get install -y mongodb-org
+    if [ $(ynh_mongo_exec --command='db.getMongo().getDBNames().indexOf("'${database}'")' --eval) -lt 0 ]
+    then
+        return 1
+    else
+        return 0
+    fi
+}
 
-    # start mongodb service
-    sudo systemctl enable mongod.service
-    sudo systemctl start mongod.service
+# Restore a database
+#
+# example: ynh_mongo_restore_db --database=wekan < ./dump.bson
+#
+# usage: ynh_mongo_restore_db --database=database
+# | arg: -d, --database=    - The database name to restore
+#
+#
+ynh_mongo_restore_db() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=d
+    local -A args_array=( [d]=database= )
+    local database
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
 
-    # add mongodb to services
-    sudo yunohost service add mongod -l /var/log/mongodb/mongod.log
-  fi
+    mongorestore --quiet --db="$database" --archive
+}
 
-  #Install other dependencies
-  sudo apt-get install -y build-essential gzip curl graphicsmagick
+# Drop a user
+#
+# [internal]
+#
+# usage: ynh_mongo_drop_user --db_user=user --db_name=name
+# | arg: -u, --db_user=    - The user to drop
+# | arg: -n, --db_name=    - Name of the database
+#
+#
+ynh_mongo_drop_user() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=un
+    local -A args_array=( [u]=db_user= [n]=db_name= )
+    local db_user
+    local db_name
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
 
-  installnode
+    ynh_mongo_exec --database="$db_name" --command='db.dropUser("'$db_user'", {w: "majority", wtimeout: 5000})'
+}
+
+# Create a database, an user and its password. Then store the password in the app's config
+#
+# usage: ynh_mongo_setup_db --db_user=user --db_name=name [--db_pwd=pwd]
+# | arg: -u, --db_user=    - Owner of the database
+# | arg: -n, --db_name=    - Name of the database
+# | arg: -p, --db_pwd=     - Password of the database. If not provided, a password will be generated
+#
+# After executing this helper, the password of the created database will be available in $db_pwd
+# It will also be stored as "mongopwd" into the app settings.
+#
+#
+ynh_mongo_setup_db() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=unp
+    local -A args_array=( [u]=db_user= [n]=db_name= [p]=db_pwd= )
+    local db_user
+    local db_name
+    db_pwd=""
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
+
+    local new_db_pwd=$(ynh_string_random) # Generate a random password
+    # If $db_pwd is not provided, use new_db_pwd instead for db_pwd
+    db_pwd="${db_pwd:-$new_db_pwd}"
+    
+    # Create the user and grant access to the database
+    ynh_mongo_create_user --db_user="$db_user" --db_pwd="$db_pwd" --db_name="$db_name"
+
+    # Store the password in the app's config
+    ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd 
+}
+
+# Remove a database if it exists, and the associated user
+#
+# usage: ynh_mongo_remove_db --db_user=user --db_name=name
+# | arg: -u, --db_user=    - Owner of the database
+# | arg: -n, --db_name=    - Name of the database
+#
+#
+ynh_mongo_remove_db() {
+    # Declare an array to define the options of this helper.
+    local legacy_args=un
+    local -A args_array=( [u]=db_user= [n]=db_name= )
+    local db_user
+    local db_name
+    # Manage arguments with getopts
+    ynh_handle_getopts_args "$@"
+
+    if ynh_mongo_database_exists --database=$db_name; then  # Check if the database exists
+        ynh_mongo_drop_db --database=$db_name  # Remove the database
+    else
+        ynh_print_warn --message="Database $db_name not found"
+    fi
+
+    # Remove mongo user if it exists
+    ynh_mongo_drop_user --db_user=$db_user --db_name=$db_name
+}
+
+# Install MongoDB and integrate MongoDB service in YunoHost
+#
+# usage: ynh_install_mongo
+#
+#
+ynh_install_mongo() {
+    ynh_print_info --message="Installing MongoDB..."
+
+    # Define Mongo Service Name
+    if $(dpkg --compare-versions $(cat /etc/debian_version) gt "10.0")
+    then
+        ynh_print_info --message="Installing MongoDB Community Edition..."
+        ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
+        MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
+    else
+        ynh_print_info --message="Installing MongoDB Debian..."
+        ynh_install_app_dependencies $MONGO_DEBIAN_DEPENDENCIES
+        MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
+    fi
+    mongodb_servicename=$MONGODB_SERVICENAME
+    
+    # Make sure MongoDB is started and enabled
+    systemctl is-enabled $MONGODB_SERVICENAME -q || systemctl enable $MONGODB_SERVICENAME --quiet
+    systemctl is-active $MONGODB_SERVICENAME -q || ynh_systemd_action --service_name=$MONGODB_SERVICENAME --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/$MONGODB_SERVICENAME.log"
+    
+    # Integrate MongoDB service in YunoHost
+    yunohost service add $MONGODB_SERVICENAME --description="MongoDB daemon" --log="/var/log/mongodb/$MONGODB_SERVICENAME.log"
+}
+
+# Remove MongoDB
+# Only remove the MongoDB service integration in YunoHost for now
+# if MongoDB package as been removed
+#
+# usage: ynh_remove_mongo
+#
+#
+ynh_remove_mongo() {
+    # Only remove the mongodb service if it is not installed.
+    if ! ynh_package_is_installed --package="mongodb*"
+    then
+        ynh_print_info --message="Removing MongoDB service..."
+        # Define Mongo Service Name
+        if [ "$(lsb_release --codename --short)" = "buster" ]; then
+            MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
+        else
+            MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
+        fi
+        # Remove the mongodb service
+        yunohost service remove $MONGODB_SERVICENAME
+        # ynh_secure_remove --file=$MONGO_ROOT_PWD_FILE
+    fi
 }
