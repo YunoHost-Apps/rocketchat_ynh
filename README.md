@@ -15,9 +15,9 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 ## Overview
 
-the ultimate chat platform
+Team collaboration communication platform
 
-**Shipped version:** 3.16.0~ynh1
+**Shipped version:** 3.16.2~ynh1
 
 **Demo:** https://cloud.rocket.chat/trial
 
