@@ -43,7 +43,7 @@ ynh_backup --src_path="$final_path"
 # BACKUP THE NGINX CONFIGURATION
 #=================================================
 
-ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx"
+ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # SPECIFIC BACKUP
@@ -51,7 +51,7 @@ ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf" "conf/nginx"
 # BACKUP SYSTEMD
 #=================================================
 
-ynh_backup --src_path="/etc/systemd/system/$app.service" "conf/service"
+ynh_backup --src_path="/etc/systemd/system/$app.service"
 
 #=================================================
 # BACKUP THE MONGODB DATABASE
