@@ -14,7 +14,7 @@ StandardError=syslog
 SyslogIdentifier=__APP__
 Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=01-rs
 Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=01-rs
-Environment=ROOT_URL=https://__DOMAIN____PATH__
+Environment=ROOT_URL=https://__DOMAIN____PATH__:__PORT__
 Environment=PORT=__PORT__
 
 [Install]
