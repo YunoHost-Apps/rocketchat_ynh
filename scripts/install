@@ -141,6 +141,10 @@ sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
 sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
 #echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
 
+mongo --eval "printjson(rs.initiate())"
+
+sleep 10
+
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
