@@ -132,7 +132,7 @@ sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
 sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
 #echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
 
-ynh_exec_warn_less systemctl enable mongod --quiet
+#ynh_exec_warn_less systemctl enable mongod --quiet
 ynh_systemd_action --service_name=mongod --action=restart
 
 mongo --eval "printjson(rs.initiate())"
