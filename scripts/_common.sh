@@ -324,12 +324,11 @@ ynh_mongo_remove_db() {
 #
 #
 ynh_install_mongo() {
-    ynh_print_info --message="Installing MongoDB..."
+    ynh_script_progression --message="Installing MongoDB..."  --weight=5
 
     # Define Mongo Service Name
     if $(dpkg --compare-versions $(cat /etc/debian_version) gt "10.0")
     then
-        ynh_print_info --message="Installing MongoDB Community Edition..."
         ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
         MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
     else
