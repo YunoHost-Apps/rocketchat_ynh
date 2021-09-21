@@ -13,7 +13,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Plateforme de communication collaborative en équipe
 
-**Version incluse :** 3.16.2~ynh1
+**Version incluse :** 3.18.1~ynh1
 
 **Démo :** https://cloud.rocket.chat/trial
 
