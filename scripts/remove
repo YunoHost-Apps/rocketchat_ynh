@@ -44,6 +44,14 @@ ynh_script_progression --message="Stopping and removing the systemd service..." 
 ynh_remove_systemd_config
 
 #=================================================
+# REMOVE LOGROTATE CONFIGURATION
+#=================================================
+ynh_script_progression --message="Removing logrotate configuration..." --weight=1
+
+# Remove the app-specific logrotate config
+ynh_remove_logrotate
+
+#=================================================
 # REMOVE THE MONGODB DATABASE
 #=================================================
 ynh_script_progression --message="Removing the MongoDB database..."
