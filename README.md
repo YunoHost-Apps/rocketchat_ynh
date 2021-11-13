@@ -17,7 +17,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 
 Team collaboration communication platform
 
-**Shipped version:** 3.18.1~ynh1
+**Shipped version:** 4.1.2~ynh1
 
 **Demo:** https://cloud.rocket.chat/trial
 
@@ -28,7 +28,6 @@ Team collaboration communication platform
 ## Documentation and resources
 
 * Official app website: https://rocket.chat/
-* Official user documentation: https://yunohost.org/apps
 * Official admin documentation: https://docs.rocket.chat/
 * Upstream app code repository: https://github.com/RocketChat/Rocket.Chat
 * YunoHost documentation for this app: https://yunohost.org/app_rocketchat
