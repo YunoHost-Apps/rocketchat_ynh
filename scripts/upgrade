@@ -132,19 +132,19 @@ ynh_replace_string --match_string="__ENV_PATH__" --replace_string="$PATH" --targ
 ynh_add_systemd_config
 
 #=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Configuring a mongod..." --weight=1
+
+echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
+
+#=================================================
 # SETUP LOGROTATE
 #=================================================
 ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
 
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
-
-#=================================================
-# MODIFY A CONFIG FILE
-#=================================================
-ynh_script_progression --message="Configuring a mongod..." --weight=1
-
-echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST

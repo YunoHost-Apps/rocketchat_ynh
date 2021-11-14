@@ -23,8 +23,8 @@ MONGO_DEBIAN_DEPENDENCIES="mongodb mongodb-server mongo-tools"
 MONGO_CE_DEPENDENCIES="mongodb-org mongodb-org-server mongodb-org-tools"
 MONGO_DEBIAN_CONFIG="/etc/mongodb.conf"
 MONGO_CE_CONFIG="/etc/mongod.conf"
-MONGO_CE_REPO="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main"
-MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-4.4.asc"
+MONGO_CE_REPO="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main"
+MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-5.0.asc"
 
 # Execute a mongo command
 #
