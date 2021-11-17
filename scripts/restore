@@ -89,6 +89,23 @@ ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
 ynh_mongo_restore_db --database="$db_name" < ./dump.bson
 
 #=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+ynh_script_progression --message="Configuring a mongod..." --weight=1
+
+sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
+sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+
+ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
+ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+
+sleep 10
+
+#mongo --eval "printjson(rs.initiate())"
+
+ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+
+#=================================================
 # RESTORE SYSTEMD
 #=================================================
 ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
@@ -115,14 +132,14 @@ yunohost service add $app --description="Team collaboration communication platfo
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=$app --action="start" --log_path=systemd
 
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server and PHP-FPM..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 
