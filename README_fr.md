@@ -11,9 +11,9 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 ## Vue d'ensemble
 
-Plateforme de communication collaborative en équipe
+Rocket.Chat est une plate-forme de communication open source entièrement personnalisable développée en JavaScript pour les organisations avec des normes élevées de protection des données. 
 
-**Version incluse :** 3.16.2~ynh1
+**Version incluse :** 4.1.2~ynh1
 
 **Démo :** https://cloud.rocket.chat/trial
 
@@ -24,7 +24,6 @@ Plateforme de communication collaborative en équipe
 ## Documentations et ressources
 
 * Site officiel de l'app : https://rocket.chat/
-* Documentation officielle utilisateur : https://yunohost.org/apps
 * Documentation officielle de l'admin : https://docs.rocket.chat/
 * Dépôt de code officiel de l'app : https://github.com/RocketChat/Rocket.Chat
 * Documentation YunoHost pour cette app : https://yunohost.org/app_rocketchat

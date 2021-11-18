@@ -21,33 +21,13 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 admin=$(ynh_app_setting_get --app=$app --key=admin)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+port=$(ynh_app_setting_get --app=$app --key=port)
 
 #=================================================
 # CHECK VERSION
 #=================================================
 
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
-
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-fi
-
-### If nobody installed your app before 4.1,
-### then you may safely remove these lines
-
-# Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-	ynh_legacy_permissions_delete_all
-
-	ynh_app_setting_delete --app=$app --key=is_public
-fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -62,6 +42,24 @@ ynh_clean_setup () {
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+
+# If final_path doesn't exist, create it
+if [ -z "$final_path" ]; then
+	final_path=/var/www/$app
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -95,7 +93,7 @@ fi
 
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
-chown -R $app:$app "$final_path"
+chown -R $app:www-data "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -139,7 +137,23 @@ ynh_add_systemd_config
 #=================================================
 ynh_script_progression --message="Configuring a mongod..." --weight=1
 
-echo -e "replication:\n  replSetName: \"rs01\"" | tee -a /etc/mongod.conf
+sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
+sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+
+ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
+ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+
+sleep 10
+
+mongo --eval "printjson(rs.initiate())"
+
+#=================================================
+# SETUP LOGROTATE
+#=================================================
+ynh_script_progression --message="Upgrading logrotate configuration..." --weight=1
+
+# Use logrotate to manage app-specific logfile(s)
+ynh_use_logrotate --non-append
 
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
@@ -153,8 +167,9 @@ yunohost service add $app --description="Team collaboration communication platfo
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=10
 
-ynh_systemd_action --service_name=mongod --action=restart --log_path=systemd 
-ynh_systemd_action --service_name=$app --action=start --log_path="/var/log/$app/$app.log"
+ynh_systemd_action --service_name=$mongodb_servicename --action=restart --log_path=systemd 
+ynh_systemd_action --service_name=$app --action=start --log_path=systemd
+sleep 120
 
 #=================================================
 # RELOAD NGINX

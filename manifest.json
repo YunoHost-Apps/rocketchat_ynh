@@ -6,14 +6,13 @@
         "en": "Team collaboration communication platform",
         "fr": "Plateforme de communication collaborative en équipe"
     },
-    "version": "3.16.2~ynh1",
+    "version": "4.1.2~ynh1",
     "url": "https://rocket.chat",
     "upstream": {
         "license": "GPL-3.0",
         "website": "https://rocket.chat/",
         "demo": "https://cloud.rocket.chat/trial",
         "admindoc": "https://docs.rocket.chat/",
-        "userdoc": "https://yunohost.org/apps",
         "code": "https://github.com/RocketChat/Rocket.Chat"
     },
     "license": "GPL-3.0",
@@ -21,19 +20,18 @@
         "name": "",
         "email": ""
     },
-    "multi_instance": false,
+    "multi_instance": true,
     "services": [
         "nginx"
     ],
     "requirements": {
-        "yunohost": ">> 4.2.4"
+        "yunohost": ">> 4.3.2"
     },
     "arguments": {
         "install" : [
             {
                 "name": "domain",
-                "type": "domain",
-                "example": "domain.org"
+                "type": "domain"
             },
             {
                 "name": "path",
