@@ -101,7 +101,7 @@ ynh_setup_source --dest_dir=$final_path
 
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+chown -R $app:$app "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -120,7 +120,7 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path/programs/server
  	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install 2>/dev/null
+ 	ynh_exec_as $app env $ynh_node_load_PATH npm install --unsafe-perm 2>/dev/null
 popd
 
 #=================================================
