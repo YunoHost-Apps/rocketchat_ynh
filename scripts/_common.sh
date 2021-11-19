@@ -357,7 +357,7 @@ ynh_remove_mongo() {
     # Only remove the mongodb service if it is not installed.
     if ! ynh_package_is_installed --package="mongodb*"
     then
-        ynh_print_info --message="Removing MongoDB service..."
+        ynh_script_progression --message="Removing MongoDB service..." --weight=2
         # Define Mongo Service Name
         if [ "$(lsb_release --codename --short)" = "buster" ]; then
             MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME

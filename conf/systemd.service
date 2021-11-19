@@ -17,6 +17,10 @@ Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=rs01
 Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01
 Environment=ROOT_URL=https://__DOMAIN____PATH__
 Environment=PORT=__PORT__
+Environment=ADMIN_USERNAME=__ADMIN__
+Environment=ADMIN_PASS=__PASSWORD__
+Environment=ADMIN_EMAIL=__EMAIL__
+Environment=OVERWRITE_SETTING_Show_Setup_Wizard=completed
 
 [Install]
 WantedBy=multi-user.target

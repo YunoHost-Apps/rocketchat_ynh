@@ -22,6 +22,9 @@ admin=$(ynh_app_setting_get --app=$app --key=admin)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 port=$(ynh_app_setting_get --app=$app --key=port)
+password=$(ynh_app_setting_get --app=$app --key=password)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+email=$(ynh_app_setting_get --app=$app --key=email)
 
 #=================================================
 # CHECK VERSION
@@ -93,7 +96,7 @@ fi
 
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
-chown -R $app:www-data "$final_path"
+chown -R $app:$app "$final_path"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -119,7 +122,7 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path/programs/server
  	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install 2>/dev/null
+ 	ynh_exec_as $app env $ynh_node_load_PATH npm install --unsafe-perm 2>/dev/null
 popd
 
 #=================================================
@@ -169,7 +172,7 @@ ynh_script_progression --message="Starting a systemd service..." --weight=10
 
 ynh_systemd_action --service_name=$mongodb_servicename --action=restart --log_path=systemd 
 ynh_systemd_action --service_name=$app --action=start --log_path=systemd
-sleep 120
+sleep 100
 
 #=================================================
 # RELOAD NGINX
