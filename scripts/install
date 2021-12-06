@@ -124,7 +124,7 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path/programs/server
  	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install --unsafe-perm 2>/dev/null
+ 	ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm install --unsafe-perm 2>/dev/null
 popd
 
 #=================================================
