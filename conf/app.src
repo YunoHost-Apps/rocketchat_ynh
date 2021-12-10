@@ -1,5 +1,5 @@
-SOURCE_URL=https://releases.rocket.chat/4.2.0/download
-SOURCE_SUM=e051c88a5106dbf3cbb8e693bbba3620d223c5cac2ccf17ee779e51c2f64c283
+SOURCE_URL=https://releases.rocket.chat/4.2.1/download
+SOURCE_SUM=430047d5b40388e391a58a933815aaa5348a2518be8d12675a08ddb1b9fd389e
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true
