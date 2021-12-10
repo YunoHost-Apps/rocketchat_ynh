@@ -13,7 +13,7 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		#upgrade=1	from_commit=CommitHash
+		upgrade=1	from_commit=f565c082fa1b839326433ad149e32223f7447eec
 		backup_restore=1
 		multi_instance=1
 		change_url=1
@@ -21,7 +21,7 @@
 Email=
 Notification=none
 ;;; Upgrade options
-	; commit=CommitHash
-		name=Name and date of the commit.
+	; commit=f565c082fa1b839326433ad149e32223f7447eec
+		name=Testing (#86)
 		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1&password=pass&port=666&
 		
