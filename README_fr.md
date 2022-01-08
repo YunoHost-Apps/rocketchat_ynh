@@ -21,6 +21,11 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 
 ![](./doc/screenshots/screenshot.jpg)
 
+## Avertissements / informations importantes
+
+### Configurer et activer la fédération pour Rocketchat 
+
+https://support.indie.host/help/fr-fr/13/40
 ## Documentations et ressources
 
 * Site officiel de l'app : https://rocket.chat/

@@ -26,6 +26,11 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 
 ![](./doc/screenshots/screenshot.jpg)
 
+## Disclaimers / important information
+
+### Configure and activate federation for Rocketchat
+
+https://support.indie.host/help/fr-fr/13/40
 ## Documentation and resources
 
 * Official app website: https://rocket.chat/
