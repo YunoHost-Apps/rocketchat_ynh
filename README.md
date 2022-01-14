@@ -34,6 +34,7 @@ https://support.indie.host/help/fr-fr/13/40
 ## Documentation and resources
 
 * Official app website: https://rocket.chat/
+* Official user documentation: https://docs.rocket.chat/guides/user-guides
 * Official admin documentation: https://docs.rocket.chat/
 * Upstream app code repository: https://github.com/RocketChat/Rocket.Chat
 * YunoHost documentation for this app: https://yunohost.org/app_rocketchat
