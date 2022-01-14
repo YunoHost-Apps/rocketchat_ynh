@@ -13,6 +13,7 @@
         "website": "https://rocket.chat/",
         "demo": "https://cloud.rocket.chat/trial",
         "admindoc": "https://docs.rocket.chat/",
+        "userdoc": "https://docs.rocket.chat/guides/user-guides",
         "code": "https://github.com/RocketChat/Rocket.Chat"
     },
     "license": "GPL-3.0",
