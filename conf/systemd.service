@@ -22,22 +22,5 @@ Environment=ADMIN_PASS=__PASSWORD__
 Environment=ADMIN_EMAIL=__EMAIL__
 Environment=OVERWRITE_SETTING_Show_Setup_Wizard=completed
 
-Environment=OVERWRITE_SETTING_LDAP_Enable:1
-Environment=OVERWRITE_SETTING_LDAP_BaseDN:ou=users,dc=yunohost,dc=org
-Environment=LDAP_Host:localhost
-Environment=LDAP_Reconnect:1
-Environment=LDAP_Port:389
-Environment=LDAP_Authentication:1
-Environment=LDAP_Username_Field:uid
-Environment=LDAP_Unique_Identifier_Field:uid
-Environment=LDAP_User_Search_Filter:(objectclass=inetOrgPerson)
-Environment=LDAP_User_Search_Scope:sub
-Environment=LDAP_User_Search_Field:uid
-Environment=LDAP_Accounts_RegistrationForm:1
-
-Environment=OVERWRITE_SETTING_SMTP_Host:localhost
-Environment=OVERWRITE_SETTING_SMTP_Port:25
-Environment=OVERWRITE_SETTING_From_Email:rocketchat@__DOMAIN__
-
 [Install]
 WantedBy=multi-user.target
