@@ -18,7 +18,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 Rocket.Chat is an open-source fully customizable communications platform developed in JavaScript for organizations with high standards of data protection.
 
 
-**Shipped version:** 4.3.1~ynh1
+**Shipped version:** 4.3.2~ynh1
 
 **Demo:** https://cloud.rocket.chat/trial
 
@@ -26,9 +26,25 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 
 ![](./doc/screenshots/screenshot.jpg)
 
+## Disclaimers / important information
+
+### E-mail Configuration
+
+To enable E-mail for address verification, go to Rocketchat Administration panel under E-mail -> SMTP and set as follow:
+
+- Protocole: smtp
+- Host: localhost
+- Port: 25
+- From -mail: rocketchat@domain.tld
+
+### Configure and activate federation for Rocketchat
+
+https://support.indie.host/help/fr-fr/13/40
+
 ## Documentation and resources
 
 * Official app website: https://rocket.chat/
+* Official user documentation: https://docs.rocket.chat/guides/user-guides
 * Official admin documentation: https://docs.rocket.chat/
 * Upstream app code repository: https://github.com/RocketChat/Rocket.Chat
 * YunoHost documentation for this app: https://yunohost.org/app_rocketchat
