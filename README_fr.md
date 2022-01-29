@@ -13,7 +13,7 @@ Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour
 
 Rocket.Chat est une plate-forme de communication open source entièrement personnalisable développée en JavaScript pour les organisations avec des normes élevées de protection des données. 
 
-**Version incluse :** 4.3.2~ynh1
+**Version incluse :** 4.4.0~ynh1
 
 **Démo :** https://cloud.rocket.chat/trial
 
