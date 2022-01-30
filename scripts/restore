@@ -132,15 +132,15 @@ ynh_script_progression --message="Starting a MongoDB service..." --weight=2
 
 # Start a mongod service
 ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+ynh_systemd_action --service_name=$mongodb_servicename --action="restart"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=5
 
-ynh_systemd_action --service_name=$app --action="start" --log_path=systemd
-sleep 120
+ynh_systemd_action --service_name=$app --action="start" --log_path="systemd"
+sleep 60
 
 #=================================================
 # GENERIC FINALIZATION
