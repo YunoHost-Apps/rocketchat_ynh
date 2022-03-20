@@ -6,7 +6,7 @@
         "en": "Team collaboration communication platform",
         "fr": "Plateforme de communication collaborative en équipe"
     },
-    "version": "4.3.2~ynh1",
+    "version": "4.5.0~ynh1",
     "url": "https://rocket.chat",
     "upstream": {
         "license": "GPL-3.0",
@@ -45,13 +45,17 @@
                 "type": "user"
             },
             {
-                "name": "is_public",
-                "type": "boolean",
-                "default": true
-            },
-            {
                 "name": "password",
                 "type": "password"
+            },
+            {
+                "name": "is_public",
+                "type": "boolean",
+                "help": {
+                    "en": "If enabled, RocketChat will be accessible by people who do not have an account. This can be changed later via the webadmin.",
+                    "fr": "Si cette case est cochée, RocketChat sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
+                },
+                "default": true
             }
         ]
     }

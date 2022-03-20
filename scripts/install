@@ -132,8 +132,7 @@ popd
 #=================================================
 ynh_script_progression --message="Configuring a systemd service..." --weight=1
 
-ynh_replace_string --match_string="__ENV_PATH__" --replace_string="$PATH" --target_file="../conf/systemd.service"
-
+env_path="$PATH"
 ynh_add_systemd_config
 
 #=================================================
@@ -175,15 +174,15 @@ ynh_script_progression --message="Starting a MongoDB service..." --weight=2
 
 # Start a mongod service
 ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+ynh_systemd_action --service_name=$mongodb_servicename --action="restart"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=2
 
-ynh_systemd_action --service_name=$app --action=start --log_path=systemd
-sleep 100
+ynh_systemd_action --service_name=$app --action="start" --log_path="systemd"
+sleep 60
 
 #=================================================
 # SETUP SSOWAT
