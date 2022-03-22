@@ -6,7 +6,7 @@
         "en": "Team collaboration communication platform",
         "fr": "Plateforme de communication collaborative en équipe"
     },
-    "version": "4.5.0~ynh1",
+    "version": "4.5.3~ynh1",
     "url": "https://rocket.chat",
     "upstream": {
         "license": "GPL-3.0",
@@ -18,7 +18,7 @@
     },
     "license": "GPL-3.0",
     "maintainer": {
-        "name": "",
+        "name": "eric_G",
         "email": ""
     },
     "multi_instance": true,
