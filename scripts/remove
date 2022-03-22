@@ -35,6 +35,12 @@ then
 	yunohost service remove $app
 fi
 
+if ynh_exec_warn_less yunohost service status "$mongodb_servicename" >/dev/null
+then
+	ynh_script_progression --message="Removing $mongodb_servicename service integration..."
+	yunohost service remove "$mongodb_servicename"
+fi
+
 #=================================================
 # STOP AND REMOVE SERVICE
 #=================================================
@@ -42,6 +48,7 @@ ynh_script_progression --message="Stopping and removing the systemd service..." 
 
 # Remove the dedicated systemd config
 ynh_remove_systemd_config
+ynh_remove_systemd_config --service=$mongodb_servicename
 
 #=================================================
 # REMOVE LOGROTATE CONFIGURATION
