@@ -6,9 +6,9 @@ After=network.target remote-fs.target nss-lookup.target nginx.service __MONGODB_
 [Service]
 User=__APP__
 Group=__APP__
-WorkingDirectory=__FINALPATH__
-Environment="PATH=__ENV_PATH__"
 Environment="NODE_ENV=production"
+WorkingDirectory=__FINALPATH__/
+Environment="__YNH_NODE_LOAD_PATH__"
 ExecStart=__YNH_NODE__ __FINALPATH__/main.js
 StandardOutput=syslog
 StandardError=syslog
