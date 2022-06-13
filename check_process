@@ -13,7 +13,8 @@
 		setup_private=1
 		setup_public=1
 		upgrade=1
-		upgrade=1	from_commit=f565c082fa1b839326433ad149e32223f7447eec
+		#4.7.2~ynh2
+		upgrade=1	from_commit=9280c034e8843e7e69622f0daa02ee74c916faa1
 		backup_restore=1
 		multi_instance=1
 		change_url=1
@@ -21,7 +22,7 @@
 Email=
 Notification=none
 ;;; Upgrade options
-	; commit=f565c082fa1b839326433ad149e32223f7447eec
-		name=Testing (#86)
+	; commit=9280c034e8843e7e69622f0daa02ee74c916faa1
+		name=Testing (#118)
 		manifest_arg=domain=DOMAIN&path=PATH&admin=USER&is_public=1&password=pass&port=666&
 		
