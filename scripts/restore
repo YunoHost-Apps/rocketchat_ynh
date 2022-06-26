@@ -94,15 +94,13 @@ ynh_mongo_restore_db --database="$db_name" < ./dump.bson
 #=================================================
 ynh_script_progression --message="Configuring mongod..." --weight=3
 
-sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
-sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+sed -i "s/^#  engine:/  engine: wiredTiger/" $MONGO_CE_CONFIG
+sed -i "s/^#replication:/replication:\n  replSetName: rs01/" $MONGO_CE_CONFIG
 
 ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
 ynh_systemd_action --service_name=$mongodb_servicename --action=restart
 
 sleep 10
-
-ynh_mongo_exec --command="printjson(rs.initiate())" --eval
 
 #=================================================
 # RESTORE SYSTEMD
