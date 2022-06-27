@@ -87,7 +87,7 @@ ynh_exec_warn_less ynh_install_mongo
 ynh_script_progression --message="Configuring system user..." --weight=3
 
 # Create a system user
-ynh_system_user_create --username=$app --home_dir=$final_path
+ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # CREATE A MONGODB DATABASE
@@ -122,14 +122,29 @@ ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC SETUP
+#=================================================
+# CONFIGURE MONGOD
+#=================================================
+ynh_script_progression --message="Configuring mongod..." --weight=1
+
+ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file=$MONGO_CE_CONFIG
+ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file=$MONGO_CE_CONFIG
+
+ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
+ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+
+sleep 10
+
+ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+
 #==============================================
 # INSTALL ROCKETCHAT
 #==============================================
 ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=20
 
 pushd $final_path/programs/server
- 	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm install --unsafe-perm 2>/dev/null
+	ynh_use_nodejs
+	ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm install --unsafe-perm 2>/dev/null
 popd
 
 #=================================================
@@ -139,19 +154,6 @@ ynh_script_progression --message="Configuring a systemd service..." --weight=1
 
 # Create a dedicated systemd config
 ynh_add_systemd_config
-
-#=================================================
-# CONFIGURE MONGOD
-#=================================================
-ynh_script_progression --message="Configuring mongod..." --weight=1
-
-sed -i "s/^#  engine:/  engine: wiredTiger/" $MONGO_CE_CONFIG
-sed -i "s/^#replication:/replication:\n  replSetName: rs01/" $MONGO_CE_CONFIG
-
-ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action=restart
-
-sleep 10
 
 #=================================================
 # GENERIC FINALIZATION
@@ -168,7 +170,7 @@ ynh_use_logrotate
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
+yunohost service add $app --description="Team collaboration communication platform"
 
 #=================================================
 # START SYSTEMD SERVICE
