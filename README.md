@@ -38,14 +38,14 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 
 ### E-mail Configuration
 
-To enable E-mail for address verification, go to Rocketchat Administration panel under E-mail -> SMTP and set as follow:
+To enable E-mail for address verification, go to Rocket.Chat Administration panel under E-mail -> SMTP and set as follow:
 
-- Protocole: smtp
-- Host: localhost
-- Port: 25
-- From -mail: rocketchat@domain.tld
+- Protocole: `smtp`
+- Host: `localhost`
+- Port: `25`
+- From -mail: `rocketchat@domain.tld`
 
-### Configure and activate federation for Rocketchat
+### Configure and activate federation for Rocket.Chat
 
 https://support.indie.host/help/fr-fr/13/40
 
