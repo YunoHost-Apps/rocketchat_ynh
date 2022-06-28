@@ -1,5 +1,5 @@
 {
-    "name": "RocketChat",
+    "name": "Rocket.Chat",
     "id": "rocketchat",
     "packaging_format": 1,
     "description": {
@@ -44,8 +44,8 @@
                 "name": "is_public",
                 "type": "boolean",
                 "help": {
-                    "en": "If enabled, RocketChat will be accessible by people who do not have an account. This can be changed later via the webadmin.",
-                    "fr": "Si cette case est cochée, RocketChat sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
+                    "en": "If enabled, Rocket.Chat will be accessible by people who do not have an account. This can be changed later via the webadmin.",
+                    "fr": "Si cette case est cochée, Rocket.Chat sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
                 },
                 "default": true
             },
