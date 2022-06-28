@@ -103,7 +103,9 @@ ynh_systemd_action --service_name=$mongodb_servicename --action=restart
 
 sleep 10
 
-ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
+	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+fi
 
 #=================================================
 # RESTORE SYSTEMD
