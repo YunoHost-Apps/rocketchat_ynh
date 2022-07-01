@@ -99,9 +99,7 @@ ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wired
 ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file=$MONGO_CE_CONFIG
 
 ynh_exec_warn_less systemctl enable $MONGO_CE_SERVICENAME --quiet
-ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart
-
-sleep 10
+ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart --log_path=/var/log/mongodb/$MONGO_CE_SERVICENAME.log --line_match="Waiting for connections"
 
 if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
 	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
