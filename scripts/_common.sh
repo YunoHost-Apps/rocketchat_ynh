@@ -17,11 +17,8 @@ pkg_dependencies="apt-transport-https build-essential gzip curl fontconfig graph
 # EXPERIMENTAL HELPERS
 #=================================================
 
-MONGO_DEBIAN_SERVICENAME="mongodb"
 MONGO_CE_SERVICENAME="mongod"
-MONGO_DEBIAN_DEPENDENCIES="mongodb mongodb-server mongo-tools"
-MONGO_CE_DEPENDENCIES="mongodb-org mongodb-org-server mongodb-org-tools"
-MONGO_DEBIAN_CONFIG="/etc/mongodb.conf"
+MONGO_CE_DEPENDENCIES="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh"
 MONGO_CE_CONFIG="/etc/mongod.conf"
 MONGO_CE_REPO="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/5.0 main"
 MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-5.0.asc"
@@ -32,14 +29,14 @@ MONGO_CE_KEY="https://www.mongodb.org/static/pgp/server-5.0.asc"
 # example: ynh_mongo_exec --command="db.getMongo().getDBNames().indexOf(\"wekan\")"
 #
 # usage: ynh_mongo_exec [--user=user] [--password=password] [--authenticationdatabase=authenticationdatabase] [--database=database] [--host=host] [--port=port] --command="command" [--eval]
-# | arg: -u, --user=                      - The user name to connect as
-# | arg: -p, --password=                  - The user password
-# | arg: -d, --authenticationdatabase=    - The authenticationdatabase to connect to
-# | arg: -d, --database=                  - The database to connect to
-# | arg: -h, --host=                      - The host to connect to
-# | arg: -P, --port=                      - The port to connect to
-# | arg: -c, --command=                   - The command to evaluate
-# | arg: -e, --eval                       - Evaluate instead of execute the command.
+# | arg: -u, --user=                        - The user name to connect as
+# | arg: -p, --password=                    - The user password
+# | arg: -d, --authenticationdatabase=      - The authenticationdatabase to connect to
+# | arg: -d, --database=                    - The database to connect to
+# | arg: -h, --host=                        - The host to connect to
+# | arg: -P, --port=                        - The port to connect to
+# | arg: -c, --command=                     - The command to evaluate
+# | arg: -e, --eval                         - Evaluate instead of execute the command.
 #
 #
 ynh_mongo_exec() {
@@ -110,7 +107,7 @@ ynh_mongo_exec() {
             database=""
         fi
 
-        mongo --quiet $user $password $authenticationdatabase $host $port <<EOF
+        mongosh --quiet --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port <<EOF
 $database
 ${command}
 quit()
@@ -124,7 +121,7 @@ EOF
             database=""
         fi
         
-        mongo --quiet $database $user $password $authenticationdatabase $host $port --eval="$command"
+        mongosh --quiet $database --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port --eval="$command"
     fi
 }
 
@@ -175,9 +172,9 @@ ynh_mongo_dump_db() {
 # [internal]
 #
 # usage: ynh_mongo_create_user --db_user=user --db_pwd=pwd --db_name=name
-# | arg: -u, --db_user=    - The user name to create
-# | arg: -p, --db_pwd=     - The password to identify user by
-# | arg: -n, --db_name=    - Name of the database to grant privilegies
+# | arg: -u, --db_user=     - The user name to create
+# | arg: -p, --db_pwd=      - The password to identify user by
+# | arg: -n, --db_name=     - Name of the database to grant privilegies
 #
 #
 ynh_mongo_create_user() {
@@ -200,7 +197,7 @@ ynh_mongo_create_user() {
 # Check if a mongo database exists
 #
 # usage: ynh_mongo_database_exists --database=database
-# | arg: -d, --database=    - The database for which to check existence
+# | arg: -d, --database=        - The database for which to check existence
 # | exit: Return 1 if the database doesn't exist, 0 otherwise
 #
 #
@@ -244,8 +241,8 @@ ynh_mongo_restore_db() {
 # [internal]
 #
 # usage: ynh_mongo_drop_user --db_user=user --db_name=name
-# | arg: -u, --db_user=    - The user to drop
-# | arg: -n, --db_name=    - Name of the database
+# | arg: -u, --db_user=     - The user to drop
+# | arg: -n, --db_name=     - Name of the database
 #
 #
 ynh_mongo_drop_user() {
@@ -263,9 +260,9 @@ ynh_mongo_drop_user() {
 # Create a database, an user and its password. Then store the password in the app's config
 #
 # usage: ynh_mongo_setup_db --db_user=user --db_name=name [--db_pwd=pwd]
-# | arg: -u, --db_user=    - Owner of the database
-# | arg: -n, --db_name=    - Name of the database
-# | arg: -p, --db_pwd=     - Password of the database. If not provided, a password will be generated
+# | arg: -u, --db_user=     - Owner of the database
+# | arg: -n, --db_name=     - Name of the database
+# | arg: -p, --db_pwd=      - Password of the database. If not provided, a password will be generated
 #
 # After executing this helper, the password of the created database will be available in $db_pwd
 # It will also be stored as "mongopwd" into the app settings.
@@ -295,8 +292,8 @@ ynh_mongo_setup_db() {
 # Remove a database if it exists, and the associated user
 #
 # usage: ynh_mongo_remove_db --db_user=user --db_name=name
-# | arg: -u, --db_user=    - Owner of the database
-# | arg: -n, --db_name=    - Name of the database
+# | arg: -u, --db_user=     - Owner of the database
+# | arg: -n, --db_name=     - Name of the database
 #
 #
 ynh_mongo_remove_db() {
@@ -324,26 +321,16 @@ ynh_mongo_remove_db() {
 #
 #
 ynh_install_mongo() {
-    ynh_script_progression --message="Installing MongoDB..."  --weight=5
-
-    # Define Mongo Service Name
-    if $(dpkg --compare-versions $(cat /etc/debian_version) gt "10.0")
-    then
-        ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
-        MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
-    else
-        ynh_print_info --message="Installing MongoDB Debian..."
-        ynh_install_app_dependencies $MONGO_DEBIAN_DEPENDENCIES
-        MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
-    fi
-    mongodb_servicename=$MONGODB_SERVICENAME
+    ynh_print_info --message="Installing MongoDB Community Edition..."
+    ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
+    mongodb_servicename=$MONGO_CE_SERVICENAME
     
     # Make sure MongoDB is started and enabled
-    systemctl is-enabled $MONGODB_SERVICENAME -q || systemctl enable $MONGODB_SERVICENAME --quiet
-    systemctl is-active $MONGODB_SERVICENAME -q || ynh_systemd_action --service_name=$MONGODB_SERVICENAME --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/$MONGODB_SERVICENAME.log"
+    systemctl is-enabled $mongodb_servicename -q || systemctl enable $mongodb_servicename --quiet
+    systemctl is-active $mongodb_servicename -q || ynh_systemd_action --service_name=$mongodb_servicename --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/$mongodb_servicename.log"
     
     # Integrate MongoDB service in YunoHost
-    yunohost service add $MONGODB_SERVICENAME --description="MongoDB daemon" --log="/var/log/mongodb/$MONGODB_SERVICENAME.log"
+    yunohost service add $mongodb_servicename --description="MongoDB daemon" --log="/var/log/mongodb/$mongodb_servicename.log"
 }
 
 # Remove MongoDB
@@ -357,15 +344,11 @@ ynh_remove_mongo() {
     # Only remove the mongodb service if it is not installed.
     if ! ynh_package_is_installed --package="mongodb*"
     then
-        ynh_script_progression --message="Removing MongoDB service..." --weight=2
-        # Define Mongo Service Name
-        if [ "$(lsb_release --codename --short)" = "buster" ]; then
-            MONGODB_SERVICENAME=$MONGO_CE_SERVICENAME
-        else
-            MONGODB_SERVICENAME=$MONGO_DEBIAN_SERVICENAME
-        fi
+        ynh_print_info --message="Removing MongoDB service..."
+        mongodb_servicename=$MONGO_CE_SERVICENAME
         # Remove the mongodb service
-        yunohost service remove $MONGODB_SERVICENAME
-        # ynh_secure_remove --file=$MONGO_ROOT_PWD_FILE
+        yunohost service remove $mongodb_servicename
+        ynh_secure_remove --file="/var/lib/mongodb"
+        ynh_secure_remove --file="/var/log/mongodb"
     fi
 }

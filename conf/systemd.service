@@ -10,8 +10,6 @@ Environment="NODE_ENV=production"
 WorkingDirectory=__FINALPATH__/
 Environment="__YNH_NODE_LOAD_PATH__"
 ExecStart=__YNH_NODE__ __FINALPATH__/main.js
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=__APP__
 Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=rs01
 Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01
