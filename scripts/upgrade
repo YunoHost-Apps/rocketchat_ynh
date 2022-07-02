@@ -29,6 +29,7 @@ email=$(ynh_app_setting_get --app=$app --key=email)
 #=================================================
 # CHECK VERSION
 #=================================================
+ynh_script_progression --message="Checking version..."
 
 upgrade_type=$(ynh_check_app_version_changed)
 
@@ -40,11 +41,21 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
+	ynh_clean_check_starting
 	# Restore it if the upgrade fails
 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
+
+#=================================================
+# STANDARD UPGRADE STEPS
+#=================================================
+# STOP SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Stopping a systemd service..." --weight=1
+
+ynh_systemd_action --service_name=$app --action="stop" --log_path="systemd"
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
@@ -63,15 +74,6 @@ if ynh_legacy_permissions_exists; then
 
 	ynh_app_setting_delete --app=$app --key=is_public
 fi
-
-#=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
-# STOP SYSTEMD SERVICE
-#=================================================
-ynh_script_progression --message="Stopping a systemd service..." --weight=1
-
-ynh_systemd_action --service_name=$app --action="stop" --log_path="systemd"
 
 #=================================================
 # CREATE DEDICATED USER
@@ -99,6 +101,15 @@ chmod -R o-rwx "$final_path"
 chown -R $app:$app "$final_path"
 
 #=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Upgrading dependencies..." --weight=7
+
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
+ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
+ynh_exec_warn_less ynh_install_mongo
+
+#=================================================
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=2
@@ -107,13 +118,21 @@ ynh_script_progression --message="Upgrading NGINX web server configuration..." -
 ynh_add_nginx_config
 
 #=================================================
-# UPGRADE DEPENDENCIES
+# SPECIFIC UPGRADE
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=7
+# CONFIGURE MONGOD
+#=================================================
+ynh_script_progression --message="Configuring mongod..." --weight=1
 
-ynh_install_app_dependencies $pkg_dependencies
-ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_install_mongo
+ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file=$MONGO_CE_CONFIG
+ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file=$MONGO_CE_CONFIG
+
+ynh_exec_warn_less systemctl enable $MONGO_CE_SERVICENAME --quiet
+ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart --log_path=/var/log/mongodb/$MONGO_CE_SERVICENAME.log --line_match="Waiting for connections"
+
+if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
+	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+fi
 
 #==============================================
 # INSTALL ROCKETCHAT
@@ -121,8 +140,8 @@ ynh_install_mongo
 ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=20
 
 pushd $final_path/programs/server
- 	ynh_use_nodejs
- 	ynh_exec_as $app env $ynh_node_load_PATH npm install --unsafe-perm 2>/dev/null
+	ynh_use_nodejs
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH npm install --unsafe-perm
 popd
 
 #=================================================
@@ -134,20 +153,7 @@ ynh_script_progression --message="Upgrading systemd configuration..." --weight=2
 ynh_add_systemd_config
 
 #=================================================
-# MODIFY A CONFIG FILE
-#=================================================
-ynh_script_progression --message="Configuring a mongod..." --weight=1
-
-sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
-sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
-
-ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action="restart"
-
-sleep 10
-
-mongo --eval "printjson(rs.initiate())"
-
+# GENERIC FINALIZATION
 #=================================================
 # SETUP LOGROTATE
 #=================================================
@@ -161,16 +167,14 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
+yunohost service add $app --description="Team collaboration communication platform"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=10
 
-ynh_systemd_action --service_name=$mongodb_servicename --action="restart" --log_path="systemd"
-ynh_systemd_action --service_name=$app --action="start" --log_path="systemd"
-sleep 60
+ynh_systemd_action --service_name=$app --action="start" --log_path="systemd" --line_match="SERVER RUNNING"
 
 #=================================================
 # RELOAD NGINX

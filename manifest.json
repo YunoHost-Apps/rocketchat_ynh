@@ -21,15 +21,15 @@
         "name": "eric_G",
         "email": ""
     },
+    "requirements": {
+        "yunohost": ">> 4.3.2"
+    },
     "multi_instance": true,
     "services": [
         "nginx"
     ],
-    "requirements": {
-        "yunohost": ">> 4.3.2"
-    },
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "domain",
                 "type": "domain"
@@ -41,14 +41,6 @@
                 "default": "/rocketchat"
             },
             {
-                "name": "admin",
-                "type": "user"
-            },
-            {
-                "name": "password",
-                "type": "password"
-            },
-            {
                 "name": "is_public",
                 "type": "boolean",
                 "help": {
@@ -56,6 +48,14 @@
                     "fr": "Si cette case est cochée, Rocket.Chat sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
                 },
                 "default": true
+            },
+            {
+                "name": "admin",
+                "type": "user"
+            },
+            {
+                "name": "password",
+                "type": "password"
             }
         ]
     }

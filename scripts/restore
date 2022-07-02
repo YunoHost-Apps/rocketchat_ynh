@@ -1,6 +1,8 @@
 #!/bin/bash
 
 #=================================================
+# GENERIC START
+#=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
@@ -13,8 +15,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 ynh_clean_setup () {
-	#### Remove this function if there's nothing to clean before calling the remove script.
-	true
+	ynh_clean_check_starting
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -37,23 +38,18 @@ db_user=$db_name
 #=================================================
 ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
-test ! -d $final_path || ynh_die --message="There is already a directory: $final_path "
+test ! -d $final_path \
+	|| ynh_die --message="There is already a directory: $final_path "
 
 #=================================================
 # STANDARD RESTORATION STEPS
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-
-ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
-
 #=================================================
 # RECREATE THE DEDICATED USER
 #=================================================
 ynh_script_progression --message="Recreating the dedicated system user..." --weight=1
 
 # Create the dedicated user (if not existing)
-ynh_system_user_create --username=$app --home_dir=$final_path
+ynh_system_user_create --username=$app --home_dir="$final_path"
 
 #=================================================
 # RESTORE THE APP MAIN DIR
@@ -74,10 +70,16 @@ chown -R $app:$app "$final_path"
 ynh_script_progression --message="Reinstalling dependencies..." --weight=1
 
 # Define and install dependencies
-ynh_install_app_dependencies $pkg_dependencies
-
+ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_install_mongo
+ynh_exec_warn_less ynh_install_mongo
+
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Restoring the NGINX web server configuration..."
+
+ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
 #=================================================
 # RESTORE THE MONGODB DATABASE
@@ -89,19 +91,19 @@ ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
 ynh_mongo_restore_db --database="$db_name" < ./dump.bson
 
 #=================================================
-# MODIFY A CONFIG FILE
+# CONFIGURE MONGOD
 #=================================================
-ynh_script_progression --message="Configuring a mongod..." --weight=3
+ynh_script_progression --message="Configuring mongod..." --weight=3
 
-sed -i "s/^#  engine:/  engine: wiredTiger/"  /etc/mongod.conf
-sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file=$MONGO_CE_CONFIG
+ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file=$MONGO_CE_CONFIG
 
-ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action=restart
+ynh_exec_warn_less systemctl enable $MONGO_CE_SERVICENAME --quiet
+ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart --log_path=/var/log/mongodb/$MONGO_CE_SERVICENAME.log --line_match="Waiting for connections"
 
-sleep 10
-
-ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
+	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+fi
 
 #=================================================
 # RESTORE SYSTEMD
@@ -123,24 +125,14 @@ ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
 
-yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
-
-#=================================================
-# START MONGO SYSTEMD SERVICE
-#=================================================
-ynh_script_progression --message="Starting a MongoDB service..." --weight=2
-
-# Start a mongod service
-ynh_exec_warn_less systemctl enable $mongodb_servicename --quiet
-ynh_systemd_action --service_name=$mongodb_servicename --action="restart"
+yunohost service add $app --description="Team collaboration communication platform"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=5
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="systemd"
-sleep 60
+ynh_systemd_action --service_name=$app --action="start" --log_path="systemd" --line_match="SERVER RUNNING"
 
 #=================================================
 # GENERIC FINALIZATION
