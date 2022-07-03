@@ -20,7 +20,7 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 ### Features
 
 - End to End Encryption
-- LDAP/Active Directory
+- LDAP/Active Directory (manual setup)
 - Multifactor Authentication
 - Customizable User Permission
 - Mobile Apps for [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) and [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
