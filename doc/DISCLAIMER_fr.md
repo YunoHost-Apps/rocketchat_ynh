@@ -1,6 +1,6 @@
 ### Configuration de l'e-mail
 
-Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'administration de Rocketchat sous E-mail -> SMTP et définissez comme suit : 
+Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'administration de Rocket.Chat sous Paramètres -> E-mail -> SMTP et définissez comme suit : 
 
 - Protocole : `smtp`
 - Hôte : `localhost`
