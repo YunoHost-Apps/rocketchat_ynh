@@ -54,7 +54,7 @@ ynh_remove_logrotate
 #=================================================
 # REMOVE THE MONGODB DATABASE
 #=================================================
-ynh_script_progression --message="Removing the MongoDB database..."
+ynh_script_progression --message="Removing the MongoDB database..." --weight=3
 
 ynh_replace_string --match_string="engine: wiredTiger" --replace_string="#  engine:" --target_file=$MONGO_CE_CONFIG
 ynh_replace_string --match_string="replication:" --replace_string="#replication:" --target_file=$MONGO_CE_CONFIG

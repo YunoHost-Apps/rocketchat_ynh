@@ -321,7 +321,7 @@ ynh_mongo_remove_db() {
 #
 #
 ynh_install_mongo() {
-    ynh_print_info --message="Installing MongoDB Community Edition..."
+    ynh_script_progression --message="Installing MongoDB Community Edition..."
     ynh_install_extra_app_dependencies --repo="$MONGO_CE_REPO" --package="$MONGO_CE_DEPENDENCIES" --key="$MONGO_CE_KEY"
     mongodb_servicename=$MONGO_CE_SERVICENAME
     

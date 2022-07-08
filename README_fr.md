@@ -20,13 +20,13 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 ### Fonctionnalités
 
 - Chiffrement de bout en bout
-- LDAP
+- LDAP (configuration manuelle)
 - Authentification multifacteur
 - Autorisation utilisateur personnalisable
 - Applications mobiles pour [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) et [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Applications de bureau pour [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) et [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Version incluse :** 4.8.1~ynh3
+**Version incluse :** 4.8.1~ynh4
 
 **Démo :** https://cloud.rocket.chat/trial
 
@@ -38,7 +38,7 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 
 ### Configuration de l'e-mail
 
-Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'administration de Rocketchat sous E-mail -> SMTP et définissez comme suit : 
+Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'administration de Rocket.Chat sous Paramètres -> E-mail -> SMTP et définissez comme suit : 
 
 - Protocole : `smtp`
 - Hôte : `localhost`
