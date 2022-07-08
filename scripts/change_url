@@ -105,6 +105,13 @@ then
 fi
 
 #=================================================
+# SPECIFIC MODIFICATIONS
+#=================================================
+ynh_script_progression --message="Updating systemd service..." --weight=1
+
+ynh_replace_string --match_string="Environment=ROOT_URL=*" --replace_string="Environment=ROOT_URL=https://$new_domain$new_path" --target_file="/etc/systemd/system/$app.service"
+
+#=================================================
 # GENERIC FINALISATION
 #=================================================
 # START SYSTEMD SERVICE
