@@ -1,6 +1,6 @@
 ### E-mail Configuration
 
-To enable E-mail for address verification, go to Rocket.Chat Administration panel under E-mail -> SMTP and set as follow:
+To enable E-mail for address verification, go to Rocket.Chat Administration panel under Settings -> E-mail -> SMTP and set as follow:
 
 - Protocole: `smtp`
 - Host: `localhost`
