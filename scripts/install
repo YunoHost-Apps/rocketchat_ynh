@@ -80,6 +80,7 @@ ynh_script_progression --message="Installing dependencies..." --weight=20
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
 ynh_exec_warn_less ynh_install_mongo
+ynh_exec_warn_less ynh_install_extra_app_dependencies --repo="deb https://dl.yarnpkg.com/debian/ stable main" --package="yarn" --key="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
 #=================================================
 # CREATE DEDICATED USER
@@ -147,7 +148,7 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path/programs/server
 	ynh_use_nodejs
-	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm install --unsafe-perm
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH yarn install --unsafe-perm
 popd
 
 #=================================================
