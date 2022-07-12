@@ -56,11 +56,11 @@ ynh_remove_logrotate
 #=================================================
 ynh_script_progression --message="Removing the MongoDB database..." --weight=3
 
-ynh_replace_string --match_string="engine: wiredTiger" --replace_string="#  engine:" --target_file=$MONGO_CE_CONFIG
-ynh_replace_string --match_string="replication:" --replace_string="#replication:" --target_file=$MONGO_CE_CONFIG
-ynh_replace_string --match_string="  replSetName: rs01" --replace_string="" --target_file=$MONGO_CE_CONFIG
+ynh_replace_string --match_string="engine: wiredTiger" --replace_string="#  engine:" --target_file="/etc/mongod.conf"
+ynh_replace_string --match_string="replication:" --replace_string="#replication:" --target_file="/etc/mongod.conf"
+ynh_replace_string --match_string="  replSetName: rs01" --replace_string="" --target_file="/etc/mongod.conf"
 
-ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart --log_path=/var/log/mongodb/$MONGO_CE_SERVICENAME.log --line_match="Waiting for connections"
+ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --line_match="Waiting for connections"
 
 # Remove a database if it exists, along with the associated user
 ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
