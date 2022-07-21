@@ -80,6 +80,7 @@ ynh_script_progression --message="Installing dependencies..." --weight=20
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
 ynh_exec_warn_less ynh_install_mongo
+ynh_exec_warn_less ynh_install_extra_app_dependencies --repo="deb https://dl.yarnpkg.com/debian/ stable main" --package="yarn" --key="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
 #=================================================
 # CREATE DEDICATED USER
@@ -108,9 +109,12 @@ ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$final_path"
 
+mkdir "/tmp/ufs"
+
 chmod 750 "$final_path"
 chmod -R o-rwx "$final_path"
 chown -R $app:$app "$final_path"
+chown -R $app:$app "/tmp/ufs"
 
 #=================================================
 # NGINX CONFIGURATION
@@ -127,11 +131,11 @@ ynh_add_nginx_config
 #=================================================
 ynh_script_progression --message="Configuring mongod..." --weight=1
 
-ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file=$MONGO_CE_CONFIG
-ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file=$MONGO_CE_CONFIG
+ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file="/etc/mongod.conf"
+ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file="/etc/mongod.conf"
 
-ynh_exec_warn_less systemctl enable $MONGO_CE_SERVICENAME --quiet
-ynh_systemd_action --service_name=$MONGO_CE_SERVICENAME --action=restart --log_path=/var/log/mongodb/$MONGO_CE_SERVICENAME.log --line_match="Waiting for connections"
+ynh_exec_warn_less systemctl enable mongod --quiet
+ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --line_match="Waiting for connections"
 
 if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
 	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
@@ -144,7 +148,7 @@ ynh_script_progression --message="Building $app... (this will take some time and
 
 pushd $final_path/programs/server
 	ynh_use_nodejs
-	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH $ynh_npm install --unsafe-perm
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH yarn install --unsafe-perm
 popd
 
 #=================================================
