@@ -32,6 +32,7 @@ path_url=$(ynh_app_setting_get --app=$app --key=path)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 db_user=$db_name
+mongo_version=$(ynh_app_setting_get --app=$app --key=mongo_version)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
@@ -72,7 +73,7 @@ ynh_script_progression --message="Reinstalling dependencies..." --weight=1
 # Define and install dependencies
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_exec_warn_less ynh_install_mongo
+ynh_exec_warn_less ynh_install_mongo --mongo_version=$mongo_version
 ynh_exec_warn_less ynh_install_extra_app_dependencies --repo="deb https://dl.yarnpkg.com/debian/ stable main" --package="yarn" --key="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
 #=================================================
