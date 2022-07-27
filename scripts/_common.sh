@@ -6,10 +6,10 @@
 
 nodejs_version=14
 
+mongo_version=5.0
+
 # dependencies used by the app
 pkg_dependencies="apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
-
-YNH_MONGO_VERSION=4.4
 
 #=================================================
 # PERSONAL HELPERS
