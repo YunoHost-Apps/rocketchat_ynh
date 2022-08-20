@@ -6,7 +6,7 @@
         "en": "Team collaboration communication platform",
         "fr": "Plateforme de communication collaborative en équipe"
     },
-    "version": "5.0.3~ynh1",
+    "version": "5.0.4~ynh1",
     "url": "https://rocket.chat",
     "upstream": {
         "license": "GPL-3.0",
@@ -22,7 +22,7 @@
         "email": ""
     },
     "requirements": {
-        "yunohost": ">> 4.3.2"
+        "yunohost": ">> 11.0.9"
     },
     "multi_instance": true,
     "services": [
@@ -44,8 +44,8 @@
                 "name": "is_public",
                 "type": "boolean",
                 "help": {
-                    "en": "If enabled, Rocket.Chat will be accessible by people who do not have an account. This can be changed later via the webadmin.",
-                    "fr": "Si cette case est cochée, Rocket.Chat sera accessible aux personnes n’ayant pas de compte. Vous pourrez changer ceci plus tard via la webadmin."
+                    "en": "You must activate public site if you want to connect a Mobile or desktop client to Rocket.Chat. This can be changed later via the webadmin.",
+                    "fr": "Vous devez activer site public si vous souhaitez connecter un client mobile ou desktop à Rocket.Chat. Vous pourrez changer ceci plus tard via la webadmin."
                 },
                 "default": true
             },
