@@ -333,7 +333,7 @@ ynh_install_mongo() {
     mongo_version="${mongo_version:-$YNH_MONGO_VERSION}"
 
     ynh_print_info --message="Installing MongoDB Community Edition..."
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
+    ynh_install_extra_app_dependencies --repo="deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/debian bullseye/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
 
     # Make sure MongoDB is started and enabled
