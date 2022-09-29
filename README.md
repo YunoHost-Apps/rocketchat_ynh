@@ -26,7 +26,7 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 - Mobile Apps for [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) and [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Desktop Apps for [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) and [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Shipped version:** 5.1.3~ynh1
+**Shipped version:** 5.1.4~ynh1
 
 
 **Demo:** https://cloud.rocket.chat/trial
@@ -46,9 +46,17 @@ To enable E-mail for address verification, go to Rocket.Chat Administration pane
 - Port: `25`
 - From -mail: `rocketchat@domain.tld`
 
+
 ### Configure and activate federation for Rocket.Chat
 
 https://support.indie.host/help/fr-fr/13/40
+
+
+### Mobile Apps
+
+In addition to the web interface, you can also download Rocket.Chat clients for:
+
+[![Rocket.Chat on Apple App Store](https://user-images.githubusercontent.com/551004/29770691-a2082ff4-8bc6-11e7-89a6-964cd405ea8e.png)](https://itunes.apple.com/us/app/rocket-chat/id1148741252?mt=8) [![Rocket.Chat on Google Play](https://user-images.githubusercontent.com/551004/29770692-a20975c6-8bc6-11e7-8ab0-1cde275496e0.png)](https://play.google.com/store/apps/details?id=chat.rocket.android)  [![](https://user-images.githubusercontent.com/551004/48210349-50649480-e35e-11e8-97d9-74a4331faf3a.png)](https://f-droid.org/en/packages/chat.rocket.android)
 
 ## Documentation and resources
 
