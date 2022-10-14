@@ -75,7 +75,7 @@ ynh_app_setting_set --app=$app --key=port --value=$port
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=20
+ynh_script_progression --message="Installing dependencies..." --weight=48
 
 ynh_exec_warn_less ynh_install_app_dependencies $pkg_dependencies
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
@@ -93,7 +93,7 @@ ynh_system_user_create --username=$app --home_dir="$final_path"
 #=================================================
 # CREATE A MONGODB DATABASE
 #=================================================
-ynh_script_progression --message="Creating a MongoDB database..." --weight=2
+ynh_script_progression --message="Creating a MongoDB database..." --weight=5
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
@@ -103,7 +103,7 @@ ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=2
+ynh_script_progression --message="Setting up source files..." --weight=10
 
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
@@ -119,7 +119,7 @@ chown -R $app:$app "/tmp/ufs"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=2
+ynh_script_progression --message="Configuring NGINX web server..." --weight=3
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -129,7 +129,7 @@ ynh_add_nginx_config
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
-ynh_script_progression --message="Configuring mongod..." --weight=1
+ynh_script_progression --message="Configuring MongoDB..." --weight=10
 
 ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file="/etc/mongod.conf"
 ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file="/etc/mongod.conf"
@@ -144,7 +144,7 @@ fi
 #==============================================
 # INSTALL ROCKETCHAT
 #==============================================
-ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=20
+ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=29
 
 pushd $final_path/programs/server
 	ynh_use_nodejs
@@ -179,7 +179,7 @@ yunohost service add $app --description="Team collaboration communication platfo
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=2
+ynh_script_progression --message="Starting a systemd service..." --weight=29
 
 ynh_systemd_action --service_name=$app --action="start" --log_path=systemd --line_match="SERVER RUNNING"
 
