@@ -109,7 +109,7 @@ ynh_mongo_exec() {
             database=""
         fi
 
-        mongosh --quiet --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port <<EOF
+        mongosh --quiet $user $password $authenticationdatabase $host $port <<EOF
 $database
 ${command}
 quit()
@@ -123,7 +123,7 @@ EOF
             database=""
         fi
         
-        mongosh --quiet $database --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port --eval="$command"
+        mongosh --quiet $database $user $password $authenticationdatabase $host $port --eval="$command"
     fi
 }
 
