@@ -18,7 +18,6 @@ pkg_dependencies="apt-transport-https build-essential gzip curl fontconfig graph
 #=================================================
 # EXPERIMENTAL HELPERS
 #=================================================
-#!/bin/bash
 
 readonly YNH_DEFAULT_MONGO_VERSION=4.4
 # Declare the actual MongoDB version to use: 4.4 ; 5.0
@@ -109,7 +108,7 @@ ynh_mongo_exec() {
             database=""
         fi
 
-        mongosh --quiet $user $password $authenticationdatabase $host $port <<EOF
+        mongosh --quiet --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port <<EOF
 $database
 ${command}
 quit()
@@ -123,7 +122,7 @@ EOF
             database=""
         fi
         
-        mongosh --quiet $database $user $password $authenticationdatabase $host $port --eval="$command"
+        mongosh --quiet $database --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port --eval="$command"
     fi
 }
 
@@ -333,7 +332,7 @@ ynh_install_mongo() {
     mongo_version="${mongo_version:-$YNH_MONGO_VERSION}"
 
     ynh_print_info --message="Installing MongoDB Community Edition..."
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian bullseye/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian buster/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
 
     # Make sure MongoDB is started and enabled
