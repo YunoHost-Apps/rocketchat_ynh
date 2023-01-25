@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # Rocket.Chat for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/rocketchat.svg)](https://dash.yunohost.org/appci/app/rocketchat) ![Working status](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/rocketchat.svg)](https://dash.yunohost.org/appci/app/rocketchat) ![Working status](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
 [![Install Rocket.Chat with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
 *[Lire ce readme en français.](./README_fr.md)*
