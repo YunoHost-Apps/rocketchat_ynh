@@ -336,7 +336,7 @@ ynh_install_mongo() {
     local mongo_debian_release=$(ynh_get_debian_release)
 
     if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" != "4.4" ]]; then
-    ynh_print_error --message="The version of Mongo you're trying to install may not be compatible with your cpu (Missing avx instruction set)."
+    ynh_print_err --message="The version of Mongo you're trying to install may not be compatible with your cpu (Missing avx instruction set)."
  fi
         if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" == "4.4" ]]; then
     ynh_print_warn --message="Installing Mongo for Buster due to incompatible cpu."
