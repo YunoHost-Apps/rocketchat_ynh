@@ -332,16 +332,16 @@ ynh_install_mongo() {
     mongo_version="${mongo_version:-$YNH_MONGO_VERSION}"
 
     ynh_print_info --message="Installing MongoDB Community Edition ..."
-    # Install the version that works with the host cpu (see https://docs.mongodb.com/manual/administration/production-notes/#x86_64)
     local mongo_debian_release=$(ynh_get_debian_release)
 
     if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" != "4.4" ]]; then
-    ynh_print_err --message="The version of Mongo you're trying to install may not be compatible with your cpu (Missing avx instruction set)."
- fi
-        if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" == "4.4" ]]; then
-    ynh_print_warn --message="Installing Mongo for Buster due to incompatible cpu."
+    ynh_print_warn --message="Installing Mongo 4.4 as $mongo_version is not compatible with your cpu (see https://docs.mongodb.com/manual/administration/production-notes/#x86_64)."
+    mongo_version="4.4"
+  fi
+  if [[ "$mongo_version" == "4.4" && "$mongo_debian_release" != "buster" ]]; then
+    ynh_print_warn --message="Switched to buster install as Mongo 4.4 is not compatible with $mongo_debian_release."
     mongo_debian_release=buster
- fi
+  fi
 
     ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
@@ -350,7 +350,7 @@ ynh_install_mongo() {
     systemctl enable $mongodb_servicename --quiet
     systemctl daemon-reload --quiet
 
-    ynh_systemd_action --service_name=$mongodb_servicename --action=restart --line_match="aiting for connections" --log_path="systemd" --length=100 --timeout=60
+    ynh_systemd_action --service_name=$mongodb_servicename --action=restart --line_match="aiting for connections" --log_path="/var/log/mongodb/$mongodb_servicename.log"
 
     # Integrate MongoDB service in YunoHost
     yunohost service add $mongodb_servicename --description="MongoDB daemon" --log="/var/log/mongodb/$mongodb_servicename.log"
