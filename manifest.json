@@ -6,7 +6,7 @@
         "en": "Team collaboration communication platform",
         "fr": "Plateforme de communication collaborative en équipe"
     },
-    "version": "5.4.2~ynh1",
+    "version": "5.4.3~ynh1",
     "url": "https://rocket.chat",
     "upstream": {
         "license": "GPL-3.0",
@@ -22,7 +22,7 @@
         "email": ""
     },
     "requirements": {
-        "yunohost": ">> 11.0.9"
+        "yunohost": ">= 11.1.7"
     },
     "multi_instance": true,
     "services": [

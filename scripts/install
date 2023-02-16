@@ -39,7 +39,7 @@ email=$(ynh_user_get_info --username=$admin --key=mail)
 ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 # Check machine architecture (in particular, we don't support ARM and 32bit machines)
-if [ $YNH_ARCH == "i386" ] || [ $YNH_ARCH == "armel" ] || [ $YNH_ARCH == "armhf" ]
+if [ $YNH_ARCH == "i386" ] || [ $YNH_ARCH == "armel" ] || [ $YNH_ARCH == "armhf" ] || [ $YNH_ARCH == "arm64" ]
 then
 	ynh_die --message="Sorry, but this app can only be installed on a x86, 64 bits machine :("
 fi
