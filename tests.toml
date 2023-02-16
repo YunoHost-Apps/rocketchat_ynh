@@ -1,0 +1,10 @@
+test_format = 1.0
+
+[default]
+
+    # -------------------------------
+    # Commits to test upgrade from
+    # -------------------------------
+
+    test_upgrade_from.78312cfb.name = "Upgrade from 4.7.2"
+    
