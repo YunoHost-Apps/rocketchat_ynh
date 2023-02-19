@@ -58,9 +58,8 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-     packages = "apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
+    packages = "apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
 
-        [[resources.apt.extras]]
-        repo = "deb https://dl.yarnpkg.com/debian/ stable main"
-        key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
-        packages = "yarn"
+    extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
+    extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
+    extras.yarn.packages = "yarn"
