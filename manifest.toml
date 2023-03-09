@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 11.1.13"
+yunohost = ">= 11.1.14"
 architectures = ["amd64"]
 multi_instance = true
 ldap = false
@@ -48,6 +48,13 @@ ram.runtime = "50M"
     type = "password"
 
 [resources]
+    [resources.sources]
+
+        [resources.sources.main]
+        url = "https://releases.rocket.chat/5.4.3/download"
+        sha256 = "f8b774f35bde97c601c4061e90747cb4a724646f5865e8074064ab24b9c68d0b"
+
+
     [resources.system_user]
 
     [resources.install_dir]
