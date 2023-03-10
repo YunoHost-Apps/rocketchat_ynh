@@ -49,8 +49,13 @@ ram.runtime = "50M"
 
 [resources]
     [resources.sources]
-    url = "https://releases.rocket.chat/6.0.0/download"
-    sha256 = "c2c60f66f345626c04af6c172202ff3e423884e2ca54d2d9553506bec816b1e0"
+
+        [resources.sources.main]
+        # This will pre-fetch the asset which can then be deployed during the install/upgrade scripts with :
+        #    ynh_setup_source --dest_dir="$install_dir"
+        # You can also define other assets than "main" and add --source_id="foobar" in the previous command
+        url = "https://releases.rocket.chat/6.0.0/download"
+        sha256 = "c2c60f66f345626c04af6c172202ff3e423884e2ca54d2d9553506bec816b1e0"
 
     [resources.system_user]
 
