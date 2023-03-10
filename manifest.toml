@@ -51,9 +51,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/5.4.3/download"
-        sha256 = "f8b774f35bde97c601c4061e90747cb4a724646f5865e8074064ab24b9c68d0b"
-
+        url = "https://releases.rocket.chat/6.0.0/download"
+        sha256 = "c2c60f66f345626c04af6c172202ff3e423884e2ca54d2d9553506bec816b1e0"
 
     [resources.system_user]
 
