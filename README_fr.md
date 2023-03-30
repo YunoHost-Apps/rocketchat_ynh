@@ -39,6 +39,10 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 
 - **Not totally free upstream**: The packaged app is under an overall free licence, but with clauses that restrict its use.
 
+## :red_circle: Fonctions indésirables
+
+- **Not totally free upstream**: The packaged app is under an overall free licence, but with clauses that restrict its use.
+
 ## Documentations et ressources
 
 * Site officiel de l’app : <https://rocket.chat/>
