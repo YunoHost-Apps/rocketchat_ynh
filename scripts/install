@@ -52,18 +52,9 @@ ynh_setup_source --dest_dir="$install_dir"
 
 mkdir "/tmp/ufs"
 
-chmod 750 "$install_dir"
 chmod -R o-rwx "$install_dir"
 chown -R $app:$app "$install_dir"
 chown -R $app:$app "/tmp/ufs"
-
-#=================================================
-# NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=3
-
-# Create a dedicated NGINX config
-ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC SETUP
@@ -82,6 +73,21 @@ if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -
 	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
 fi
 
+#=================================================
+# SETUP SYSTEMD
+#=================================================
+ynh_script_progression --message="Configuring a systemd service..." --weight=1
+
+# Create a dedicated NGINX config
+ynh_add_nginx_config
+
+# Create a dedicated systemd config
+ynh_add_systemd_config
+
+# Use logrotate to manage application logfile(s)
+ynh_use_logrotate
+yunohost service add $app --description="Team collaboration communication platform"
+
 #==============================================
 # INSTALL ROCKETCHAT
 #==============================================
@@ -91,31 +97,6 @@ pushd $install_dir/programs/server
 	ynh_use_nodejs
 	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH yarn install --unsafe-perm
 popd
-
-#=================================================
-# SETUP SYSTEMD
-#=================================================
-ynh_script_progression --message="Configuring a systemd service..." --weight=1
-
-# Create a dedicated systemd config
-ynh_add_systemd_config
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# SETUP LOGROTATE
-#=================================================
-ynh_script_progression --message="Configuring log rotation..." --weight=1
-
-# Use logrotate to manage application logfile(s)
-ynh_use_logrotate
-
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..." --weight=1
-
-yunohost service add $app --description="Team collaboration communication platform"
 
 #=================================================
 # START SYSTEMD SERVICE

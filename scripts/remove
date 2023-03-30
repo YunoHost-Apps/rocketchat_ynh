@@ -30,21 +30,21 @@ then
 	yunohost service remove $app
 fi
 
-#=================================================
-# STOP AND REMOVE SERVICE
-#=================================================
-ynh_script_progression --message="Stopping and removing the systemd service..." --weight=1
-
 # Remove the dedicated systemd config
 ynh_remove_systemd_config
 
-#=================================================
-# REMOVE LOGROTATE CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing logrotate configuration..." --weight=1
-
 # Remove the app-specific logrotate config
 ynh_remove_logrotate
+
+if [ -d "/tmp/ufs" ]; then
+	ynh_secure_remove --file="/tmp/ufs"
+fi
+
+# Remove the dedicated NGINX config
+ynh_remove_nginx_config
+
+# Remove metapackage and its dependencies
+ynh_remove_nodejs
 
 #=================================================
 # REMOVE THE MONGODB DATABASE
@@ -60,30 +60,6 @@ ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mo
 # Remove a database if it exists, along with the associated user
 ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
 
-#=================================================
-# REMOVE APP MAIN DIR
-#=================================================
-ynh_script_progression --message="Removing app main directory..." --weight=2
-
-if [ -d "/tmp/ufs" ]; then
-	ynh_secure_remove --file="/tmp/ufs"
-fi
-
-#=================================================
-# REMOVE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Removing NGINX web server configuration..." --weight=1
-
-# Remove the dedicated NGINX config
-ynh_remove_nginx_config
-
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Removing dependencies..." --weight=4
-
-# Remove metapackage and its dependencies
-ynh_remove_nodejs
 ynh_remove_mongo
 
 #=================================================
