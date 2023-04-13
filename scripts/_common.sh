@@ -284,7 +284,7 @@ ynh_mongo_setup_db() {
     ynh_mongo_create_user --db_user="$db_user" --db_pwd="$db_pwd" --db_name="$db_name"
 
     # Store the password in the app's config
-#REMOVEME?     ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
+    ynh_app_setting_set --app=$app --key=db_pwd --value=$db_pwd
 }
 
 # Remove a database if it exists, and the associated user
@@ -340,7 +340,7 @@ ynh_install_mongo() {
     mongo_debian_release=buster
   fi
 
-#REMOVEME?     ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
 
     # Make sure MongoDB is started and enabled
