@@ -1,0 +1,74 @@
+packaging_format = 2
+
+id = "rocketchat"
+name = "Rocket.Chat"
+description.en = "Team collaboration communication platform"
+description.fr = "Plateforme de communication collaborative en équipe"
+
+version = "6.1.2~ynh1"
+
+maintainers = ["eric_G"]
+
+[upstream]
+license = "GPL-3.0"
+website = "https://rocket.chat/"
+demo = "https://cloud.rocket.chat/trial"
+admindoc = "https://docs.rocket.chat/"
+userdoc = "https://docs.rocket.chat/guides/user-guides"
+code = "https://github.com/RocketChat/Rocket.Chat"
+
+[integration]
+yunohost = ">= 11.1.15"
+architectures = ["amd64"]
+multi_instance = true
+ldap = false
+sso = false
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/rocketchat"
+
+    [install.init_main_permission]
+    help.en = "You must activate 'Visitors' if you want to connect a Mobile or desktop client to Rocket.Chat. This can be changed later via the webadmin."
+    help.fr = "Vous devez activer 'Visiteurs' si vous souhaitez connecter un client mobile ou desktop à Rocket.Chat. Vous pourrez changer ceci plus tard via la webadmin."
+    type = "group"
+    default = "visitors"
+
+    [install.admin]
+    type = "user"
+
+    [install.password]
+    type = "password"
+
+[resources]
+    [resources.sources]
+
+        [resources.sources.main]
+        url = "https://releases.rocket.chat/6.1.2/download"
+        sha256 = "2600755e7c2b9f8cd072662368469b6fa03ba34efba3fccd813d4287c7086965"
+        in_subdir = true
+        extract = true
+        rename = "rocket.chat.tgz"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.ports]
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.apt]
+    packages = "apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
+
+    extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
+    extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
+    extras.yarn.packages = "yarn"
