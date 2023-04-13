@@ -27,37 +27,13 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 - Applications mobiles pour [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) et [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Applications de bureau pour [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) et [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Version incluse :** 6.0.1~ynh1
+**Version incluse :** 6.1.2~ynh1
 
 **Démo :** https://cloud.rocket.chat/trial
 
 ## Captures d’écran
 
 ![Capture d’écran de Rocket.Chat](./doc/screenshots/screenshot.jpg)
-
-## Avertissements / informations importantes
-
-### Configuration de l'e-mail
-
-Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'administration de Rocket.Chat sous Paramètres -> E-mail -> SMTP et définissez comme suit : 
-
-- Protocole : `smtp`
-- Hôte : `localhost`
-- Port : `25`
-- De l'e-mail : `rocketchat@domain.tld`
-
-
-### Configurer et activer la fédération pour Rocket.Chat 
-
-https://support.indie.host/help/fr-fr/13/40
-
-
-### Applications Mobiles
-
-En plus de l'interface Web, vous pouvez également télécharger les clients Rocket.Chat pour :
-
-[![Rocket.Chat on Apple App Store](https://user-images.githubusercontent.com/551004/29770691-a2082ff4-8bc6-11e7-89a6-964cd405ea8e.png)](https://itunes.apple.com/us/app/rocket-chat/id1148741252?mt=8) [![Rocket.Chat on Google Play](https://user-images.githubusercontent.com/551004/29770692-a20975c6-8bc6-11e7-8ab0-1cde275496e0.png)](https://play.google.com/store/apps/details?id=chat.rocket.android)  [![](https://user-images.githubusercontent.com/551004/48210349-50649480-e35e-11e8-97d9-74a4331faf3a.png)](https://f-droid.org/en/packages/chat.rocket.android)
-
 
 ## :red_circle: Fonctions indésirables
 

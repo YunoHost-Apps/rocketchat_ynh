@@ -1,0 +1,10 @@
+test_format = 1.0
+
+[default]
+
+    # -------------------------------
+    # Commits to test upgrade from
+    # -------------------------------
+
+    test_upgrade_from.8c5ad8d9.name = "Upgrade from 5.4.3"
+    
