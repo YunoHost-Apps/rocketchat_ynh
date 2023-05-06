@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "6.1.5~ynh1"
+version = "6.1.6~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -24,7 +24,7 @@ multi_instance = true
 ldap = false
 sso = false
 disk = "50M"
-ram.build = "50M"
+ram.build = "1500M"
 ram.runtime = "50M"
 
 [install]
@@ -51,8 +51,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.1.5/download"
-        sha256 = "16b577b51382e2ab7b31488b6e80d6d7d7e563705603b8638eded43022fe57a4"
+        url = "https://releases.rocket.chat/6.1.6/download"
+        sha256 = "3c20bb980e17c52a92a31b255aacd3d3816e3a84d36ea1a3d8f2ba54e330d3a1"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
