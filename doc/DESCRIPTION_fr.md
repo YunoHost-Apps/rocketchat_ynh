@@ -3,7 +3,6 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 ### Fonctionnalités
 
 - Chiffrement de bout en bout
-- LDAP (configuration manuelle)
 - Authentification multifacteur
 - Autorisation utilisateur personnalisable
 - Applications mobiles pour [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) et [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
