@@ -340,7 +340,7 @@ ynh_install_mongo() {
     mongo_debian_release=buster
   fi
 
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org-server mongodb-org-shell" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org-server mongodb-org-shell mongodb-database-tools" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
 
     # Make sure MongoDB is started and enabled
