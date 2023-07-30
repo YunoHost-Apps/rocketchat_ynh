@@ -105,7 +105,7 @@ ynh_mongo_exec() {
             database=""
         fi
 
-        mongosh --quiet --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port <<EOF
+        mongo --quiet $user $password $authenticationdatabase $host $port <<EOF
 $database
 ${command}
 quit()
@@ -119,7 +119,7 @@ EOF
             database=""
         fi
 
-        mongosh --quiet $database --username $user --password $password --authenticationDatabase $authenticationdatabase --host $host --port $port --eval="$command"
+        mongo --quiet $database $user $password $authenticationdatabase $host $port --eval="$command"
     fi
 }
 
@@ -340,7 +340,7 @@ ynh_install_mongo() {
     mongo_debian_release=buster
   fi
 
-    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org mongodb-org-server mongodb-org-tools mongodb-mongosh" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
+    ynh_install_extra_app_dependencies --repo="deb http://repo.mongodb.org/apt/debian $mongo_debian_release/mongodb-org/$mongo_version main" --package="mongodb-org-server mongodb-org-shell mongodb-database-tools" --key="https://www.mongodb.org/static/pgp/server-$mongo_version.asc"
     mongodb_servicename=mongod
 
     # Make sure MongoDB is started and enabled
