@@ -19,6 +19,8 @@ Environment=ADMIN_USERNAME="__ADMIN__"
 Environment=ADMIN_PASS="__PASSWORD__"
 Environment=ADMIN_EMAIL="__EMAIL__"
 Environment=OVERWRITE_SETTING_Show_Setup_Wizard=completed
+StandardOutput=append:/var/log/__APP__/rocketchat.log
+StandardError=inherit
 
 # Sandboxing options to harden security
 # Depending on specificities of your service/app, you may need to tweak these 
