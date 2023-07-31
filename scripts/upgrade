@@ -110,7 +110,7 @@ ynh_add_systemd_config
 # Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
 
-yunohost service add $app --description="Team collaboration communication platform"
+yunohost service add $app --description="Team collaboration communication platform" --log=/var/log/$app/rocketchat.log
 
 #=================================================
 # START SYSTEMD SERVICE
