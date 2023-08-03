@@ -10,20 +10,6 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# RETRIEVE ARGUMENTS FROM THE MANIFEST
-#=================================================
-
-password=$YNH_APP_ARG_PASSWORD
-email=$(ynh_user_get_info --username=$admin --key=mail)
-
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-
-ynh_app_setting_set --app=$app --key=password --value="$password"
-ynh_app_setting_set --app=$app --key=email --value=$email
-
-#=================================================
 # INSTALL DEPENDENCIES
 #=================================================
 ynh_script_progression --message="Installing dependencies..." --weight=48
