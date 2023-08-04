@@ -331,12 +331,12 @@ ynh_install_mongo() {
     ynh_print_info --message="Installing MongoDB Community Edition ..."
     local mongo_debian_release=$(ynh_get_debian_release)
 
-    if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" != "4.4" ]]; then
-    ynh_print_warn --message="Installing Mongo 4.4 as $mongo_version is not compatible with your cpu (see https://docs.mongodb.com/manual/administration/production-notes/#x86_64)."
+  if [[ $(cat /proc/cpuinfo) != *"avx"* && "$mongo_version" != "4.4" ]]; then
+    ynh_print_warn --message="Installing Mongo 4.4 as $mongo_version is not compatible with your CPU (see https://docs.mongodb.com/manual/administration/production-notes/#x86_64)."
     mongo_version="4.4"
   fi
   if [[ "$mongo_version" == "4.4" && "$mongo_debian_release" != "buster" ]]; then
-    ynh_print_warn --message="Switched to buster install as Mongo 4.4 is not compatible with $mongo_debian_release."
+    ynh_print_warn --message="Switched to Buster install as Mongo 4.4 is not compatible with $mongo_debian_release."
     mongo_debian_release=buster
   fi
 
