@@ -71,7 +71,7 @@ ram.runtime = "50M"
     api.show_tile = false
 
     [resources.apt]
-    packages = "apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
+    packages = "fontconfig graphicsmagick"
 
     extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
     extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
