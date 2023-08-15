@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "6.2.9~ynh1"
+version = "6.3.1~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 11.1.21"
+yunohost = ">= 11.2"
 architectures = ["amd64"]
 multi_instance = true
 ldap = false
@@ -51,8 +51,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.2.9/download"
-        sha256 = "f10db86c790f26fbeb01a3aa6e5462d81cf98868896d70264258d44712a2343a"
+        url = "https://releases.rocket.chat/6.3.1/download"
+        sha256 = "81d51303f0f6ff57c95b7ff84524cb2d46a0382d6d1177fe8b72556eaf401111"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
@@ -65,9 +65,13 @@ ram.runtime = "50M"
 
     [resources.permissions]
     main.url = "/"
+    api.url = "/api"
+    api.allowed = "visitors"
+    api.auth_header =false
+    api.show_tile = false
 
     [resources.apt]
-    packages = "apt-transport-https build-essential gzip curl fontconfig graphicsmagick"
+    packages = "fontconfig graphicsmagick"
 
     extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
     extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
