@@ -7,12 +7,6 @@ To enable E-mail for address verification, go to Rocket.Chat Administration pane
 - Port: `25`
 - From -mail: `rocketchat@domain.tld`
 
-
-### Configure and activate federation for Rocket.Chat
-
-https://support.indie.host/help/fr-fr/13/40
-
-
 ### Mobile Apps
 
 In addition to the web interface, you can also download Rocket.Chat clients for:
