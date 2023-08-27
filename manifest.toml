@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "6.3.1~ynh1"
+version = "6.3.2~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -31,10 +31,6 @@ ram.runtime = "50M"
     [install.domain]
     type = "domain"
 
-    [install.path]
-    type = "path"
-    default = "/rocketchat"
-
     [install.init_main_permission]
     help.en = "You must activate 'Visitors' if you want to connect a Mobile or desktop client to Rocket.Chat. This can be changed later via the webadmin."
     help.fr = "Vous devez activer 'Visiteurs' si vous souhaitez connecter un client mobile ou desktop à Rocket.Chat. Vous pourrez changer ceci plus tard via la webadmin."
@@ -51,8 +47,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.3.1/download"
-        sha256 = "81d51303f0f6ff57c95b7ff84524cb2d46a0382d6d1177fe8b72556eaf401111"
+        url = "https://releases.rocket.chat/6.3.2/download"
+        sha256 = "0dd259ce9ca64721d20f00ccb1c36f7c3cf5c1db0f7d4551f7374e88947ef7be"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
