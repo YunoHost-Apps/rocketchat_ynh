@@ -61,7 +61,12 @@ ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mo
 # Remove a database if it exists, along with the associated user
 ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
 
-ynh_remove_mongo
+#ynh_remove_mongo
+
+# Remove mongod service
+yunohost service remove mongod
+ynh_secure_remove --file="/var/lib/mongodb"
+ynh_secure_remove --file="/var/log/mongodb"
 
 #=================================================
 # END OF SCRIPT
