@@ -13,7 +13,7 @@ ExecStart=__YNH_NODE__ __INSTALL_DIR__/main.js
 SyslogIdentifier=__APP__
 Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=rs01
 Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01
-Environment=ROOT_URL=https://__DOMAIN____PATH__
+Environment=ROOT_URL=https://__DOMAIN__
 Environment=PORT=__PORT__
 Environment=ADMIN_USERNAME="__ADMIN__"
 Environment=ADMIN_PASS="__PASSWORD__"
