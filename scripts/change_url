@@ -30,7 +30,7 @@ ynh_change_url_nginx_config
 #=================================================
 ynh_script_progression --message="Updating systemd service..." --weight=1
 
-ynh_replace_string --match_string="Environment=ROOT_URL=https://$old_domain$old_path" --replace_string="Environment=ROOT_URL=https://$new_domain$new_path" --target_file="/etc/systemd/system/$app.service"
+ynh_replace_string --match_string="Environment=ROOT_URL=https://$old_domain" --replace_string="Environment=ROOT_URL=https://$new_domain" --target_file="/etc/systemd/system/$app.service"
 systemctl daemon-reload
 
 #=================================================

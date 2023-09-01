@@ -73,9 +73,9 @@ if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -
 fi
 
 #=================================================
-# SETUP SYSTEMD
+# SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring a systemd service..." --weight=1
+ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
@@ -85,7 +85,7 @@ ynh_add_systemd_config
 
 # Use logrotate to manage application logfile(s)
 ynh_use_logrotate
-yunohost service add $app --description="Team collaboration communication platform"
+yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #==============================================
 # INSTALL ROCKETCHAT

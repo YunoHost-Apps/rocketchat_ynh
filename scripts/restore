@@ -64,9 +64,11 @@ if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -
 fi
 
 #=================================================
-# RESTORE SYSTEMD
+# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Restoring the systemd configuration..." --weight=1
+# RESTORE THE PHP-FPM CONFIGURATION
+#=================================================
+ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
 
 ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 
@@ -75,12 +77,14 @@ systemctl enable $app.service --quiet
 
 ynh_restore_file --origin_path="/etc/logrotate.d/$app"
 
-yunohost service add $app --description="Team collaboration communication platform"
+yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #=================================================
-# START SYSTEMD SERVICE
+# GENERIC FINALIZATION
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=19
+# RELOAD NGINX AND PHP-FPM OR THE APP SERVICE
+#=================================================
+ynh_script_progression --message="Reloading NGINX web server and $app's service..." --weight=1
 
 ynh_systemd_action --service_name=$app --action="start" --log_path="systemd" --line_match="SERVER RUNNING"
 

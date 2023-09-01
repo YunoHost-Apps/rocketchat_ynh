@@ -7,12 +7,6 @@ Pour activer l'e-mail pour la vérification des adresses, accédez au panneau d'
 - Port : `25`
 - De l'e-mail : `rocketchat@domain.tld`
 
-
-### Configurer et activer la fédération pour Rocket.Chat 
-
-https://support.indie.host/help/fr-fr/13/40
-
-
 ### Applications Mobiles
 
 En plus de l'interface Web, vous pouvez également télécharger les clients Rocket.Chat pour :
