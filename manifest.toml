@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "6.3.3~ynh1"
+version = "6.3.5~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -47,8 +47,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.3.3/download"
-        sha256 = "fa3647e1e8ca9c8ec12e6fc32903a82d2fe4fd18efc4c0580576c924510c9444"
+        url = "https://releases.rocket.chat/6.3.5/download"
+        sha256 = "94b1e4a43a223a5a29fd4ae8647e97979ed8a124dd8d8330377fedb7e56ab378"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
@@ -67,7 +67,7 @@ ram.runtime = "50M"
     api.show_tile = false
 
     [resources.apt]
-    packages = "fontconfig graphicsmagick"
+    packages = "fontconfig, graphicsmagick"
 
     extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
     extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
