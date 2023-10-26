@@ -47,8 +47,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.4.2/download"
-        sha256 = "ba20ffbf1812f323bbe6290ecf687005a557f92dc75d80cbce571e6de4facc61"
+        url = "https://releases.rocket.chat/6.4.3/download"
+        sha256 = "8495e8f512a92e1320fa68b6ab2ef782d9a0f964a968213cd1f72bdde4a1cf32"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
