@@ -44,6 +44,7 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 * Documentation officielle utilisateur : <https://docs.rocket.chat/guides/user-guides>
 * Documentation officielle de l’admin : <https://docs.rocket.chat/>
 * Dépôt de code officiel de l’app : <https://github.com/RocketChat/Rocket.Chat>
+* YunoHost Store: <https://apps.yunohost.org/app/rocketchat>
 * Signaler un bug : <https://github.com/YunoHost-Apps/rocketchat_ynh/issues>
 
 ## Informations pour les développeurs
