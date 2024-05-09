@@ -26,7 +26,7 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 - Mobile Apps for [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) and [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Desktop Apps for [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) and [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Versión proporcionada:** 6.6.3~ynh1
+**Versión proporcionada:** 6.7.2~ynh1
 
 **Demo:** <https://cloud.rocket.chat/trial>
 
@@ -34,9 +34,9 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 
 ![Captura de pantalla de Rocket.Chat](./doc/screenshots/screenshot.jpg)
 
-## :red_circle: Caraterísticas cuestionables
+## :red_circle: Debes considerar
 
-- **Not totally free upstream**: The packaged app is under an overall free licence, but with clauses that restrict its use.
+- **Not totally free upstream**: The packaged app is under an overall free license, but with clauses that may restrict its use.
 
 ## Documentación e recursos
 
