@@ -36,7 +36,7 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 
 ## :red_circle: Antifeatures
 
-- **Not totally free upstream**: The packaged app is under an overall free licence, but with clauses that restrict its use.
+- **Not totally free upstream**: The packaged app is under an overall free license, but with clauses that may restrict its use.
 
 ## Documentation and resources
 
