@@ -20,12 +20,6 @@ email=$(ynh_app_setting_get --app=$app --key=email)
 mongo_version=$(ynh_app_setting_get --app=$app --key=mongo_version)
 
 #=================================================
-# CHECK VERSION
-#=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
 # STOP SYSTEMD SERVICE
