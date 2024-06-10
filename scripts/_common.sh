@@ -6,7 +6,7 @@
 
 nodejs_version=14
 
-YNH_MONGO_VERSION=6.0
+mongo_version=6.0
 
 #=================================================
 # PERSONAL HELPERS
