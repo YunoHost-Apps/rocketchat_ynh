@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "6.9.1~ynh1"
+version = "6.9.2~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 11.2.12"
+yunohost = ">= 11.2.14"
 architectures = ["amd64"]
 multi_instance = true
 
@@ -50,8 +50,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/6.9.1/download"
-        sha256 = "44444f515dfd36e6b44b2e7d1e84e08819adb8c51f60bc56b2c7b48e49c3eef2"
+        url = "https://releases.rocket.chat/6.9.2/download"
+        sha256 = "6e4dacb38d509171a673011c918efcd236aba64aad9ed26184afc132714d3f51"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
