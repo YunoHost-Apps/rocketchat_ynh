@@ -66,7 +66,6 @@ ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
 # Remove mongod service
 yunohost service remove mongod
 ynh_secure_remove --file="/var/lib/mongodb"
-ynh_secure_remove --file="/var/log/mongodb"
 
 #=================================================
 # END OF SCRIPT
