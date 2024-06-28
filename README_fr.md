@@ -5,7 +5,7 @@ Il NE doit PAS être modifié à la main.
 
 # Rocket.Chat pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/rocketchat.svg)](https://dash.yunohost.org/appci/app/rocketchat) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
+[![Niveau d’intégration](https://dash.yunohost.org/integration/rocketchat.svg)](https://ci-apps.yunohost.org/ci/apps/rocketchat/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
 
 [![Installer Rocket.Chat avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
@@ -26,7 +26,7 @@ Rocket.Chat est une plate-forme de communication open source entièrement person
 - Applications mobiles pour [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) et [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Applications de bureau pour [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) et [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Version incluse :** 6.9.2~ynh1
+**Version incluse :** 6.9.3~ynh1
 
 **Démo :** <https://cloud.rocket.chat/trial>
 
