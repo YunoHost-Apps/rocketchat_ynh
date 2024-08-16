@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 11.2.21"
+yunohost = ">= 11.2.27"
 architectures = ["amd64"]
 multi_instance = true
 
