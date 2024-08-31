@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -20,39 +14,39 @@ email=$(ynh_user_get_info --username=$admin --key=mail)
 # STORE SETTINGS FROM MANIFEST
 #=================================================
 
-ynh_app_setting_set --app=$app --key=password --value="$password"
-ynh_app_setting_set --app=$app --key=email --value=$email
+ynh_app_setting_set --key=password --value="$password"
+ynh_app_setting_set --key=email --value=$email
 
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Installing dependencies..." --weight=48
+ynh_script_progression "Installing dependencies..."
 
-ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_exec_warn_less ynh_install_mongo --mongo_version=$mongo_version
+ynh_nodejs_install
+ynh_hide_warnings ynh_install_mongo
 
 #=================================================
 # CREATE A MONGODB DATABASE
 #=================================================
-ynh_script_progression --message="Creating a MongoDB database..." --weight=5
+ynh_script_progression "Creating a MongoDB database..."
 
 db_name=$(ynh_sanitize_dbid --db_name=$app)
 db_user=$db_name
-ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+ynh_app_setting_set --key=db_name --value=$db_name
 ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=10
+ynh_script_progression "Setting up source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
 
 mkdir "/tmp/ufs"
 
-chmod -R o-rwx "$install_dir"
-chown -R $app:$app "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chmod -R o-rwx "$install_dir"
+#REMOVEME? Assuming the install dir is setup using ynh_setup_source, the proper chmod/chowns are now already applied and it shouldn't be necessary to tweak perms | chown -R $app:$app "$install_dir"
 chown -R $app:$app "/tmp/ufs"
 
 #=================================================
@@ -60,52 +54,52 @@ chown -R $app:$app "/tmp/ufs"
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
-ynh_script_progression --message="Configuring MongoDB..." --weight=10
+ynh_script_progression "Configuring MongoDB..."
 
-ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file="/etc/mongod.conf"
-ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file="/etc/mongod.conf"
+ynh_replace --match="#  engine:" --replace="  engine: wiredTiger" --file="/etc/mongod.conf"
+ynh_replace --match="#replication:" --replace="replication:\n  replSetName: rs01" --file="/etc/mongod.conf"
 
-ynh_exec_warn_less systemctl enable mongod --quiet
-ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --line_match="Waiting for connections"
+ynh_hide_warnings systemctl enable mongod --quiet
+ynh_systemctl --service=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --wait_until="Waiting for connections"
 
-if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
-	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+if ynh_hide_warnings ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
+	ynh_hide_warnings ynh_mongo_exec --command="printjson(rs.initiate())"
 fi
 
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
 # Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 # Create a dedicated systemd config
-ynh_add_systemd_config
+ynh_config_add_systemd
 
 # Use logrotate to manage application logfile(s)
-ynh_use_logrotate
+ynh_config_add_logrotate
 yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #==============================================
 # INSTALL ROCKETCHAT
 #==============================================
-ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=29
+ynh_script_progression "Building $app... (this will take some time and resources!)"
 
 pushd $install_dir/programs/server
-	ynh_use_nodejs
-	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH yarn install --unsafe-perm
+
+	ynh_hide_warnings ynh_exec_as_app node_load_PATH yarn install --unsafe-perm
 popd
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=29
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name=$app --action="start" --log_path=systemd --line_match="SERVER RUNNING"
+ynh_systemctl --service=$app --action="start" --log_path=systemd --wait_until="SERVER RUNNING"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
