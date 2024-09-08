@@ -45,7 +45,7 @@ ynh_setup_source --dest_dir="$install_dir"
 mkdir "/tmp/ufs"
 
 chmod -R o-rwx "$install_dir"
-hown -R $app:$app "$install_dir"
+chown -R $app:$app "$install_dir"
 chown -R $app:$app "/tmp/ufs"
 
 #=================================================
