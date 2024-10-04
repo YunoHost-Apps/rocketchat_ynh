@@ -67,6 +67,7 @@ ynh_config_add_nginx
 ynh_config_add_systemd
 
 ynh_config_add_logrotate
+
 yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #==============================================
