@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -19,8 +13,6 @@ password=$(ynh_app_setting_get --app=$app --key=password)
 email=$(ynh_app_setting_get --app=$app --key=email)
 mongo_version=$(ynh_app_setting_get --app=$app --key=mongo_version)
 
-#=================================================
-# STANDARD UPGRADE STEPS
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
@@ -44,7 +36,6 @@ fi
 #=================================================
 ynh_script_progression --message="Upgrading source files..." --weight=22
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir" --full_replace=1
 
 chmod -R o-rwx "$install_dir"
@@ -58,8 +49,6 @@ ynh_script_progression --message="Upgrading dependencies..." --weight=7
 ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
 ynh_exec_warn_less ynh_install_mongo --mongo_version=$mongo_version
 
-#=================================================
-# SPECIFIC UPGRADE
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
@@ -90,13 +79,10 @@ popd
 #=================================================
 ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
-# Create a dedicated NGINX config
 ynh_add_nginx_config
 
-# Create a dedicated systemd config
 ynh_add_systemd_config
 
-# Use logrotate to manage app-specific logfile(s)
 ynh_use_logrotate --non-append
 
 yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
