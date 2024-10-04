@@ -10,10 +10,6 @@ source /usr/share/yunohost/helpers
 password=$YNH_APP_ARG_PASSWORD
 email=$(ynh_user_get_info --username=$admin --key=mail)
 
-#=================================================
-# STORE SETTINGS FROM MANIFEST
-#=================================================
-
 ynh_app_setting_set --key=password --value="$password"
 ynh_app_setting_set --key=email --value=$email
 
@@ -44,12 +40,8 @@ ynh_setup_source --dest_dir="$install_dir"
 
 mkdir "/tmp/ufs"
 
-chmod -R o-rwx "$install_dir"
-chown -R $app:$app "$install_dir"
 chown -R $app:$app "/tmp/ufs"
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
@@ -83,7 +75,6 @@ yunohost service add $app --description="Team collaboration communication platfo
 ynh_script_progression "Building $app... (this will take some time and resources!)"
 
 pushd $install_dir/programs/server
-
 	ynh_hide_warnings ynh_exec_as_app yarn install --unsafe-perm
 popd
 

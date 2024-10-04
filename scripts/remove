@@ -16,9 +16,7 @@ db_user=$db_name
 #=================================================
 ynh_script_progression "Removing system configurations related to $app..."
 
-if ynh_hide_warnings yunohost service status $app >/dev/null
-then
-	ynh_script_progression "Removing $app service integration..."
+if ynh_hide_warnings yunohost service status $app >/dev/null; then
 	yunohost service remove $app
 fi
 
@@ -48,8 +46,8 @@ ynh_systemctl --service=mongod --action=restart --log_path=/var/log/mongodb/mong
 # Remove a database if it exists, along with the associated user
 ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
 
-# Remove mongod service
 yunohost service remove mongod
+
 ynh_safe_rm "/var/lib/mongodb"
 
 #=================================================
