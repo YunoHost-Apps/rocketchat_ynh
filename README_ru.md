@@ -9,10 +9,10 @@
 
 [![Установите Rocket.Chat с YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
-*[Прочтите этот README на других языках.](./ALL_README.md)*
+_[Прочтите этот README на других языках.](./ALL_README.md)_
 
-> *Этот пакет позволяет Вам установить Rocket.Chat быстро и просто на YunoHost-сервер.*  
-> *Если у Вас нет YunoHost, пожалуйста, посмотрите [инструкцию](https://yunohost.org/install), чтобы узнать, как установить его.*
+> _Этот пакет позволяет Вам установить Rocket.Chat быстро и просто на YunoHost-сервер._  
+> _Если у Вас нет YunoHost, пожалуйста, посмотрите [инструкцию](https://yunohost.org/install), чтобы узнать, как установить его._
 
 ## Обзор
 
@@ -26,7 +26,7 @@ Rocket.Chat is an open-source fully customizable communications platform develop
 - Mobile Apps for [iOS](https://apps.apple.com/app/rocket-chat/id1148741252) and [Android](https://play.google.com/store/apps/details?id=chat.rocket.android)
 - Desktop Apps for [macOS](https://apps.apple.com/br/app/rocket-chat/id1086818840), [Linux](https://snapcraft.io/rocketchat-desktop) and [Windows](https://releases.rocket.chat/desktop/latest/download)
 
-**Поставляемая версия:** 6.11.1~ynh1
+**Поставляемая версия:** 7.1.0~ynh1
 
 **Демо-версия:** <https://cloud.rocket.chat/trial>
 
