@@ -6,7 +6,7 @@
 
 nodejs_version=22
 
-mongo_version=8.0
+mongo_version=6.0
 
 #=================================================
 # PERSONAL HELPERS
