@@ -4,9 +4,9 @@
 # COMMON VARIABLES
 #=================================================
 
-nodejs_version=14
+nodejs_version=22
 
-mongo_version=6.0
+mongo_version=8.0.3
 
 #=================================================
 # PERSONAL HELPERS
