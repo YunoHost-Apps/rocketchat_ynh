@@ -5,14 +5,16 @@
 
 # YunoHost 上的 Rocket.Chat
 
-[![集成程度](https://dash.yunohost.org/integration/rocketchat.svg)](https://ci-apps.yunohost.org/ci/apps/rocketchat/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/rocketchat)](https://ci-apps.yunohost.org/ci/apps/rocketchat/)
+![工作状态](https://apps.yunohost.org/badge/state/rocketchat)
+![维护状态](https://apps.yunohost.org/badge/maintained/rocketchat)
 
 [![使用 YunoHost 安装 Rocket.Chat](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
-_[阅读此 README 的其它语言版本。](./ALL_README.md)_
+*[阅读此 README 的其它语言版本。](./ALL_README.md)*
 
-> _通过此软件包，您可以在 YunoHost 服务器上快速、简单地安装 Rocket.Chat。_  
-> _如果您还没有 YunoHost，请参阅[指南](https://yunohost.org/install)了解如何安装它。_
+> *通过此软件包，您可以在 YunoHost 服务器上快速、简单地安装 Rocket.Chat。*  
+> *如果您还没有 YunoHost，请参阅[指南](https://yunohost.org/install)了解如何安装它。*
 
 ## 概况
 

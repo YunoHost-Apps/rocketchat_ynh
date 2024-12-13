@@ -5,14 +5,16 @@ Ini TIDAK boleh diedit dengan tangan.
 
 # Rocket.Chat untuk YunoHost
 
-[![Tingkat integrasi](https://dash.yunohost.org/integration/rocketchat.svg)](https://ci-apps.yunohost.org/ci/apps/rocketchat/) ![Status kerja](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Status pemeliharaan](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
+[![Tingkat integrasi](https://apps.yunohost.org/badge/integration/rocketchat)](https://ci-apps.yunohost.org/ci/apps/rocketchat/)
+![Status kerja](https://apps.yunohost.org/badge/state/rocketchat)
+![Status pemeliharaan](https://apps.yunohost.org/badge/maintained/rocketchat)
 
 [![Pasang Rocket.Chat dengan YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
-_[Baca README ini dengan bahasa yang lain.](./ALL_README.md)_
+*[Baca README ini dengan bahasa yang lain.](./ALL_README.md)*
 
-> _Paket ini memperbolehkan Anda untuk memasang Rocket.Chat secara cepat dan mudah pada server YunoHost._  
-> _Bila Anda tidak mempunyai YunoHost, silakan berkonsultasi dengan [panduan](https://yunohost.org/install) untuk mempelajari bagaimana untuk memasangnya._
+> *Paket ini memperbolehkan Anda untuk memasang Rocket.Chat secara cepat dan mudah pada server YunoHost.*  
+> *Bila Anda tidak mempunyai YunoHost, silakan berkonsultasi dengan [panduan](https://yunohost.org/install) untuk mempelajari bagaimana untuk memasangnya.*
 
 ## Ringkasan
 

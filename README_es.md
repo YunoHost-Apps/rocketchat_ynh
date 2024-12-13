@@ -5,14 +5,16 @@ No se debe editar a mano.
 
 # Rocket.Chat para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/rocketchat.svg)](https://ci-apps.yunohost.org/ci/apps/rocketchat/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/rocketchat.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/rocketchat.maintain.svg)
+[![Nivel de integración](https://apps.yunohost.org/badge/integration/rocketchat)](https://ci-apps.yunohost.org/ci/apps/rocketchat/)
+![Estado funcional](https://apps.yunohost.org/badge/state/rocketchat)
+![Estado En Mantención](https://apps.yunohost.org/badge/maintained/rocketchat)
 
 [![Instalar Rocket.Chat con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=rocketchat)
 
-_[Leer este README en otros idiomas.](./ALL_README.md)_
+*[Leer este README en otros idiomas.](./ALL_README.md)*
 
-> _Este paquete le permite instalarRocket.Chat rapidamente y simplement en un servidor YunoHost._  
-> _Si no tiene YunoHost, visita [the guide](https://yunohost.org/install) para aprender como instalarla._
+> *Este paquete le permite instalarRocket.Chat rapidamente y simplement en un servidor YunoHost.*  
+> *Si no tiene YunoHost, visita [the guide](https://yunohost.org/install) para aprender como instalarla.*
 
 ## Descripción general
 
