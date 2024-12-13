@@ -4,6 +4,6 @@
 # COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
-nodejs_version=14
+nodejs_version="20"
 
-mongo_version=6.0
+mongo_version="7.0"
