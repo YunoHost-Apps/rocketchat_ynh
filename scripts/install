@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
@@ -46,17 +40,15 @@ ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=10
 
-# Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source --dest_dir="$install_dir"
-
-mkdir "/tmp/ufs"
 
 chmod -R o-rwx "$install_dir"
 chown -R $app:$app "$install_dir"
+
+mkdir "/tmp/ufs"
+
 chown -R $app:$app "/tmp/ufs"
 
-#=================================================
-# SPECIFIC SETUP
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
@@ -77,13 +69,10 @@ fi
 #=================================================
 ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
-# Create a dedicated NGINX config
 ynh_add_nginx_config
 
-# Create a dedicated systemd config
 ynh_add_systemd_config
 
-# Use logrotate to manage application logfile(s)
 ynh_use_logrotate
 yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
@@ -91,6 +80,13 @@ yunohost service add $app --description="Team collaboration communication platfo
 # INSTALL ROCKETCHAT
 #==============================================
 ynh_script_progression --message="Building $app... (this will take some time and resources!)" --weight=29
+
+# Create server directory and set permissions
+mkdir -p $install_dir/programs/server
+mkdir -p "$install_dir/programs/server/node_modules"
+
+chown -R $app:$app "$install_dir/programs/server"
+chmod -R 775 "$install_dir/programs/server"
 
 pushd $install_dir/programs/server
 	ynh_use_nodejs
