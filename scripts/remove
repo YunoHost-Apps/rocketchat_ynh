@@ -43,7 +43,7 @@ ynh_replace --match="  replSetName: rs01" --replace="" --file="/etc/mongod.conf"
 
 ynh_systemctl --service=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --wait_until="Waiting for connections"
 
-ynh_mongo_remove_db --db_user=$db_user --db_name=$db_name
+ynh_mongo_remove_db --database=$app #--db_user=$db_user --db_name=$db_name
 
 yunohost service remove mongod
 
