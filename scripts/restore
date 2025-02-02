@@ -33,7 +33,7 @@ ynh_script_progression "Restoring the MongoDB database..."
 
 db_pwd=$(ynh_app_setting_get --key=db_pwd)
 ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
-ynh_mongo_restore_db  < ./dump.bson
+ynh_mongo_restore_db --database=$app < ./dump.bson
 
 #=================================================
 # CONFIGURE MONGOD
