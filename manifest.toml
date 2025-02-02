@@ -20,7 +20,7 @@ code = "https://github.com/RocketChat/Rocket.Chat"
 [integration]
 yunohost = ">= 11.2.27"
 architectures = ["amd64"]
-multi_instance = true
+multi_instance = false
 
 ldap = false
 sso = false
