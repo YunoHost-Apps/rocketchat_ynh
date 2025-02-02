@@ -77,16 +77,13 @@ ynh_script_progression "Building $app... (this will take some time and resources
 
 # Create server directory and set permissions
 mkdir -p $install_dir/programs/server
-chown -R $app:$app $install_dir
-chmod -R 775 $install_dir
+mkdir -p "$install_dir/programs/server/node_modules"
+
+chown -R $app:$app "$install_dir/programs/server"
+chmod -R 775 "$install_dir/programs/server"
 
 pushd $install_dir/programs/server
-	# Ensure yarn directories exist with correct permissions
-	mkdir -p "$install_dir/programs/server/node_modules"
-	chown -R $app:$app "$install_dir/programs/server"
-	chmod -R 775 "$install_dir/programs/server"
-
-	ynh_hide_warnings ynh_exec_as_app yarn install --unsafe-perm
+	ynh_exec_warn_less ynh_exec_as_app yarn install --unsafe-perm
 popd
 
 #=================================================

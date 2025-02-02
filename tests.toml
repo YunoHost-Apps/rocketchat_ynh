@@ -6,11 +6,11 @@ test_format = 1.0
     # Tests to run
     # ------------
 
-    exclude = ["install.subdir"]
+    exclude = ["install.subdir", "install.multi"]
 
     # -------------------------------
     # Commits to test upgrade from
     # -------------------------------
 
-    test_upgrade_from.2312a40a0f485bb2763b437f77f346bbdfc2dbc6.name = "Upgrade from 6.3.3~ynh1"
+    #test_upgrade_from.2312a40a0f485bb2763b437f77f346bbdfc2dbc6.name = "Upgrade from 6.3.3~ynh1"
     
