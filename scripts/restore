@@ -6,78 +6,75 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+ynh_script_progression "Loading installation settings..."
 
 db_user=$db_name
-mongo_version=$(ynh_app_setting_get --app=$app --key=mongo_version)
+mongo_version=$(ynh_app_setting_get --key=mongo_version)
 
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring the app main directory..." --weight=1
+ynh_script_progression "Restoring the app main directory..."
 
-ynh_restore_file --origin_path="$install_dir"
-
-chmod -R o-rwx "$install_dir"
-chown -R $app:$app "$install_dir"
+ynh_restore "$install_dir"
 
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=40
+ynh_script_progression "Reinstalling dependencies..."
 
-ynh_exec_warn_less ynh_install_nodejs --nodejs_version=$nodejs_version
-ynh_exec_warn_less ynh_install_mongo --mongo_version=$mongo_version
+ynh_nodejs_install
+ynh_hide_warnings ynh_install_mongo
 
 #=================================================
 # RESTORE THE MONGODB DATABASE
 #=================================================
-ynh_script_progression --message="Restoring the MongoDB database..." --weight=10
+ynh_script_progression "Restoring the MongoDB database..."
 
-db_pwd=$(ynh_app_setting_get --app=$app --key=db_pwd)
+db_pwd=$(ynh_app_setting_get --key=db_pwd)
 ynh_mongo_setup_db --db_user=$db_user --db_name=$db_name --db_pwd=$db_pwd
-ynh_mongo_restore_db --database="$db_name" < ./dump.bson
+ynh_mongo_restore_db --database=$app < ./dump.bson
 
 #=================================================
 # CONFIGURE MONGOD
 #=================================================
-ynh_script_progression --message="Configuring mongod..." --weight=7
+ynh_script_progression "Configuring mongod..."
 
-ynh_replace_string --match_string="#  engine:" --replace_string="  engine: wiredTiger" --target_file="/etc/mongod.conf"
-ynh_replace_string --match_string="#replication:" --replace_string="replication:\n  replSetName: rs01" --target_file="/etc/mongod.conf"
+ynh_replace --match="#  engine:" --replace="  engine: wiredTiger" --file="/etc/mongod.conf"
+ynh_replace --match="#replication:" --replace="replication:\n  replSetName: rs01" --file="/etc/mongod.conf"
 
-ynh_exec_warn_less systemctl enable mongod --quiet
-ynh_systemd_action --service_name=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --line_match="Waiting for connections"
+ynh_hide_warnings systemctl enable mongod --quiet
+ynh_systemctl --service=mongod --action=restart --log_path=/var/log/mongodb/mongod.log --wait_until="Waiting for connections"
 
-if ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
-	ynh_exec_warn_less ynh_mongo_exec --command="printjson(rs.initiate())" --eval
+if ynh_hide_warnings ynh_mongo_exec --command="printjson(rs.status())" | grep -q "no replset config has been received"; then
+	ynh_hide_warnings ynh_mongo_exec --command="printjson(rs.initiate())"
 fi
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
+ynh_script_progression "Restoring system configurations related to $app..."
 
-ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-ynh_restore_file --origin_path="/etc/systemd/system/$app.service"
+ynh_restore "/etc/systemd/system/$app.service"
 systemctl enable $app.service --quiet
 
-ynh_restore_file --origin_path="/etc/logrotate.d/$app"
+ynh_restore "/etc/logrotate.d/$app"
 
 yunohost service add $app --description="Team collaboration communication platform" --log="/var/log/$app/$app.log"
 
 #=================================================
 # RELOAD NGINX AND PHP-FPM OR THE APP SERVICE
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server and $app's service..." --weight=1
+ynh_script_progression "Reloading NGINX web server and $app's service..."
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="systemd" --line_match="SERVER RUNNING"
+ynh_systemctl --service=$app --action="start" --log_path="systemd" --wait_until="SERVER RUNNING"
 
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --last
+ynh_script_progression "Restoration completed for $app"
