@@ -43,6 +43,13 @@ mkdir "/tmp/ufs"
 chown -R $app:$app "/tmp/ufs"
 
 #=================================================
+# APP INITIAL CONFIGURATION
+#=================================================
+ynh_script_progression "Adding $app's configuration files..."
+
+ynh_config_add --template=".env" --destination="$install_dir/.env"
+
+#=================================================
 # CONFIGURE MONGOD
 #=================================================
 ynh_script_progression "Configuring MongoDB..."

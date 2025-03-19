@@ -7,18 +7,11 @@ After=network.target remote-fs.target nss-lookup.target nginx.service __MONGODB_
 User=__APP__
 Group=__APP__
 Environment="NODE_ENV=production"
+EnvironmentFile=__INSTALL_DIR__/.env
 WorkingDirectory=__INSTALL_DIR__/
 Environment="PATH=__PATH_WITH_NODEJS__"
 ExecStart=__NODEJS_DIR__/node __INSTALL_DIR__/main.js
 SyslogIdentifier=__APP__
-Environment=MONGO_URL=mongodb://localhost:27017/__APP__?replicaSet=rs01
-Environment=MONGO_OPLOG_URL=mongodb://localhost:27017/local?replicaSet=rs01
-Environment=ROOT_URL=https://__DOMAIN__
-Environment=PORT=__PORT__
-Environment=ADMIN_USERNAME="__ADMIN__"
-Environment=ADMIN_PASS="__PASSWORD__"
-Environment=ADMIN_EMAIL="__EMAIL__"
-Environment=OVERWRITE_SETTING_Show_Setup_Wizard=completed
 Restart=on-failure
 RestartSec=1s
 
