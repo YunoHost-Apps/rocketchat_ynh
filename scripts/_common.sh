@@ -4,6 +4,6 @@
 # COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
-nodejs_version="22"
+#REMOVEME? nodejs_version="22"
 
-mongo_version="7.0"
+mon#REMOVEME? go_version="7.0"

@@ -9,7 +9,7 @@ source /usr/share/yunohost/helpers
 ynh_script_progression "Loading installation settings..."
 
 db_user=$db_name
-mongo_version=$(ynh_app_setting_get --key=mongo_version)
+mon#REMOVEME? go_version=$(ynh_app_setting_get --key=mongo_version)
 
 #=================================================
 # RESTORE THE APP MAIN DIR
@@ -23,7 +23,7 @@ ynh_restore "$install_dir"
 #=================================================
 ynh_script_progression "Reinstalling dependencies..."
 
-ynh_nodejs_install
+#REMOVEME? ynh_nodejs_install
 ynh_hide_warnings ynh_install_mongo
 
 #=================================================
