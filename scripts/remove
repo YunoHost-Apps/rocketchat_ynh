@@ -30,8 +30,6 @@ fi
 
 ynh_config_remove_nginx
 
-ynh_nodejs_remove
-
 #=================================================
 # REMOVE THE MONGODB DATABASE
 #=================================================
