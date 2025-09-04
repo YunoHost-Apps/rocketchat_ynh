@@ -11,7 +11,7 @@ ynh_script_progression "Loading installation settings..."
 db_name=$(ynh_app_setting_get --key=db_name)
 password=$(ynh_app_setting_get --key=password)
 email=$(ynh_app_setting_get --key=email)
-mon#REMOVEME? go_version=$(ynh_app_setting_get --key=mongo_version)
+mongo_version=$(ynh_app_setting_get --key=mongo_version)
 
 #=================================================
 # STOP SYSTEMD SERVICE
@@ -36,7 +36,6 @@ fi
 #=================================================
 ynh_script_progression "Upgrading dependencies..."
 
-#REMOVEME? ynh_nodejs_install
 ynh_hide_warnings ynh_install_mongo
 
 #=================================================

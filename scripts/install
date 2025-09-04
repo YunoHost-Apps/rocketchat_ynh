@@ -18,7 +18,6 @@ ynh_app_setting_set --key=email --value=$email
 #=================================================
 ynh_script_progression "Installing dependencies..."
 
-#REMOVEME? ynh_nodejs_install
 ynh_hide_warnings ynh_install_mongo
 
 #=================================================
