@@ -23,7 +23,6 @@ ynh_restore "$install_dir"
 #=================================================
 ynh_script_progression "Reinstalling dependencies..."
 
-ynh_nodejs_install
 ynh_hide_warnings ynh_install_mongo
 
 #=================================================

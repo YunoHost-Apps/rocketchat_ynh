@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 12.0.9"
+yunohost = ">= 12.1.17"
 helpers_version = "2.1"
 architectures = ["amd64"]
 multi_instance = false
@@ -75,3 +75,6 @@ ram.runtime = "50M"
     extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
     extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
     extras.yarn.packages = "yarn"
+
+    [resources.nodejs]
+    version = "22"
