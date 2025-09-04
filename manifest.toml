@@ -50,7 +50,7 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/7.9.1/download"
+        url = "https://releases.rocket.chat/7.10.0/download"
         sha256 = "8cafd9f5d01f55f6dab4cc6258fdaced7888e347c2f79e46b13880c5a3aef970"
         in_subdir = true
         extract = true
