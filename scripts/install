@@ -89,6 +89,7 @@ chown -R $app:$app "$install_dir/programs/server"
 chmod -R 775 "$install_dir/programs/server"
 
 pushd $install_dir/programs/server
+	ynh_hide_warnings corepack enable && corepack prepare pnpm@latest --activate
 	ynh_hide_warnings ynh_exec_as_app yarn install --unsafe-perm
 popd
 
