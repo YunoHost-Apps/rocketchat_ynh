@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "7.13.1~ynh1"
+version = "8.0.1~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -50,8 +50,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/7.13.1/download"
-        sha256 = "842eaad0b2a3595acf4716c62559051b1038eda65489471b21700e0d2ec0ee6e"
+        url = "https://releases.rocket.chat/8.0.1/download"
+        sha256 = "7b4651125a657e634a40c0b238c7f5e0ecbc132f5a8f91537a13c6e7e67329c3"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
