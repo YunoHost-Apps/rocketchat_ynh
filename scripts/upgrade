@@ -18,7 +18,7 @@ mongo_version=$(ynh_app_setting_get --key=mongo_version)
 #=================================================
 ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemctl --service=$app --action="stop" --log_path="systemd"
+ynh_systemctl --service=$app --action="stop"
 
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
@@ -97,7 +97,7 @@ yunohost service add $app --description="Team collaboration communication platfo
 #=================================================
 ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemctl --service=$app --action="start" --log_path="systemd" --wait_until="SERVER RUNNING"
+ynh_systemctl --service=$app --action="start"
 
 #=================================================
 # END OF SCRIPT
