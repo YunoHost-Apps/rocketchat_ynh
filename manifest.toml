@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "7.8.1~ynh1"
+version = "8.0.1~ynh1"
 
 maintainers = ["eric_G"]
 
@@ -18,7 +18,7 @@ userdoc = "https://docs.rocket.chat/guides/user-guides"
 code = "https://github.com/RocketChat/Rocket.Chat"
 
 [integration]
-yunohost = ">= 12.1.17"
+yunohost = ">= 12.1.38"
 helpers_version = "2.1"
 architectures = ["amd64"]
 multi_instance = false
@@ -50,8 +50,8 @@ ram.runtime = "50M"
     [resources.sources]
 
         [resources.sources.main]
-        url = "https://releases.rocket.chat/7.8.1/download"
-        sha256 = "b0b834d99e671eef408b6ec615bb7b5229ef5f09351365eb37c79640b010719d"
+        url = "https://releases.rocket.chat/8.0.1/download"
+        sha256 = "7b4651125a657e634a40c0b238c7f5e0ecbc132f5a8f91537a13c6e7e67329c3"
         in_subdir = true
         extract = true
         rename = "rocket.chat.tgz"
@@ -70,11 +70,7 @@ ram.runtime = "50M"
     api.show_tile = false
 
     [resources.apt]
-    packages = "fontconfig, graphicsmagick"
-
-    extras.yarn.repo = "deb https://dl.yarnpkg.com/debian/ stable main"
-    extras.yarn.key = "https://dl.yarnpkg.com/debian/pubkey.gpg"
-    extras.yarn.packages = "yarn"
+    packages = "fontconfig, build-essential, graphicsmagick"
 
     [resources.nodejs]
-    version = "22"
+    version = "22.16.0"
