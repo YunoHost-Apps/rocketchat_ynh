@@ -70,7 +70,7 @@ ram.runtime = "50M"
     api.show_tile = false
 
     [resources.apt]
-    packages = "fontconfig, graphicsmagick"
+    packages = "fontconfig, build-essential, graphicsmagick"
 
     [resources.nodejs]
     version = "22.16.0"
