@@ -5,7 +5,7 @@ name = "Rocket.Chat"
 description.en = "Team collaboration communication platform"
 description.fr = "Plateforme de communication collaborative en équipe"
 
-version = "8.8.0~ynh1"
+version = "8.8.0~ynh2"
 
 maintainers = ["eric_G"]
 
@@ -73,4 +73,4 @@ ram.runtime = "50M"
     packages = "fontconfig, build-essential, graphicsmagick"
 
     [resources.nodejs]
-    version = "22.22.3"
+    version = "22.23.4"
